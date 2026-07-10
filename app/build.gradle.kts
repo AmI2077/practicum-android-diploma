@@ -1,9 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     id("ru.practicum.android.diploma.plugins.developproperties")
+    id("kotlin-parcelize")
+    id("androidx.navigation.safeargs.kotlin")
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -34,6 +37,7 @@ android {
     }
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 }
 
@@ -54,4 +58,30 @@ dependencies {
     testImplementation(libs.junit4)
     androidTestImplementation(libs.junit.ext)
     androidTestImplementation(libs.espresso.core)
+    // Glide
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+    // Gson
+    implementation(libs.gson)
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    // Lifecycle
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.ktx)
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
+    // Navigation
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
 }
