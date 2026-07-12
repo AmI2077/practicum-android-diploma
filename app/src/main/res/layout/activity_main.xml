@@ -7,9 +7,12 @@
     tools:context=".core.android.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_view"
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_nav_graph"
         android:background="?attr/colorSurface"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_view"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_nav_view_divider_height"
         android:background="@color/lightGray"
-        app:layout_constraintBottom_toBottomOf="@+id/fragment_container_view" />
+        app:layout_constraintBottom_toBottomOf="@+id/nav_host_fragment" />
 
     <!--        colorSurface в BottomNavigationView используется по дефолту,
     но решил явно прописать для читаемости-->
