@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+
+    <dimen name="regular_text_style_line_height">16sp</dimen>
+    <dimen name="regular_text_style_font_weight">400</dimen>
+
+    <dimen name="medium_text_style_line_height">26sp</dimen>
+    <dimen name="medium_text_style_font_weight">500</dimen>
+
+    <dimen name="bottom_nav_view_divider_height">1dp</dimen>
+</resources>
