@@ -4,5 +4,5 @@
     <string name="search_screen_tab">Поиск вакансий</string>
     <string name="favourites_screen_tab">Избранное</string>
     <string name="team_screen_tab">Команда</string>
-    <string name="filter_screen">Фильтрация</string>
+    <string name="filter_screen">Настройки фильтрации</string>
 </resources>
