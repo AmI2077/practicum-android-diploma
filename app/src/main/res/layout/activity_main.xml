@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface"
         app:elevation="0dp"
-        app:itemActiveIndicatorStyle="null"
+        app:itemActiveIndicatorStyle="@null"
         app:itemIconTint="@color/bottom_nav_item_tint_selector"
         app:itemTextAppearanceActive="@style/RegularTextStyle.12"
         app:itemTextAppearanceInactive="@style/RegularTextStyle.12"
