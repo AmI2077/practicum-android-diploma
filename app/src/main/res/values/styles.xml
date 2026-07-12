@@ -24,5 +24,11 @@
             @dimen/text_size_12
         </item>
     </style>
+
+    <style name="MediumTextStyle.22.Header" parent="MediumTextStyle.22">
+        <item name="android:paddingTop">@dimen/header_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/header_padding_vertical</item>
+        <item name="android:paddingStart">@dimen/header_padding_start</item>
+    </style>
     
 </resources>

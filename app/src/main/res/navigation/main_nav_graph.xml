@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/search_screen_tab">
+    <fragment
+        android:id="@+id/search_screen_tab"
+        android:name="ru.practicum.android.diploma.feature.search.ui.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search"/>
+
+    <fragment
+        android:id="@+id/favourites_screen_tab"
+        android:name="ru.practicum.android.diploma.feature.favourites.ui.FavouritesFragment"
+        android:label="FavouritesFragment"
+        tools:layout="@layout/fragment_favourites"/>
+
+    <fragment
+        android:id="@+id/team_screen_tab"
+        android:name="ru.practicum.android.diploma.feature.team.ui.TeamFragment"
+        android:label="TeamFragment"
+        tools:layout="@layout/fragment_team"/>
+
+</navigation>
