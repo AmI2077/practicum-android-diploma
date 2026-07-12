@@ -4,4 +4,5 @@
     <string name="search_screen_tab">Главная</string>
     <string name="favourites_screen_tab">Избранное</string>
     <string name="team_screen_tab">Команда</string>
+    <string name="filter_screen">Фильтрация</string>
 </resources>

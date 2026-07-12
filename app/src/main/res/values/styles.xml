@@ -3,12 +3,26 @@
 
     <style name="RegularTextStyle">
         <item name="fontFamily">@font/ys_display_regular</item>
-        <item name="lineHeight">16sp</item>
-        <item name="android:fontWeight">400</item>
+        <item name="lineHeight">@dimen/regular_text_style_line_height</item>
+        <item name="android:fontWeight">@dimen/regular_text_style_font_weight</item>
+    </style>
+
+    <style name="MediumTextStyle">
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="lineHeight">@dimen/medium_text_style_line_height</item>
+        <item name="android:fontWeight">@dimen/medium_text_style_font_weight</item>
+    </style>
+
+    <style name="MediumTextStyle.22" parent="MediumTextStyle">
+        <item name="android:textSize">
+            @dimen/text_size_22
+        </item>
     </style>
 
     <style name="RegularTextStyle.12" parent="RegularTextStyle">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">
+            @dimen/text_size_12
+        </item>
     </style>
     
 </resources>
