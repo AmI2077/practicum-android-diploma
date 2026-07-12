@@ -6,7 +6,7 @@
     <color name="red">#FFF56B6C</color>
     <color name="gray">#FFAEAFB4</color>
     <color name="lightGray">#FFE6E8EB</color>
-    <color name="background">#1A1B2280</color>
+    <color name="background_alpha_50">#801A1B22</color>
 
     <color name="blackUniversal">#FF1A1B22</color>
     <color name="whiteUniversal">#FFFDFDFD</color>
