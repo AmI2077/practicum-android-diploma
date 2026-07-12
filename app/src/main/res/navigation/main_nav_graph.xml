@@ -8,7 +8,11 @@
         android:id="@+id/search_screen_tab"
         android:name="ru.practicum.android.diploma.feature.search.ui.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search"/>
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_search_screen_tab_to_filterFragment"
+            app:destination="@id/filter_screen" />
+    </fragment>
 
     <fragment
         android:id="@+id/favourites_screen_tab"
@@ -21,5 +25,11 @@
         android:name="ru.practicum.android.diploma.feature.team.ui.TeamFragment"
         android:label="TeamFragment"
         tools:layout="@layout/fragment_team"/>
+
+    <fragment
+        android:id="@+id/filter_screen"
+        android:name="ru.practicum.android.diploma.feature.search.ui.FilterFragment"
+        android:label="FilterFragment"
+        tools:layout="@layout/fragment_filter"/>
 
 </navigation>

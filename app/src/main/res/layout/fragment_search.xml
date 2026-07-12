@@ -16,7 +16,20 @@
         android:text="@string/search_screen_tab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/filter_button"/>
+
+    <ImageButton
+        android:id="@+id/filter_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_filter_off_24"
+        android:background="?attr/colorSurface"
+        app:tint="@color/black"
+        android:layout_marginEnd="@dimen/header_margin_end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="@id/header" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
