@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item
+        android:id="@+id/search_screen_tab"
+        android:icon="@drawable/ic_search_screen_24"
+        android:title="@string/search_screen_tab" />
+    <item
+        android:id="@+id/favourites_screen_tab"
+        android:icon="@drawable/ic_favourites_screen_24"
+        android:title="@string/favourites_screen_tab" />
+    <item
+        android:id="@+id/team_screen_tab"
+        android:icon="@drawable/ic_team_screen_24"
+        android:title="@string/team_screen_tab" />
 </menu>
