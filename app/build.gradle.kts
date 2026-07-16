@@ -63,6 +63,9 @@ dependencies {
     annotationProcessor(libs.glide.compiler)
     // Gson
     implementation(libs.gson)
+    //okhttp
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
