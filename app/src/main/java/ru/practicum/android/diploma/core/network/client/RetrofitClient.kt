@@ -34,7 +34,7 @@ object RetrofitClient: NetworkClient {
 
     private val apiService = retrofit.create(VacanciesApiService::class.java)
 
-    override suspend fun fetchVacancies(vacancyRequestDto: VacancyRequestDto): NetworkResult<VacancyResponseDto> {
+    override suspend fun fetchVacancies(vacancyRequestDto: VacancyRequestDto): NetworkResult<VacancyResponseDto?> {
         return try {
             val response = apiService.fetchVacancies(
                 area = vacancyRequestDto.area,

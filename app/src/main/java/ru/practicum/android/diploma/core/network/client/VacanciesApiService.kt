@@ -14,6 +14,6 @@ interface VacanciesApiService {
         @Query("text") text: String,
         @Query("salary") salary: Int? = null,
         @Query("page") page: Int? = null,
-        @Query("only_with_salary ") onlyWithSalary: Boolean? = null,
+        @Query("only_with_salary") onlyWithSalary: Boolean? = null,
     ): Response<VacancyResponseDto>
 }
