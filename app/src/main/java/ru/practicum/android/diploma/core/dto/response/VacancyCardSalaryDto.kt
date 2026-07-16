@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class VacancyCardSalaryDto(
     @SerializedName("from")
-    val from: String?,
+    val from: Int?,
     @SerializedName("to")
-    val to: String?,
+    val to: Int?,
     @SerializedName("currency")
     val currency: String?
 )
