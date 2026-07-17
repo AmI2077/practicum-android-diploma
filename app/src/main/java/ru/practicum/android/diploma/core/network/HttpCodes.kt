@@ -10,8 +10,10 @@ enum class HttpCodes(val code: Int) {
     );
 
     companion object {
+        val codes = entries.associateBy(HttpCodes::code)
+
         fun fromInt(code: Int): HttpCodes {
-            return entries.associateBy(HttpCodes::code)[code] ?: SERVER_ERROR_CODE
+            return codes[code] ?: SERVER_ERROR_CODE
         }
     }
 }
