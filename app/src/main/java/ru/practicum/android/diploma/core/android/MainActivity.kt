@@ -1,8 +1,6 @@
 package ru.practicum.android.diploma.core.android
 
 import android.os.Bundle
-import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -20,11 +18,8 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
-        val bottomNavBorder = findViewById<View>(R.id.divider_view)
 
         bottomNavigationView.setupWithNavController(navController)
-
-
     }
 }
 

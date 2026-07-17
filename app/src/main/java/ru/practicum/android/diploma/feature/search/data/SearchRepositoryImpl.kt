@@ -16,16 +16,17 @@ import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
     private val dispatcher: CoroutineDispatcher
-): SearchRepository {
+) : SearchRepository {
 
     override suspend fun fetchVacancies(params: VacancySearchParams): Result<List<VacancyCard>> =
         withContext(dispatcher) {
-            when(val result = networkClient.fetchVacancies(params.toDto())) {
+            when (val result = networkClient.fetchVacancies(params.toDto())) {
                 is NetworkResult.Error -> {
                     Result.Error(
                         handleErrorCode(result.code)
                     )
                 }
+
                 is NetworkResult.Success -> {
                     val vacancies = result.data?.items?.map {
                         it.toModel()
@@ -37,7 +38,7 @@ class SearchRepositoryImpl(
         }
 
     private fun handleErrorCode(code: HttpCodes): NetworkErrors {
-        return when(code) {
+        return when (code) {
             HttpCodes.NO_INTERNET_CONNECTION_ERROR_CODE -> NetworkErrors.NoInternetConnectionError
             HttpCodes.SERVER_ERROR_CODE -> NetworkErrors.ServerError
             HttpCodes.NOT_FOUND_ERROR_CODE -> NetworkErrors.NotFoundError
