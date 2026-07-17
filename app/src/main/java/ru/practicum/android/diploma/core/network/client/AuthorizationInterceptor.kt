@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.core.network.NetworkHeaders
 
 class AuthorizationInterceptor(
     private val token: String
-): Interceptor {
+) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val newRequest = chain.request().newBuilder()
             .addHeader(

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.core.network.client
 
+import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -7,11 +8,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.core.dto.request.VacancyRequestDto
 import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
-import ru.practicum.android.diploma.core.network.NetworkErrors
+import ru.practicum.android.diploma.core.network.HttpCodes
 import ru.practicum.android.diploma.core.network.NetworkResult
 import java.io.IOException
 
-object RetrofitClient: NetworkClient {
+object RetrofitClient : NetworkClient {
 
     private const val BASE_URL = "https://android-diploma.education-services.ru"
 
@@ -47,10 +48,11 @@ object RetrofitClient: NetworkClient {
             if (response.isSuccessful) {
                 NetworkResult.Success(response.body())
             } else {
-                NetworkResult.Error(response.code())
+                NetworkResult.Error(HttpCodes.fromInt(response.code()))
             }
         } catch (e: IOException) {
-            NetworkResult.Error(NetworkErrors.NO_INTERNET_CONNECTION_ERROR.code)
+            Log.d("RETROFIT_CLIENT", "FETCH", e)
+            NetworkResult.Error(HttpCodes.NO_INTERNET_CONNECTION_ERROR_CODE)
         }
     }
 }

@@ -11,13 +11,13 @@ class FavouritesFragment : Fragment() {
 
     private var _binding: FragmentFavouritesBinding? = null
 
-        private val binding get() = _binding!!
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFavouritesBinding.inflate(inflater, container, false)
         return binding.root
     }
