@@ -18,21 +18,33 @@
     <dimen name="header_padding_start">16dp</dimen>
     <dimen name="header_margin_end">20dp</dimen>
 
+    <dimen name="search_header_margin_start">16dp</dimen>
     <dimen name="search_field_height">48dp</dimen>
     <dimen name="search_field_padding_horizontal">12dp</dimen>
     <dimen name="search_field_margin_horizontal">16dp</dimen>
     <dimen name="search_field_margin_top">8dp</dimen>
     <dimen name="search_edit_text_margin_horizontal">16dp</dimen>
+
     <dimen name="status_container_margin_top">11dp</dimen>
     <dimen name="status_container_corner_radius">12dp</dimen>
     <dimen name="status_text_padding_vertical">4dp</dimen>
     <dimen name="status_text_padding_horizontal">12dp</dimen>
     <dimen name="status_text_size">14sp</dimen>
+
     <dimen name="error_image_width">328dp</dimen>
     <dimen name="error_image_height">233dp</dimen>
     <dimen name="error_text_margin_top">16dp</dimen>
-    <dimen name="recycler_view_margin_top">11dp</dimen>
+
+    <dimen name="recycler_view_margin_top">17dp</dimen>
     <dimen name="recycler_view_padding_bottom">16dp</dimen>
+
     <dimen name="filter_button_margin_end">16dp</dimen>
-    <dimen name="search_header_margin_start">16dp</dimen>
+
+    <dimen name="item_vacancy_margin_horizontal">16dp</dimen>
+    <dimen name="item_vacancy_margin_vertical">9dp</dimen>
+    <dimen name="item_vacancy_logo_size">48dp</dimen>
+    <dimen name="item_vacancy_logo_corner_radius">12dp</dimen>
+    <dimen name="item_vacancy_text_margin_start">12dp</dimen>
+
+    <dimen name="glide_corner_radius">12dp</dimen>
 </resources>
