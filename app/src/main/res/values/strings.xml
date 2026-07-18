@@ -32,4 +32,8 @@
     <string name="currency_uzs">сум</string>
     <string name="currency_gel">₾</string>
     <string name="currency_kgs">сом</string>
+
+    <string name="required_experience">Требуемый опыт</string>
+    <string name="vacancy_description">Описание вакансии</string>
+    <string name="key_skills">Ключевые навыки</string>
 </resources>
