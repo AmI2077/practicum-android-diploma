@@ -5,4 +5,15 @@
     <string name="favourites_screen_tab">Избранное</string>
     <string name="team_screen_tab">Команда</string>
     <string name="filter_screen">Настройки фильтрации</string>
+
+    <string name="no_internet">Нет интернета</string>
+    <string name="search_hint">Введите запрос</string>
+    <string name="no_vacancies_title">Не удалось получить\nсписок вакансий</string>
+    <string name="server_error_title">Ошибка сервера</string>
+    <string name="vacancies_found">Найдено %d вакансий</string>
+    <string name="vacancies_found_zero">Найдено 0 вакансий</string>
+
+    <string name="vacancy_title_placeholder">Название вакансии5555555555555555555555555555555555555555555555, Город</string>
+    <string name="company_name_placeholder">Компания</string>
+    <string name="salary_placeholder">от 10000 до 100000000</string>
 </resources>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="9dp"
+    android:background="?attr/colorSurface"
+    android:theme="@style/Theme.PracticumAndroidDiploma">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_cover"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="0dp"
+        android:clipChildren="true"
+        android:clipToPadding="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/companyLogo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="?attr/colorSurface"
+            tools:src="@drawable/ic_placeholder_32"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/vacancyTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            style="@style/MediumTextStyle.22"
+            android:textColor="@color/black"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/card_cover"
+            app:layout_constraintTop_toTopOf="@id/card_cover"
+            tools:text="@string/vacancy_title_placeholder"/>
+
+        <TextView
+            android:id="@+id/companyName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            style="@style/RegularTextStyle.16"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/card_cover"
+            app:layout_constraintTop_toBottomOf="@id/vacancyTitle"
+            tools:text="@string/company_name_placeholder"/>
+
+        <TextView
+            android:id="@+id/salary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            style="@style/RegularTextStyle.16"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/card_cover"
+            app:layout_constraintTop_toBottomOf="@id/companyName"
+            tools:text="@string/salary_placeholder" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
