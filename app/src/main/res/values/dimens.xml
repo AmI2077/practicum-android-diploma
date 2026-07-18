@@ -58,14 +58,12 @@
     <dimen name="detail_vacancy_padding_horizontal">16dp</dimen>
     <dimen name="detail_vacancy_padding_vertical">8dp</dimen>
     <dimen name="detail_vacancy_margin_top_4">4dp</dimen>
+    <dimen name="detail_vacancy_margin_top_8">8dp</dimen>
     <dimen name="detail_vacancy_margin_top_16">16dp</dimen>
     <dimen name="card_vacancy_height">80dp</dimen>
 
     <dimen name="detail_vacancy_padding_top_24">24dp</dimen>
     <dimen name="detail_vacancy_padding_top_32">32dp</dimen>
-
-    <dimen name="detail_vacancy_margin_top_8">8dp</dimen>
-    <dimen name="detail_vacancy_margin_top_16">16dp</dimen>
 
     <dimen name="detail_vacancy_margin_start_8">8dp</dimen>
 
