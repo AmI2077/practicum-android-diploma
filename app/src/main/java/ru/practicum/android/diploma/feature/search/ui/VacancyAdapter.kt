@@ -11,7 +11,7 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.VacancyCard
 import ru.practicum.android.diploma.core.models.VacancyCardSalary
 import ru.practicum.android.diploma.databinding.ItemVacancyBinding
-
+import java.util.Locale
 
 class VacancyAdapter : RecyclerView.Adapter<VacancyAdapter.VacancyViewHolder>() {
 
@@ -43,7 +43,7 @@ class VacancyAdapter : RecyclerView.Adapter<VacancyAdapter.VacancyViewHolder>() 
         private val binding: ItemVacancyBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-         fun bind(vacancy: VacancyCard) {
+        fun bind(vacancy: VacancyCard) {
             binding.apply {
                 vacancyTitle.text = formatTitle(
                     name = vacancy.name,
@@ -91,7 +91,7 @@ class VacancyAdapter : RecyclerView.Adapter<VacancyAdapter.VacancyViewHolder>() 
         }
 
         private fun formatNumber(number: Int): String {
-            return String.format("%,d", number).replace(',', ' ')
+            return String.format(Locale.getDefault(), "%,d", number).replace(',', ' ')
         }
 
         private fun getCurrencySymbol(currency: String?): String {

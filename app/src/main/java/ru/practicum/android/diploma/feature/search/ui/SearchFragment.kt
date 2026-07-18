@@ -1,8 +1,6 @@
 package ru.practicum.android.diploma.feature.search.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,10 +25,10 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: VacancyAdapter
+    private var adapter: VacancyAdapter? = null
     private var isSearchPerformed = false
 
-    private var searchJob: Job? = null //потом перенести логику в ViewModel
+    private var searchJob: Job? = null // потом перенести логику в ViewModel
 
     private companion object {
         const val SEARCH_DELAY = 2000L
@@ -66,7 +64,6 @@ class SearchFragment : Fragment() {
 
     private fun setupSearchEditText() {
         binding.searchEditText.apply {
-
             doOnTextChanged { text, _, _, _ ->
                 handleTextChanged(text.toString())
             }
@@ -98,7 +95,6 @@ class SearchFragment : Fragment() {
         scheduleSearch(query)
     }
 
-
     private fun scheduleSearch(query: String) {
         cancelDelayedSearch()
         searchJob = viewLifecycleOwner.lifecycleScope.launch {
@@ -120,7 +116,6 @@ class SearchFragment : Fragment() {
             showInitialState()
             binding.searchEditText.requestFocus()
             hideKeyboard()
-
         }
     }
 
@@ -129,7 +124,8 @@ class SearchFragment : Fragment() {
             findNavController().navigate(R.id.action_search_screen_tab_to_filterFragment)
         }
     }
-// в будущем выполнение запросов в ViewModel
+
+    // в будущем выполнение запросов в ViewModel
     private fun performSearch(query: String) {
         if (query.isBlank()) {
             showInitialState()
@@ -139,7 +135,7 @@ class SearchFragment : Fragment() {
         isSearchPerformed = true
 
         showLoadingState()
-// что бы проверить разные экраны состояний
+        // что бы проверить разные экраны состояний
         binding.root.postDelayed({
             when {
                 query.contains("пусто", ignoreCase = true) -> {
@@ -174,6 +170,7 @@ class SearchFragment : Fragment() {
         binding.statusContainer.isVisible = false
         binding.progressBar.isVisible = true
     }
+
     private fun showSearchResult(vacancies: List<VacancyCard>, query: String) {
         hideAllImageStates()
         binding.progressBar.isVisible = false
@@ -183,7 +180,7 @@ class SearchFragment : Fragment() {
             vacancies.size
         )
         binding.recyclerView.isVisible = true
-        adapter.submitList(vacancies)
+        adapter?.submitList(vacancies)
     }
 
     private fun showEmptyResultState() {
