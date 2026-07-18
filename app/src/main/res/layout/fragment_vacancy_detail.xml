@@ -23,10 +23,34 @@
         style="@style/MediumTextStyle.22.Header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/filter_screen"
+        android:text="@string/title_vacancy"
         app:layout_constraintStart_toEndOf="@id/back_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/sharing_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_sharing_24"
+        android:background="?attr/colorSurface"
+        app:tint="@color/black"
+        android:layout_marginEnd="@dimen/header_margin_buttons"
+        app:layout_constraintEnd_toStartOf="@+id/favorites_button"
+        app:layout_constraintTop_toTopOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="@id/header" />
+
+    <ImageButton
+        android:id="@+id/favorites_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_favorites_off_24"
+        android:background="?attr/colorSurface"
+        app:tint="@color/black"
+        android:layout_marginEnd="@dimen/filter_button_margin_end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="@id/header" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"

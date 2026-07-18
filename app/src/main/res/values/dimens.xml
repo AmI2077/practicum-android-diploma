@@ -17,6 +17,8 @@
 
     <dimen name="header_padding_start">16dp</dimen>
     <dimen name="header_margin_end">20dp</dimen>
+    <dimen name="header_margin_buttons">28dp</dimen>
+
 
     <dimen name="search_header_margin_start">16dp</dimen>
     <dimen name="search_field_height">48dp</dimen>
@@ -38,7 +40,7 @@
     <dimen name="recycler_view_margin_top">17dp</dimen>
     <dimen name="recycler_view_padding_bottom">16dp</dimen>
 
-    <dimen name="filter_button_margin_end">16dp</dimen>
+    <dimen name="filter_button_margin_end">20dp</dimen>
 
     <dimen name="item_vacancy_margin_horizontal">16dp</dimen>
     <dimen name="item_vacancy_margin_vertical">9dp</dimen>

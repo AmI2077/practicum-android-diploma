@@ -5,6 +5,7 @@
     <string name="favourites_screen_tab">Избранное</string>
     <string name="team_screen_tab">Команда</string>
     <string name="filter_screen">Настройки фильтрации</string>
+    <string name="title_vacancy">Вакансия</string>
 
     <string name="no_internet">Нет интернета</string>
     <string name="search_hint">Введите запрос</string>
