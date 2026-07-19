@@ -55,7 +55,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = VacancyAdapter()
+        adapter = VacancyAdapter { vacancy ->
+            openVacancyDetails(vacancy)
+        }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@SearchFragment.adapter
@@ -125,6 +127,11 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun openVacancyDetails(vacancy: VacancyCard) {
+        findNavController().navigate(
+            R.id.action_search_screen_tab_to_vacancyDetailFragment
+        )
+    }
     // в будущем выполнение запросов в ViewModel
     private fun performSearch(query: String) {
         if (query.isBlank()) {

@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_search_screen_tab_to_filterFragment"
             app:destination="@id/filter_screen" />
+        <action
+            android:id="@+id/action_search_screen_tab_to_vacancyDetailFragment"
+            app:destination="@id/vacancyDetailFragment" />
     </fragment>
 
     <fragment
@@ -31,5 +34,17 @@
         android:name="ru.practicum.android.diploma.feature.search.ui.FilterFragment"
         android:label="FilterFragment"
         tools:layout="@layout/fragment_filter"/>
+
+    <fragment
+        android:id="@+id/vacancyDetailFragment"
+        android:name="ru.practicum.android.diploma.feature.detail.ui.VacancyDetailFragment"
+        android:label="VacancyDetailFragment"
+        tools:layout="@layout/fragment_vacancy_detail">
+
+        <!-- для будущей передачи id через safe arg -->
+        <!-- <argument
+            android:name="vacancyId"
+            app:argType="string" /> -->
+    </fragment>
 
 </navigation>

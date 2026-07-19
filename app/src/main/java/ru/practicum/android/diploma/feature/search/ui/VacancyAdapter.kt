@@ -13,7 +13,9 @@ import ru.practicum.android.diploma.core.models.VacancyCardSalary
 import ru.practicum.android.diploma.databinding.ItemVacancyBinding
 import java.util.Locale
 
-class VacancyAdapter : RecyclerView.Adapter<VacancyAdapter.VacancyViewHolder>() {
+class VacancyAdapter(
+    private val onItemClick: (VacancyCard) -> Unit
+) : RecyclerView.Adapter<VacancyAdapter.VacancyViewHolder>() {
 
     private var items: List<VacancyCard> = emptyList()
 
@@ -35,6 +37,9 @@ class VacancyAdapter : RecyclerView.Adapter<VacancyAdapter.VacancyViewHolder>() 
 
     override fun onBindViewHolder(holder: VacancyViewHolder, position: Int) {
         holder.bind(items[position])
+        holder.itemView.setOnClickListener {
+            onItemClick(items[position])
+        }
     }
 
     override fun getItemCount(): Int = items.size
