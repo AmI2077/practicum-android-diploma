@@ -12,7 +12,6 @@ import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
 import ru.practicum.android.diploma.core.network.HttpCodes
 import ru.practicum.android.diploma.core.network.NetworkResult
 import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
-import java.io.IOException
 
 object RetrofitClient : NetworkClient {
 

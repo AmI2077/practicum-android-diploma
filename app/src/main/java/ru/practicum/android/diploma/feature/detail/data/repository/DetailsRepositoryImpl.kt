@@ -20,7 +20,7 @@ class DetailsRepositoryImpl(
             when(val result = networkClient.fetchVacancyDetails(vacancyId)) {
                 is NetworkResult.Error -> {
                     Result.Error(
-                        result.codeToError(result.code)
+                        result.codeToError()
                     )
                 }
                 is NetworkResult.Success -> {
