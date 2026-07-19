@@ -36,4 +36,25 @@
     <string name="required_experience">Требуемый опыт</string>
     <string name="vacancy_description">Описание вакансии</string>
     <string name="key_skills">Ключевые навыки</string>
+
+    <!-- Заглушки для экрана вакансии -->
+    <string name="placeholder_vacancy_title">Здесь должно быть название вакансии</string>
+    <string name="placeholder_salary">Здесь должна быть зарплата</string>
+    <string name="placeholder_company_name">Здесь должно быть название фирмы</string>
+    <string name="placeholder_city">Здесь должен быть город</string>
+    <string name="placeholder_experience">Здесь должен быть опыт работы</string>
+    <string name="placeholder_employment_type">Здесь должен указываться тип занятости</string>
+    <string name="placeholder_description">Здесь должно быть описание вакансии\n
+        Обязаности\n
+        Разрабатывать новую функциональность приложения\n
+        Помогать с интеграцией нашего SDK в другие приложения\n
+        Проектировать большие новые модули\n
+        Писать UI- и unit-тесты\n
+        Следить за работоспособностью сервиса и устранять технический долг
+    </string>
+    <string name="placeholder_skills">Здесь должны быть ключевые навыки\n
+        Знание классических алгоритмов и структуры данных\n
+        Программирование для Android больше одного года\n
+        Знание WebRTC
+    </string>
 </resources>
