@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.models.VacancyCard
+import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.ui.utils.MockData
 import androidx.core.widget.doOnTextChanged

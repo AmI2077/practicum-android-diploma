@@ -8,8 +8,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.models.VacancyCard
-import ru.practicum.android.diploma.core.models.VacancyCardSalary
+import ru.practicum.android.diploma.core.models.card.VacancyCard
+import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
 import ru.practicum.android.diploma.databinding.ItemVacancyBinding
 import java.util.Locale
 

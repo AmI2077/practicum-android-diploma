@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.core.models
+package ru.practicum.android.diploma.core.models.card
 
 data class VacancyCard(
     val id: String,

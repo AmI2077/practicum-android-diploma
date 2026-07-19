@@ -1,7 +1,7 @@
 package ru.practicum.android.diploma.feature.search.ui.utils
 
-import ru.practicum.android.diploma.core.models.VacancyCard
-import ru.practicum.android.diploma.core.models.VacancyCardSalary
+import ru.practicum.android.diploma.core.models.card.VacancyCard
+import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
 
 object MockData {
     fun getMockVacancies(): List<VacancyCard> {

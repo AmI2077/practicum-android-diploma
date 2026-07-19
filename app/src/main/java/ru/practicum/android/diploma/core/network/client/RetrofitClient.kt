@@ -3,6 +3,7 @@ package ru.practicum.android.diploma.core.network.client
 import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
@@ -10,7 +11,7 @@ import ru.practicum.android.diploma.core.dto.request.VacancyRequestDto
 import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
 import ru.practicum.android.diploma.core.network.HttpCodes
 import ru.practicum.android.diploma.core.network.NetworkResult
-import java.io.IOException
+import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
 
 object RetrofitClient : NetworkClient {
 
@@ -36,8 +37,8 @@ object RetrofitClient : NetworkClient {
     private val apiService = retrofit.create(VacanciesApiService::class.java)
 
     override suspend fun fetchVacancies(vacancyRequestDto: VacancyRequestDto): NetworkResult<VacancyResponseDto?> {
-        return try {
-            val response = apiService.fetchVacancies(
+        return safeApiCall {
+            apiService.fetchVacancies(
                 area = vacancyRequestDto.area,
                 industry = vacancyRequestDto.industry,
                 text = vacancyRequestDto.text,
@@ -45,12 +46,26 @@ object RetrofitClient : NetworkClient {
                 page = vacancyRequestDto.page,
                 onlyWithSalary = vacancyRequestDto.onlyWithSalary
             )
+        }
+    }
+
+    override suspend fun fetchVacancyDetails(vacancyId: String): NetworkResult<VacancyDetailsDto?> {
+        return safeApiCall {
+            apiService.fetchVacancyDetails(vacancyId)
+        }
+    }
+
+    private suspend fun <T>safeApiCall(
+        call: suspend () -> Response<T>
+    ): NetworkResult<T?> {
+        return try {
+            val response = call()
             if (response.isSuccessful) {
                 NetworkResult.Success(response.body())
             } else {
                 NetworkResult.Error(HttpCodes.fromInt(response.code()))
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Log.d("RETROFIT_CLIENT", "FETCH", e)
             NetworkResult.Error(HttpCodes.NO_INTERNET_CONNECTION_ERROR_CODE)
         }
