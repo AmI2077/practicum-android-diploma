@@ -11,6 +11,7 @@ import ru.practicum.android.diploma.core.models.VacancySearchParams
 import ru.practicum.android.diploma.core.network.HttpCodes
 import ru.practicum.android.diploma.core.network.NetworkResult
 import ru.practicum.android.diploma.core.network.client.NetworkClient
+import ru.practicum.android.diploma.core.network.codeToError
 import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
 
 class SearchRepositoryImpl(
@@ -23,7 +24,7 @@ class SearchRepositoryImpl(
             when (val result = networkClient.fetchVacancies(params.toDto())) {
                 is NetworkResult.Error -> {
                     Result.Error(
-                        handleErrorCode(result.code)
+                        result.codeToError(result.code)
                     )
                 }
 
@@ -36,12 +37,4 @@ class SearchRepositoryImpl(
                 }
             }
         }
-
-    private fun handleErrorCode(code: HttpCodes): NetworkErrors {
-        return when (code) {
-            HttpCodes.NO_INTERNET_CONNECTION_ERROR_CODE -> NetworkErrors.NoInternetConnectionError
-            HttpCodes.SERVER_ERROR_CODE -> NetworkErrors.ServerError
-            HttpCodes.NOT_FOUND_ERROR_CODE -> NetworkErrors.NotFoundError
-        }
-    }
 }
