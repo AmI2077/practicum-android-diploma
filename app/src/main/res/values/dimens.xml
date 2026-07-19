@@ -3,13 +3,18 @@
     <dimen name="text_size_12">12sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_32">32sp</dimen>
 
     <dimen name="regular_text_style_line_height">16sp</dimen>
     <dimen name="regular_text_style_line_height_19">19sp</dimen>
     <dimen name="regular_text_style_font_weight">400</dimen>
 
+    <dimen name="medium_text_style_line_height_19">19sp</dimen>
     <dimen name="medium_text_style_line_height">26sp</dimen>
     <dimen name="medium_text_style_font_weight">500</dimen>
+
+    <dimen name="bold_text_style_line_height">38sp</dimen>
+    <dimen name="bold_text_style_font_weight">700</dimen>
 
     <dimen name="bottom_nav_view_divider_height">1dp</dimen>
 
@@ -17,6 +22,8 @@
 
     <dimen name="header_padding_start">16dp</dimen>
     <dimen name="header_margin_end">20dp</dimen>
+    <dimen name="header_margin_buttons">28dp</dimen>
+
 
     <dimen name="search_header_margin_start">16dp</dimen>
     <dimen name="search_field_height">48dp</dimen>
@@ -38,7 +45,7 @@
     <dimen name="recycler_view_margin_top">17dp</dimen>
     <dimen name="recycler_view_padding_bottom">16dp</dimen>
 
-    <dimen name="filter_button_margin_end">16dp</dimen>
+    <dimen name="filter_button_margin_end">20dp</dimen>
 
     <dimen name="item_vacancy_margin_horizontal">16dp</dimen>
     <dimen name="item_vacancy_margin_vertical">9dp</dimen>
@@ -46,5 +53,24 @@
     <dimen name="item_vacancy_logo_corner_radius">12dp</dimen>
     <dimen name="item_vacancy_text_margin_start">12dp</dimen>
 
-    <dimen name="glide_corner_radius">12dp</dimen>
+    <dimen name="corner_radius">12dp</dimen>
+
+    <dimen name="detail_vacancy_padding_horizontal">16dp</dimen>
+    <dimen name="detail_vacancy_padding_vertical">8dp</dimen>
+    <dimen name="detail_vacancy_margin_top_4">4dp</dimen>
+    <dimen name="detail_vacancy_margin_top_8">8dp</dimen>
+    <dimen name="detail_vacancy_margin_top_16">16dp</dimen>
+    <dimen name="card_vacancy_height">80dp</dimen>
+
+    <dimen name="detail_vacancy_padding_top_24">24dp</dimen>
+    <dimen name="detail_vacancy_padding_top_32">32dp</dimen>
+
+    <dimen name="detail_vacancy_margin_start_8">8dp</dimen>
+
+    <dimen name="detail_vacancy_margin_bottom_19">19dp</dimen>
+
+    <dimen name="detail_vacancy_card_logo_size">45dp</dimen>
+
+    <dimen name="detail_vacancy_card_logo_margin">16dp</dimen>
+
 </resources>
