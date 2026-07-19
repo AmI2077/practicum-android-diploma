@@ -3,8 +3,8 @@ package ru.practicum.android.diploma.core.extensions
 import ru.practicum.android.diploma.core.dto.request.VacancyRequestDto
 import ru.practicum.android.diploma.core.dto.response.VacancyCardDto
 import ru.practicum.android.diploma.core.dto.response.VacancyCardSalaryDto
-import ru.practicum.android.diploma.core.models.VacancyCard
-import ru.practicum.android.diploma.core.models.VacancyCardSalary
+import ru.practicum.android.diploma.core.models.card.VacancyCard
+import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
 import ru.practicum.android.diploma.core.models.VacancySearchParams
 
 fun VacancySearchParams.toDto(): VacancyRequestDto {
