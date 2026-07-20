@@ -2,7 +2,10 @@ package ru.practicum.android.diploma.core.di
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+import ru.practicum.android.diploma.core.database.AppDatabase
+import ru.practicum.android.diploma.core.database.dao.VacancyDao
 import ru.practicum.android.diploma.core.network.client.NetworkClient
 import ru.practicum.android.diploma.core.network.client.RetrofitClient
 import ru.practicum.android.diploma.feature.detail.data.repository.DetailsRepositoryImpl
@@ -19,6 +22,11 @@ val dataModule = module {
         DetailsRepositoryImpl(get(), get())
     }
 
+    single<VacancyDao> {
+        get<AppDatabase>().getVacancyDao()
+    }
+
     single<NetworkClient> { RetrofitClient }
+    single<AppDatabase> { AppDatabase.createInstance(androidContext()) }
     single<CoroutineDispatcher> { Dispatchers.IO }
 }
