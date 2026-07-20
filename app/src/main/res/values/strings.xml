@@ -57,4 +57,6 @@
         Программирование для Android больше одного года\n
         Знание WebRTC
     </string>
+
+    <string name="not_specified">Не указано</string>
 </resources>
