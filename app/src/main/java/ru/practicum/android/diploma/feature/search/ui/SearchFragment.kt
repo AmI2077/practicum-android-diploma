@@ -128,10 +128,11 @@ class SearchFragment : Fragment() {
     }
 
     private fun openVacancyDetails(vacancy: VacancyCard) {
-        findNavController().navigate(
-            R.id.action_search_screen_tab_to_vacancyDetailFragment
-        )
+        val action = SearchFragmentDirections
+            .actionSearchScreenTabToVacancyDetailFragment(vacancy.id)
+        findNavController().navigate(action)
     }
+
     // в будущем выполнение запросов в ViewModel
     private fun performSearch(query: String) {
         if (query.isBlank()) {
