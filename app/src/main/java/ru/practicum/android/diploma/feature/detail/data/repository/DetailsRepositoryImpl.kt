@@ -3,6 +3,8 @@ package ru.practicum.android.diploma.feature.detail.data.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.feature.Parser.domain.HtmlParserService
+import ru.practicum.android.diploma.core.database.dao.VacancyDao
+import ru.practicum.android.diploma.core.extensions.toEntity
 import ru.practicum.android.diploma.core.extensions.toModel
 import ru.practicum.android.diploma.core.models.Result
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
@@ -13,6 +15,7 @@ import ru.practicum.android.diploma.feature.detail.domain.api.DetailsRepository
 
 class DetailsRepositoryImpl(
     private val networkClient: NetworkClient,
+    private val vacancyDao: VacancyDao,
     private val dispatcher: CoroutineDispatcher,
     private val htmlParser: HtmlParserService
 ) : DetailsRepository {
@@ -32,5 +35,21 @@ class DetailsRepositoryImpl(
                 }
             }
         }
+    }
+
+    override suspend fun addVacancyToFavourites(vacancyDetails: VacancyDetails) {
+        withContext(dispatcher) {
+            vacancyDao.insertVacancyToFavourites(vacancyDetails.toEntity())
+        }
+    }
+
+    override suspend fun deleteVacancyFromFavourites(vacancyDetails: VacancyDetails) {
+        withContext(dispatcher) {
+            vacancyDao.deleteVacancyFromFavourites(vacancyDetails.toEntity())
+        }
+    }
+
+    private fun parseHtml(raw: String): String {
+       return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
     }
 }

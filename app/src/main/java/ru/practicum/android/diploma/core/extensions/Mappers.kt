@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.core.extensions
 
+import ru.practicum.android.diploma.core.database.entities.VacancyEntity
 import ru.practicum.android.diploma.core.dto.request.VacancyRequestDto
 import ru.practicum.android.diploma.core.dto.response.VacancyCardDto
 import ru.practicum.android.diploma.core.dto.response.VacancyCardSalaryDto
@@ -29,6 +30,45 @@ import ru.practicum.android.diploma.feature.detail.data.dto.SalaryDto
 import ru.practicum.android.diploma.feature.detail.data.dto.ScheduleDto
 import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
 import ru.practicum.android.diploma.feature.Parser.domain.HtmlParserService
+
+fun VacancyDetails.toEntity(): VacancyEntity {
+    return VacancyEntity(
+        id = id,
+        name = name,
+        description = description,
+        salary = salary,
+        address = address,
+        experience = experience,
+        schedule = schedule,
+        employment = employment,
+        contacts = contacts,
+        employer = employer,
+        area = area,
+        skills = skills,
+        url = url,
+        industry = industry
+    )
+}
+
+fun VacancyEntity.toModel(): VacancyDetails {
+    return VacancyDetails(
+        id = id,
+        name = name,
+        description = description,
+        salary = salary,
+        address = address,
+        experience = experience,
+        schedule = schedule,
+        employment = employment,
+        contacts = contacts,
+        employer = employer,
+        area = area,
+        skills = skills,
+        url = url,
+        industry = industry
+    )
+}
+
 fun VacancySearchParams.toDto(): VacancyRequestDto {
     return VacancyRequestDto(
         area = this.area,
