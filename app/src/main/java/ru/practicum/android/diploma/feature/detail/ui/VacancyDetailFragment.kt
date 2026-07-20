@@ -1,7 +1,7 @@
 package ru.practicum.android.diploma.feature.detail.ui
 
 import android.os.Bundle
-import android.text.Html
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -26,8 +27,9 @@ class VacancyDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: VacancyDetailFragmentArgs by navArgs()
-
     private val viewModel: VacancyDetailViewModel by viewModel()
+
+    private lateinit var descriptionAdapter: DescriptionAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,10 +43,19 @@ class VacancyDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupDescriptionRecyclerView()
         setupBackButton()
         observeState()
 
         viewModel.loadVacancyDetail(args.vacancyId)
+    }
+
+    private fun setupDescriptionRecyclerView() {
+        descriptionAdapter = DescriptionAdapter()
+        binding.descriptionRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = descriptionAdapter
+        }
     }
 
     private fun setupBackButton() {
@@ -80,16 +91,12 @@ class VacancyDetailFragment : Fragment() {
             errorServer.isVisible = false
 
             jobTitle.text = vacancy.name
-
             salary.text = formatSalary(vacancy.salary)
-
             company.text = vacancy.employer.name
             loadCompanyLogo(vacancy.employer.logo)
-
             city.text = vacancy.area.name
 
             experience.text = vacancy.experience?.name ?: getString(R.string.not_specified)
-
             val scheduleName = vacancy.schedule?.name ?: ""
             val employmentName = vacancy.employment?.name ?: ""
             employment.text = when {
@@ -99,23 +106,29 @@ class VacancyDetailFragment : Fragment() {
                 else -> getString(R.string.not_specified)
             }
 
-            vacancy.description?.let {
-                description.text = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
-                description.isVisible = true
-            } ?: run {
-                description.isVisible = false
+            if (vacancy.description.isNotEmpty()) {
+                descriptionRecyclerView.isVisible = true
+                descriptionAdapter.submitList(vacancy.description)
+            } else {
+                descriptionRecyclerView.isVisible = false
             }
 
             if (vacancy.skills.isNotEmpty()) {
-                val skillsText = vacancy.skills.joinToString("\n\n") { "• $it" }
+                val skillsText = vacancy.skills.joinToString("\n") { "  •  $it" }
                 skill.text = skillsText
                 skill.isVisible = true
                 skillTitle.isVisible = true
+                val leftPadding = dpToPx(16f)
+                skill.setPadding(leftPadding, 0, 0, 0)
             } else {
                 skill.isVisible = false
                 skillTitle.isVisible = false
             }
         }
+    }
+
+    private fun dpToPx(dp: Float): Int {
+        return Math.round(dp * requireContext().resources.displayMetrics.density)
     }
 
     private fun formatSalary(salary: ru.practicum.android.diploma.core.models.details.Salary?): String {
@@ -173,10 +186,7 @@ class VacancyDetailFragment : Fragment() {
                 .load(logoUrl)
                 .placeholder(R.drawable.ic_placeholder_32)
                 .error(R.drawable.ic_placeholder_32)
-                .transform(
-                    CenterCrop(),
-                    RoundedCorners(cornerRadius)
-                )
+                .transform(CenterCrop(), RoundedCorners(cornerRadius))
                 .into(binding.companyLogo)
         } else {
             binding.companyLogo.setImageResource(R.drawable.ic_placeholder_32)
@@ -188,17 +198,11 @@ class VacancyDetailFragment : Fragment() {
             detailScrollView.isVisible = false
             progressBar.isVisible = false
             errorServer.isVisible = true
-            errorServerImage.setImageResource(R.drawable.ic_vacancy_server_error)
         }
     }
 
-    private fun showNotFound() {
-        showError()
-    }
-
-    private fun showNoInternet() {
-        showError()
-    }
+    private fun showNotFound() = showError()
+    private fun showNoInternet() = showError()
 
     override fun onDestroyView() {
         super.onDestroyView()

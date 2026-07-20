@@ -87,4 +87,6 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    implementation("org.jsoup:jsoup:1.16.1")
+
 }

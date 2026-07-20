@@ -212,29 +212,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/experience" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/descriptionCont"
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/descriptionRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorSurface"
                 android:paddingHorizontal="@dimen/detail_vacancy_padding_horizontal"
                 android:paddingTop="@dimen/detail_vacancy_padding_top_32"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/experienceEmployment">
-
-                <TextView
-                    android:id="@+id/description"
-                    style="@style/RegularTextStyle.16"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/detail_vacancy_margin_top_4"
-                    android:text="@string/placeholder_description"
-                    android:textColor="@color/black"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/descriptionCont" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@+id/experienceEmployment" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/skillsCont"
@@ -245,7 +233,7 @@
                 android:paddingTop="@dimen/detail_vacancy_padding_top_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/descriptionCont">
+                app:layout_constraintTop_toBottomOf="@+id/descriptionRecyclerView">
 
                 <TextView
                     android:id="@+id/skillTitle"
@@ -289,6 +277,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/errorText"
                     style="@style/ErrorTitle"
                     android:text="@string/server_error_title"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -306,7 +295,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

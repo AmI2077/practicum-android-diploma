@@ -28,7 +28,7 @@ import ru.practicum.android.diploma.feature.detail.data.dto.PhoneDto
 import ru.practicum.android.diploma.feature.detail.data.dto.SalaryDto
 import ru.practicum.android.diploma.feature.detail.data.dto.ScheduleDto
 import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
-
+import ru.practicum.android.diploma.feature.Parser.domain.HtmlParserService
 fun VacancySearchParams.toDto(): VacancyRequestDto {
     return VacancyRequestDto(
         area = this.area,
@@ -59,11 +59,11 @@ fun VacancyCardSalaryDto.toModel(): VacancyCardSalary {
     )
 }
 
-fun VacancyDetailsDto.toModel(): VacancyDetails {
+fun VacancyDetailsDto.toModel(htmlParser: HtmlParserService): VacancyDetails {
     return VacancyDetails(
         id = this.id,
         name = this.name,
-        description = this.description,
+        description = htmlParser.parseHtmlToStructured(this.description),
         salary = this.salary?.toModel(),
         address = this.address?.toModel(),
         experience = this.experience?.toModel(),

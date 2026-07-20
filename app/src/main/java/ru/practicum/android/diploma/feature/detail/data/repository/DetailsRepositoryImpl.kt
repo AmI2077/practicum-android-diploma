@@ -1,8 +1,8 @@
 package ru.practicum.android.diploma.feature.detail.data.repository
 
-import androidx.core.text.HtmlCompat
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import ru.practicum.android.diploma.feature.Parser.domain.HtmlParserService
 import ru.practicum.android.diploma.core.extensions.toModel
 import ru.practicum.android.diploma.core.models.Result
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
@@ -14,31 +14,23 @@ import ru.practicum.android.diploma.feature.detail.domain.api.DetailsRepository
 class DetailsRepositoryImpl(
     private val networkClient: NetworkClient,
     private val dispatcher: CoroutineDispatcher,
-): DetailsRepository {
+    private val htmlParser: HtmlParserService
+) : DetailsRepository {
+
     override suspend fun fetchVacancyDetails(vacancyId: String): Result<VacancyDetails?> {
         return withContext(dispatcher) {
-            when(val result = networkClient.fetchVacancyDetails(vacancyId)) {
+            when (val result = networkClient.fetchVacancyDetails(vacancyId)) {
                 is NetworkResult.Error -> {
-                    Result.Error(
-                        result.codeToError()
-                    )
+                    Result.Error(result.codeToError())
                 }
                 is NetworkResult.Success -> {
                     result.data?.let {
-                        val description = parseHtml(it.description)
                         Result.Content(
-                            data = result.data.copy(
-                                description = description
-                            ).toModel()
+                            data = it.toModel(htmlParser)
                         )
                     } ?: Result.Content(null)
                 }
             }
         }
     }
-
-    private fun parseHtml(raw: String): String {
-       return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
-    }
 }
-
