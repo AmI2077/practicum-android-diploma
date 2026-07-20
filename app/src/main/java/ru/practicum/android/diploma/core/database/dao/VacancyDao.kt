@@ -4,16 +4,18 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+import ru.practicum.android.diploma.core.database.entities.VacancyEntity
 
 @Dao
 interface VacancyDao {
 
     @Insert
-    fun insertVacancyToFavourites()
+    suspend fun insertVacancyToFavourites(vacancyEntity: VacancyEntity)
 
-    @Query("SELECT * FROM ")
-    fun getAllVacanciesFromFavourites()
+    @Query("SELECT * FROM Vacancy")
+    fun getAllVacanciesFromFavourites(): Flow<VacancyEntity>
 
     @Delete
-    fun deleteVacancyFromFavourites()
+    suspend fun deleteVacancyFromFavourites(vacancyEntity: VacancyEntity)
 }
