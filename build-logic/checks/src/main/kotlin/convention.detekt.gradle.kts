@@ -80,8 +80,9 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
 // workaround for https://github.com/gradle/gradle/issues/15383
 project.withVersionCatalog { libs ->
     dependencies {
-        add("detekt", libs.staticAnalysis.detektCli)
-        add("detektPlugins", libs.staticAnalysis.detektFormatting)
-        add("detektPlugins", libs.staticAnalysis.detektLibraries)
+        // Используем явные координаты вместо несуществующего libs.staticAnalysis.*
+        add("detekt", "io.gitlab.arturbosch.detekt:detekt-cli:2.6.0")
+        add("detektPlugins", "io.gitlab.arturbosch.detekt:detekt-formatting:2.6.0")
+        add("detektPlugins", "io.gitlab.arturbosch.detekt:detekt-libraries:2.6.0")
     }
 }
