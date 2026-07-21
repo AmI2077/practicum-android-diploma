@@ -2,7 +2,13 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
-    id("convention.detekt")
-    alias(libs.plugins.kotlin.ksp) apply false
-    id("androidx.navigation.safeargs.kotlin") version "2.9.7" apply false
+    alias(libs.plugins.kotlin.kapt)  apply false
+    alias(libs.plugins.hilt.android) apply false
+    alias(libs.plugins.ksp) apply false
+}
+
+buildscript {
+    dependencies {
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.55")
+    }
 }

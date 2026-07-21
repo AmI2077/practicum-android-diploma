@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.practicum.playlistmaker.databinding.FragmentFavouritesBinding
+import ru.practicum.android.diploma.databinding.FragmentFavouritesBinding
 
 class FavouritesFragment : Fragment() {
 

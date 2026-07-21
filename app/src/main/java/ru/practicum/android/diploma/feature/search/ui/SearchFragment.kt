@@ -1,7 +1,9 @@
 package ru.practicum.android.diploma.feature.search.ui
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
@@ -16,6 +18,7 @@ import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchState
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModel
+
 
 /**
  * Что перенесено в SearchViewModel:
@@ -87,7 +90,7 @@ class SearchFragment : Fragment() {
                 viewModel.search(query)
             }
             setOnEditorActionListener { _, actionId, _ ->
-                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     hideKeyboard()
                     true
                 } else {
@@ -117,7 +120,7 @@ class SearchFragment : Fragment() {
         viewModel.state.observe(
             viewLifecycleOwner
         ) { state ->
-            when(state){
+            when (state) {
                 SearchState.Initial -> {
                     showInitialState()
                 }
@@ -131,12 +134,9 @@ class SearchFragment : Fragment() {
                 }
                 SearchState.EmptyResult -> {
                     showEmptyResultState()
-
                 }
                 is SearchState.Error -> {
-
                     when (state.error) {
-
                         NetworkErrors.ServerError -> {
                             showServerErrorState()
                         }
@@ -227,7 +227,7 @@ class SearchFragment : Fragment() {
         )
     }
 
-    private fun hideAllImageStates(){
+    private fun hideAllImageStates() {
         binding.imageStateEmpty.isVisible = false
         binding.errorNoInternet.isVisible = false
         binding.errorNoVacancies.isVisible = false
@@ -243,9 +243,9 @@ class SearchFragment : Fragment() {
 
     private fun showImageState(
         state: ImageState
-    ){
+    ) {
         hideAllImageStates()
-        when(state){
+        when (state) {
             ImageState.EMPTY ->
                 binding.imageStateEmpty.isVisible = true
             ImageState.NO_INTERNET ->
