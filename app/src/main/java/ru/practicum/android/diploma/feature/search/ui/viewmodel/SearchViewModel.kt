@@ -12,6 +12,7 @@ import ru.practicum.android.diploma.core.models.Result
 import ru.practicum.android.diploma.core.models.VacancySearchParams
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.feature.search.domain.usecase.SearchVacanciesUseCase
+import java.util.ArrayList
 
 
 class SearchViewModel(
@@ -21,71 +22,103 @@ class SearchViewModel(
 
     private val _state =
         MutableLiveData<SearchState>(SearchState.Initial)
-
     val state: LiveData<SearchState> = _state
 
-
     private var searchJob: Job? = null
-
+    private var currentQuery = ""
+    private var currentPage = 0
+    private var totalPages = 0
+    private val vacancies = mutableListOf<VacancyCard>()
+    private var isLoadingNextPage = false
 
     companion object {
         private const val SEARCH_DELAY = 2000L
     }
 
-
     fun search(query: String) {
-
         searchJob?.cancel()
-
+        currentQuery = query
 
         if (query.isBlank()) {
+            vacancies.clear()
             _state.value = SearchState.Initial
             return
         }
 
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DELAY)
+            currentPage = 0
+            totalPages = 0
+            vacancies.clear()
+            _state.value = SearchState.Loading
+
+            loadVacancies()
+        }
+    }
+
+    private suspend fun loadVacancies() {
+        val params = VacancySearchParams(
+            text = currentQuery,
+            page = currentPage
+        )
+
+        when (val result = searchVacanciesUseCase(params)) {
+
+            is Result.Content -> {
+
+                totalPages = result.data.pages
+
+                val newVacancies = result.data.vacancies.filter { vacancy ->
+                    vacancies.none { it.id == vacancy.id }
+                }
+
+                vacancies.addAll(newVacancies)
+
+                if (vacancies.isEmpty()) {
+                    _state.value = SearchState.EmptyResult
+                } else {
+                    _state.value = SearchState.Content(
+                        vacancies = vacancies.toList(),
+                        isLoadingNextPage = isLoadingNextPage
+                    )
+                }
+            }
+
+            is Result.Error -> {
+                _state.value = SearchState.Error(result.error)
+            }
+        }
+    }
+    fun loadNextPage() {
+
+        if (isLoadingNextPage) return
+
+        if (currentPage >= totalPages - 1) return
 
         searchJob = viewModelScope.launch {
 
-            delay(SEARCH_DELAY)
+            isLoadingNextPage = true
 
-
-            _state.value = SearchState.Loading
-
-
-            val params = VacancySearchParams(
-                text = query
+            _state.value = SearchState.Content(
+                vacancies = vacancies.toList(),
+                isLoadingNextPage = true
             )
 
+            currentPage++
 
-            when(
-                val result =
-                    searchVacanciesUseCase(params)
-            ) {
+            loadVacancies()
 
-                is Result.Content -> {
+            isLoadingNextPage = false
 
-                    if (result.data.isEmpty()) {
-
-                        _state.value =
-                            SearchState.EmptyResult
-
-                    } else {
-
-                        _state.value =
-                            SearchState.Content(
-                                result.data
-                            )
-                    }
-                }
-                is Result.Error -> {
-
-                    _state.value =
-                        SearchState.Error(
-                            result.error
-                        )
-                }
-            }
+            _state.value = SearchState.Content(
+                vacancies = vacancies.toList(),
+                isLoadingNextPage = false
+            )
         }
+    }
+
+    fun isLoadingNextPage(): Boolean {
+        return isLoadingNextPage
     }
 }
 
@@ -93,7 +126,8 @@ sealed interface SearchState {
     data object Initial : SearchState
     data object Loading : SearchState
     data class Content(
-        val vacancies: List<VacancyCard>
+        val vacancies: List<VacancyCard>,
+        val isLoadingNextPage: Boolean = false
     ) : SearchState
     data object EmptyResult : SearchState
     data class Error(
