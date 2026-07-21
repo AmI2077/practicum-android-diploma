@@ -1,5 +1,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
+import org.gradle.internal.impldep.org.apache.commons.compress.harmony.pack200.PackingUtils.config
 import ru.practicum.android.withVersionCatalog
 
 plugins {
@@ -78,11 +79,10 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
 }
 
 // workaround for https://github.com/gradle/gradle/issues/15383
-project.withVersionCatalog { libs ->
-    dependencies {
-        // Используем явные координаты вместо несуществующего libs.staticAnalysis.*
-        add("detekt", "io.gitlab.arturbosch.detekt:detekt-cli:2.6.0")
-        add("detektPlugins", "io.gitlab.arturbosch.detekt:detekt-formatting:2.6.0")
-        add("detektPlugins", "io.gitlab.arturbosch.detekt:detekt-libraries:2.6.0")
-    }
-}
+//project.withVersionCatalog { libs ->
+//    dependencies {
+//        add("detekt", libs.staticAnalysis.detektCli)
+//        add("detektPlugins", libs.staticAnalysis.detektFormatting)
+//        add("detektPlugins", libs.staticAnalysis.detektLibraries)
+//    }
+//}
