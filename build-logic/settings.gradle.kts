@@ -8,6 +8,9 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    plugins {
+        id("io.gitlab.arturbosch.detekt") version "1.23.8"
+    }
 }
 
 @Suppress("UnstableApiUsage")
@@ -33,3 +36,5 @@ dependencyResolutionManagement {
 include("gradle-ext")
 include(":develop-properties")
 include(":checks")
+println("BUILD LOGIC DIR = ${rootDir}")
+println("CATALOG EXISTS = ${file("../gradle/libs.versions.toml").exists()}")

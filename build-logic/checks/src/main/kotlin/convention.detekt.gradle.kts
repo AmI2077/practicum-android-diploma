@@ -11,7 +11,7 @@ fun Detekt.setupCommonDetektSettings() {
     parallel = true
     autoCorrect = false
     disableDefaultRuleSets = false
-    buildUponDefaultConfig = false
+    buildUponDefaultConfig = true
 
     // workaround for https://github.com/gradle/gradle/issues/15383
     project.withVersionCatalog { libs ->
@@ -70,7 +70,7 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
 
     // workaround for https://github.com/gradle/gradle/issues/15383
     project.withVersionCatalog { libs ->
-        jvmTarget = JavaVersion.valueOf(libs.versions.java.get()).toString()
+        jvmTarget = JavaVersion.toVersion(libs.versions.java.get()).toString()
     }
 
     // Configuration
