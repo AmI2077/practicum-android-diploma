@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     id("ru.practicum.android.diploma.plugins.developproperties")
     id("kotlin-parcelize")
+    id("convention.detekt")
     alias(libs.plugins.hilt.android)
     id("com.google.devtools.ksp")
     alias(libs.plugins.navigation.safeargs)

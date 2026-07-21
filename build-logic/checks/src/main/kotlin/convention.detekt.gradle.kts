@@ -1,6 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
-import org.gradle.internal.impldep.org.apache.commons.compress.harmony.pack200.PackingUtils.config
 import ru.practicum.android.withVersionCatalog
 
 plugins {
