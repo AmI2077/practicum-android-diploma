@@ -21,4 +21,9 @@ interface VacancyDao {
 
     @Delete
     suspend fun deleteVacancyFromFavourites(vacancyEntity: VacancyEntity)
+
+    @Query("SELECT * FROM Vacancy WHERE id = :vacancyId")
+    suspend fun getVacancyFromFavouritesById(
+        vacancyId: String
+    ): VacancyEntity? //получить одну вакансию по id
 }
