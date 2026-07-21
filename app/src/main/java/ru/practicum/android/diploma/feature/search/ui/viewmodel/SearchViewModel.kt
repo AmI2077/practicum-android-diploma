@@ -77,8 +77,6 @@ class SearchViewModel(
                             )
                     }
                 }
-
-
                 is Result.Error -> {
 
                     _state.value =
