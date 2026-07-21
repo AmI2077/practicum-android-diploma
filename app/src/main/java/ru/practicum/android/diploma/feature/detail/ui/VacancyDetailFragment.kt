@@ -15,10 +15,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
-import ru.practicum.android.diploma.databinding.FragmentVacancyDetailBinding
-import ru.practicum.android.diploma.feature.detail.presentation.viewmodel.VacancyDetailState
-import ru.practicum.android.diploma.feature.detail.presentation.viewmodel.VacancyDetailViewModel
+import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailState
+import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailViewModel
 import java.util.Locale
+import kotlin.getValue
+import ru.practicum.android.diploma.databinding.FragmentVacancyDetailBinding
 
 class VacancyDetailFragment : Fragment() {
 

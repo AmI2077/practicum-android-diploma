@@ -4,6 +4,7 @@ import ru.practicum.android.diploma.core.database.entities.VacancyEntity
 import ru.practicum.android.diploma.core.dto.request.VacancyRequestDto
 import ru.practicum.android.diploma.core.dto.response.VacancyCardDto
 import ru.practicum.android.diploma.core.dto.response.VacancyCardSalaryDto
+import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
 import ru.practicum.android.diploma.core.models.VacancySearchParams
@@ -18,6 +19,7 @@ import ru.practicum.android.diploma.core.models.details.Schedule
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
 import ru.practicum.android.diploma.core.models.filter.FilterArea
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
+import ru.practicum.android.diploma.core.models.search.VacancySearchResult
 import ru.practicum.android.diploma.feature.detail.data.dto.AddressDto
 import ru.practicum.android.diploma.feature.detail.data.dto.ContactsDto
 import ru.practicum.android.diploma.feature.detail.data.dto.EmployerDto
@@ -175,3 +177,13 @@ fun FilterIndustryDto.toModel() = FilterIndustry(
     id = this.id,
     name = this.name
 )
+fun VacancyResponseDto.toModel(): VacancySearchResult {
+
+    return VacancySearchResult(
+        vacancies = items.map {
+            it.toModel()
+        },
+        page = page,
+        pages = pages
+    )
+}

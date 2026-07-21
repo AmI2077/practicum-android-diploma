@@ -15,7 +15,7 @@ fun Detekt.setupCommonDetektSettings() {
 
     // workaround for https://github.com/gradle/gradle/issues/15383
     project.withVersionCatalog { libs ->
-        jvmTarget = JavaVersion.valueOf(libs.versions.java.get()).toString()
+        jvmTarget = "JVM_${libs.versions.java.get()}"
     }
 
     // Setup sources for run
@@ -78,10 +78,10 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
 }
 
 // workaround for https://github.com/gradle/gradle/issues/15383
-project.withVersionCatalog { libs ->
-    dependencies {
-        add("detekt", libs.staticAnalysis.detektCli)
-        add("detektPlugins", libs.staticAnalysis.detektFormatting)
-        add("detektPlugins", libs.staticAnalysis.detektLibraries)
-    }
-}
+//project.withVersionCatalog { libs ->
+//    dependencies {
+//        add("detekt", libs.staticAnalysis.detektCli)
+//        add("detektPlugins", libs.staticAnalysis.detektFormatting)
+//        add("detektPlugins", libs.staticAnalysis.detektLibraries)
+//    }
+//}

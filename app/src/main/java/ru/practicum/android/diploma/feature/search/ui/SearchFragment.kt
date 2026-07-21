@@ -7,51 +7,64 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.models.NetworkErrors
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
-import ru.practicum.android.diploma.feature.search.ui.utils.MockData
-import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchState
+import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModel
 
+
+/**
+ * Что перенесено в SearchViewModel:
+ * - выполнение поиска вакансий через SearchVacanciesUseCase
+ * - debounce (задержка перед отправкой запроса)
+ * - формирование параметров поиска VacancySearchParams
+ * - обработка результата поиска (успех / пустой результат / ошибки сети)
+ * - хранение состояния экрана через SearchState
+ *
+ * SearchFragment теперь отвечает только за:
+ * - отображение UI-состояний
+ * - обработку пользовательских действий
+ * - подписку на изменения состояния ViewModel
+ * - навигацию
+ */
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-
+    private val viewModel: SearchViewModel by viewModel()
     private var adapter: VacancyAdapter? = null
-    private var isSearchPerformed = false
-
-    private var searchJob: Job? = null // потом перенести логику в ViewModel
-
-    private companion object {
-        const val SEARCH_DELAY = 2000L
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding =
+            FragmentSearchBinding.inflate(
+                inflater,
+                container,
+                false
+            )
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
         setupSearchEditText()
         setupClearButton()
         setupFilterButton()
-
-        showInitialState()
+        observeState()
     }
 
     private fun setupRecyclerView() {
@@ -59,21 +72,25 @@ class SearchFragment : Fragment() {
             openVacancyDetails(vacancy)
         }
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@SearchFragment.adapter
+            layoutManager =
+                LinearLayoutManager(requireContext())
+            adapter =
+                this@SearchFragment.adapter
         }
     }
 
     private fun setupSearchEditText() {
         binding.searchEditText.apply {
             doOnTextChanged { text, _, _, _ ->
-                handleTextChanged(text.toString())
+                val query = text.toString()
+                binding.clearButton.isVisible =
+                    query.isNotEmpty()
+                binding.searchButton.isVisible =
+                    query.isEmpty()
+                viewModel.search(query)
             }
-
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    cancelDelayedSearch()
-                    performSearch(text.toString())
                     hideKeyboard()
                     true
                 } else {
@@ -83,83 +100,70 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun handleTextChanged(query: String) {
-        binding.clearButton.isVisible = query.isNotEmpty()
-        binding.searchButton.isVisible = query.isEmpty()
-
-        if (query.isEmpty()) {
-            cancelDelayedSearch()
-            isSearchPerformed = false
-            showInitialState()
-            return
-        }
-
-        scheduleSearch(query)
-    }
-
-    private fun scheduleSearch(query: String) {
-        cancelDelayedSearch()
-        searchJob = viewLifecycleOwner.lifecycleScope.launch {
-            delay(SEARCH_DELAY)
-            performSearch(query)
-        }
-    }
-
-    private fun cancelDelayedSearch() {
-        searchJob?.cancel()
-        searchJob = null
-    }
-
     private fun setupClearButton() {
         binding.clearButton.setOnClickListener {
-            cancelDelayedSearch()
-            isSearchPerformed = false
             binding.searchEditText.text?.clear()
-            showInitialState()
             binding.searchEditText.requestFocus()
-            hideKeyboard()
         }
     }
 
     private fun setupFilterButton() {
         binding.filterButton.setOnClickListener {
-            findNavController().navigate(R.id.action_search_screen_tab_to_filterFragment)
+            findNavController()
+                .navigate(
+                    R.id.action_search_screen_tab_to_filterFragment
+                )
         }
     }
 
-    private fun openVacancyDetails(vacancy: VacancyCard) {
-        val action = SearchFragmentDirections
-            .actionSearchScreenTabToVacancyDetailFragment(vacancy.id)
-        findNavController().navigate(action)
-    }
-
-    // в будущем выполнение запросов в ViewModel
-    private fun performSearch(query: String) {
-        if (query.isBlank()) {
-            showInitialState()
-            return
-        }
-
-        isSearchPerformed = true
-
-        showLoadingState()
-        // что бы проверить разные экраны состояний
-        binding.root.postDelayed({
-            when {
-                query.contains("пусто", ignoreCase = true) -> {
+    private fun observeState() {
+        viewModel.state.observe(
+            viewLifecycleOwner
+        ) { state ->
+            when (state) {
+                SearchState.Initial -> {
+                    showInitialState()
+                }
+                SearchState.Loading -> {
+                    showLoadingState()
+                }
+                is SearchState.Content -> {
+                    showSearchResult(
+                        state.vacancies
+                    )
+                }
+                SearchState.EmptyResult -> {
                     showEmptyResultState()
                 }
-                query.contains("ошибка", ignoreCase = true) -> {
-                    showServerErrorState()
-                }
-                query.contains("интернет", ignoreCase = true) -> {
-                    showNoInternetState()
-                }
-                else -> {
-                    showSearchResult(MockData.getMockVacancies(), query)
+                is SearchState.Error -> {
+                    when (state.error) {
+                        NetworkErrors.ServerError -> {
+                            showServerErrorState()
+                        }
+
+                        NetworkErrors.NoInternetConnectionError -> {
+                            showNoInternetState()
+                        }
+
+                        NetworkErrors.NotFoundError -> {
+                            showEmptyResultState()
+                        }
+                    }
                 }
             }
-        }, SEARCH_DELAY)
+        }
+    }
+
+    private fun openVacancyDetails(
+        vacancy: VacancyCard
+    ) {
+        val action =
+            SearchFragmentDirections
+                .actionSearchScreenTabToVacancyDetailFragment(
+                    vacancy.id
+                )
+        findNavController()
+            .navigate(action)
     }
 
     private fun showInitialState() {
@@ -167,27 +171,28 @@ class SearchFragment : Fragment() {
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
         hideAllImageStates()
-        if (!isSearchPerformed) {
-            showImageState(ImageState.EMPTY)
-        }
+        binding.imageStateEmpty.isVisible = true
     }
 
     private fun showLoadingState() {
         hideAllImageStates()
+        binding.progressBar.isVisible = true
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
-        binding.progressBar.isVisible = true
-    }
 
-    private fun showSearchResult(vacancies: List<VacancyCard>, query: String) {
+    }
+    private fun showSearchResult(
+        vacancies: List<VacancyCard>
+    ) {
         hideAllImageStates()
         binding.progressBar.isVisible = false
-        binding.statusContainer.isVisible = true
-        binding.statusVacancies.text = getString(
-            R.string.vacancies_found,
-            vacancies.size
-        )
         binding.recyclerView.isVisible = true
+        binding.statusContainer.isVisible = true
+        binding.statusVacancies.text =
+            getString(
+                R.string.vacancies_found,
+                vacancies.size
+            )
         adapter?.submitList(vacancies)
     }
 
@@ -195,24 +200,31 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = true
-        binding.statusVacancies.text = getString(R.string.vacancies_not_found)
-        showImageState(ImageState.NO_VACANCIES)
-    }
-
-    private fun showNoInternetState() {
-        binding.progressBar.isVisible = false
-        binding.recyclerView.isVisible = false
-        binding.statusContainer.isVisible = false
-        hideAllImageStates()
-        showImageState(ImageState.NO_INTERNET)
+        binding.statusVacancies.text =
+            getString(
+                R.string.vacancies_not_found
+            )
+        showImageState(
+            ImageState.NO_VACANCIES
+        )
     }
 
     private fun showServerErrorState() {
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
-        hideAllImageStates()
-        showImageState(ImageState.SERVER_ERROR)
+        showImageState(
+            ImageState.SERVER_ERROR
+        )
+    }
+
+    private fun showNoInternetState() {
+        binding.progressBar.isVisible = false
+        binding.recyclerView.isVisible = false
+        binding.statusContainer.isVisible = false
+        showImageState(
+            ImageState.NO_INTERNET
+        )
     }
 
     private fun hideAllImageStates() {
@@ -229,28 +241,28 @@ class SearchFragment : Fragment() {
         SERVER_ERROR
     }
 
-    private fun showImageState(state: ImageState) {
+    private fun showImageState(
+        state: ImageState
+    ) {
         hideAllImageStates()
         when (state) {
-            ImageState.EMPTY -> {
+            ImageState.EMPTY ->
                 binding.imageStateEmpty.isVisible = true
-            }
-            ImageState.NO_INTERNET -> {
+            ImageState.NO_INTERNET ->
                 binding.errorNoInternet.isVisible = true
-            }
-            ImageState.NO_VACANCIES -> {
+            ImageState.NO_VACANCIES ->
                 binding.errorNoVacancies.isVisible = true
-            }
-            ImageState.SERVER_ERROR -> {
+            ImageState.SERVER_ERROR ->
                 binding.errorServer.isVisible = true
-            }
         }
     }
 
-    private fun hideKeyboard() {
-        val imm = requireContext().getSystemService(
-            InputMethodManager::class.java
-        )
+    private fun hideKeyboard(){
+        val imm =
+            requireContext()
+                .getSystemService(
+                    InputMethodManager::class.java
+                )
         imm?.hideSoftInputFromWindow(
             binding.searchEditText.windowToken,
             0
@@ -259,7 +271,6 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        cancelDelayedSearch()
         _binding = null
     }
 }
