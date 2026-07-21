@@ -15,7 +15,7 @@ fun Detekt.setupCommonDetektSettings() {
 
     // workaround for https://github.com/gradle/gradle/issues/15383
     project.withVersionCatalog { libs ->
-        jvmTarget = JavaVersion.valueOf(libs.versions.java.get()).toString()
+        jvmTarget = "JVM_${libs.versions.java.get()}"
     }
 
     // Setup sources for run
