@@ -60,33 +60,45 @@ android {
 }
 
 dependencies {
+    // AndroidX
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
-    testImplementation(libs.junit)
-    implementation(libs.glide)
+
+    // Network
     implementation(libs.retrofit)
-    implementation(libs.converter.gson)
     implementation(libs.okhttp.logging)
 
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    // Gson
+    implementation(libs.converter.gson)
+
+    // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+
+    // Koin
     implementation (libs.koin.android)
     implementation (libs.koin.androidx.workmanager)
 
-    // Glide annotation processor
-    annotationProcessor(libs.compiler)
+    // Glide
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
 
-    implementation ("androidx.viewpager2:viewpager2:1.1.0")
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.6")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.7.6")
+    // Navigation
+    implementation (libs.androidx.navigation.fragment.ktx)
+    implementation (libs.androidx.navigation.ui.ktx)
+
+    // Lifecycle
     implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
+    //Testing
+    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
