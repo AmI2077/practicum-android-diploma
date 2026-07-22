@@ -20,6 +20,9 @@ import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailVie
 import java.util.Locale
 import kotlin.getValue
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailBinding
+import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailNavigationCommand
+import ru.practicum.android.diploma.feature.sharing.domain.SharingInteractor
+import org.koin.android.ext.android.inject
 
 class VacancyDetailFragment : Fragment() {
 
@@ -29,6 +32,8 @@ class VacancyDetailFragment : Fragment() {
     private val args: VacancyDetailFragmentArgs by navArgs()
 
     private val viewModel: VacancyDetailViewModel by viewModel()
+
+    private val sharingInteractor: SharingInteractor by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +48,10 @@ class VacancyDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupBackButton()
+        setupShareButton()
         observeState()
+        observeNavigation()
+
 
         viewModel.loadVacancyDetail(args.vacancyId)
     }
@@ -51,6 +59,15 @@ class VacancyDetailFragment : Fragment() {
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
+        }
+    }
+
+    private fun setupShareButton() {
+        binding.sharingButton.setOnClickListener {
+            val currentState = viewModel.state.value
+            if (currentState is VacancyDetailState.Content) {
+                viewModel.onShareClick(currentState.vacancy.url)
+            }
         }
     }
 
@@ -62,6 +79,19 @@ class VacancyDetailFragment : Fragment() {
                 is VacancyDetailState.Error -> showError()
                 is VacancyDetailState.NotFound -> showNotFound()
                 is VacancyDetailState.NoInternet -> showNoInternet()
+            }
+        }
+    }
+
+    private fun observeNavigation() {
+        viewModel.navigationCommand.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { command ->
+                when (command) {
+                    is VacancyDetailNavigationCommand.ShareVacancy -> {
+                        val shareIntent = sharingInteractor.createShareIntent(command.url)
+                        startActivity(shareIntent)
+                    }
+                }
             }
         }
     }
@@ -87,7 +117,8 @@ class VacancyDetailFragment : Fragment() {
             company.text = vacancy.employer.name
             loadCompanyLogo(vacancy.employer.logo)
 
-            city.text = vacancy.area.name
+            val locationText = vacancy.address?.raw ?: vacancy.area.name
+            city.text = locationText
 
             experience.text = vacancy.experience?.name ?: getString(R.string.not_specified)
 
@@ -108,7 +139,7 @@ class VacancyDetailFragment : Fragment() {
             }
 
             if (vacancy.skills.isNotEmpty()) {
-                val skillsText = vacancy.skills.joinToString("\n\n") { "• $it" }
+                val skillsText = vacancy.skills.joinToString("\n") { "• $it" }
                 skill.text = skillsText
                 skill.isVisible = true
                 skillTitle.isVisible = true
@@ -116,6 +147,7 @@ class VacancyDetailFragment : Fragment() {
                 skill.isVisible = false
                 skillTitle.isVisible = false
             }
+            displayContacts(vacancy.contacts)
         }
     }
 
@@ -133,12 +165,15 @@ class VacancyDetailFragment : Fragment() {
                 "${getString(R.string.salary_from)} ${formatNumber(from)} " +
                     "${getString(R.string.salary_to)} ${formatNumber(to)} $currencySymbol"
             }
+
             from != null -> {
                 "${getString(R.string.salary_from)} ${formatNumber(from)} $currencySymbol"
             }
+
             to != null -> {
                 "${getString(R.string.salary_to)} ${formatNumber(to)} $currencySymbol"
             }
+
             else -> {
                 getString(R.string.salary_not_specified)
             }
@@ -190,6 +225,54 @@ class VacancyDetailFragment : Fragment() {
             progressBar.isVisible = false
             errorServer.isVisible = true
             errorServerImage.setImageResource(R.drawable.ic_vacancy_server_error)
+        }
+    }
+
+    private fun displayContacts(contacts: ru.practicum.android.diploma.core.models.details.Contacts?) {
+        with(binding) {
+            if (contacts == null) {
+                contactsCont.isVisible = false
+                return
+            }
+
+            contactsCont.isVisible = true
+
+            val hasName = !contacts.name.isNullOrEmpty()
+            contactNameLabel.isVisible = hasName
+            contactName.text = contacts.name ?: ""
+            contactName.isVisible = hasName
+
+            val hasEmail = !contacts.email.isNullOrEmpty()
+            contactEmailLabel.isVisible = hasEmail
+            contactEmail.text = contacts.email ?: ""
+            contactEmail.isVisible = hasEmail
+
+            val phones = contacts.phones
+            val hasPhone = !phones.isNullOrEmpty()
+
+            if (hasPhone) {
+                val phone = phones.first()
+
+                contactPhoneLabel.isVisible = true
+                contactPhone.text = phone.formatted ?: ""
+                contactPhone.isVisible = true
+
+                val hasComment = !phone.comment.isNullOrEmpty()
+                contactPhoneCommentLabel.isVisible = hasComment
+                contactPhoneComment.text = phone.comment ?: ""
+                contactPhoneComment.isVisible = hasComment
+            } else {
+                contactPhoneLabel.isVisible = false
+                contactPhone.isVisible = false
+                contactPhoneCommentLabel.isVisible = false
+                contactPhoneComment.isVisible = false
+            }
+
+            val hasAnyContactInfo = hasName || hasEmail || hasPhone
+
+            if (!hasAnyContactInfo) {
+                contactsCont.isVisible = false
+            }
         }
     }
 

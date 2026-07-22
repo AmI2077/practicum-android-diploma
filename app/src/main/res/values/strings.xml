@@ -36,6 +36,11 @@
     <string name="required_experience">Требуемый опыт</string>
     <string name="vacancy_description">Описание вакансии</string>
     <string name="key_skills">Ключевые навыки</string>
+    <string name="contacts">Контакты</string>
+    <string name="contact_name_label">ФИО:</string>
+    <string name="contact_email_label">Почта:</string>
+    <string name="contact_phone_label">Телефон:</string>
+    <string name="contact_comment_label">Доп. информация:</string>
 
     <!-- Заглушки для экрана вакансии -->
     <string name="placeholder_vacancy_title">Здесь должно быть название вакансии</string>
@@ -59,4 +64,7 @@
     </string>
 
     <string name="not_specified">Не указано</string>
+    <string name="no_contacts">Контакты не указаны</string>
+
+    <string name="share_vacancy">Поделиться вакансией</string>
 </resources>
