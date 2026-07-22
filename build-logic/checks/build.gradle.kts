@@ -4,7 +4,6 @@ plugins {
 
 group = "ru.practicum.android.buildlogic"
 
-
 dependencies {
     implementation(projects.gradleExt)
     implementation(libs.staticAnalysis.detektPlugin)
