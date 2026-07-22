@@ -53,4 +53,10 @@ val dataModule = module {
     single<CoroutineDispatcher> {
         Dispatchers.IO
     }
+
+    // Компоненты для фичи Sharing (из ветки develop)
+    single<SharingRepository> { SharingRepositoryImpl(context = androidContext()) }
+    single<SharingInteractor> { SharingInteractorImpl(repository = get()) }
+}
+
 }
