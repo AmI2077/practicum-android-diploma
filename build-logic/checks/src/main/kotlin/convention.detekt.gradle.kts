@@ -77,7 +77,7 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
     config.setFrom(files(project.rootDir.resolve("conf/detekt.yml")))
 }
 
-// workaround for https://github.com/gradle/gradle/issues/15383
+//workaround for https://github.com/gradle/gradle/issues/15383
 project.withVersionCatalog { libs ->
     dependencies {
         add("detekt", libs.staticAnalysis.detektCli)

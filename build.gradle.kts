@@ -3,6 +3,5 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     id("convention.detekt")
-    alias(libs.plugins.kotlin.ksp) apply false
-    id("androidx.navigation.safeargs.kotlin") version "2.9.7" apply false
+    alias(libs.plugins.ksp) apply false
 }
