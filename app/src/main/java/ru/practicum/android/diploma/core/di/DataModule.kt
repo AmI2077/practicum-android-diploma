@@ -14,6 +14,10 @@ import ru.practicum.android.diploma.feature.favourites.data.repository.Favourite
 import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepository
 import ru.practicum.android.diploma.feature.search.data.SearchRepositoryImpl
 import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
+import ru.practicum.android.diploma.feature.sharing.data.SharingRepositoryImpl
+import ru.practicum.android.diploma.feature.sharing.domain.SharingInteractor
+import ru.practicum.android.diploma.feature.sharing.domain.SharingInteractorImpl
+import ru.practicum.android.diploma.feature.sharing.domain.SharingRepository
 
 val dataModule = module {
     single<SearchRepository> {
@@ -59,4 +63,10 @@ val dataModule = module {
     single<SharingInteractor> { SharingInteractorImpl(repository = get()) }
 }
 
+    single<SharingRepository> { SharingRepositoryImpl(context = androidContext()) }
+    single<SharingInteractor> { SharingInteractorImpl(repository = get()) }
+
+    single<NetworkClient> { RetrofitClient }
+    single<AppDatabase> { AppDatabase.createInstance(androidContext()) }
+    single<CoroutineDispatcher> { Dispatchers.IO }
 }

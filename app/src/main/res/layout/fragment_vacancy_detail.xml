@@ -66,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
+            android:paddingBottom="@dimen/detail_vacancy_padding_bottom_24"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
@@ -133,7 +134,7 @@
                         android:id="@+id/companyLogo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="?attr/colorSurface"
+                        android:background="@color/whiteUniversal"
                         android:scaleType="centerCrop"
                         tools:src="@drawable/ic_placeholder_32" />
                 </androidx.cardview.widget.CardView>
@@ -267,6 +268,125 @@
                     android:textColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/skillTitle" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contactsCont"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorSurface"
+                android:paddingHorizontal="@dimen/detail_vacancy_padding_horizontal"
+                android:paddingTop="@dimen/detail_vacancy_padding_top_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/skillsCont">
+
+                <TextView
+                    android:id="@+id/contactTitle"
+                    style="@style/MediumTextStyle.22"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contacts"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/contactsCont" />
+
+                <TextView
+                    android:id="@+id/contactNameLabel"
+                    style="@style/MediumTextStyle.16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/detail_vacancy_margin_top_16"
+                    android:text="@string/contact_name_label"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/contactTitle" />
+
+                <TextView
+                    android:id="@+id/contactName"
+                    style="@style/RegularTextStyle.16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/detail_vacancy_margin_top_4"
+                    android:textColor="@color/black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/contactNameLabel"
+                    app:layout_constraintTop_toTopOf="@+id/contactNameLabel"
+                    tools:text="Иван Иванов" />
+
+                <TextView
+                    android:id="@+id/contactEmailLabel"
+                    style="@style/MediumTextStyle.16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/detail_vacancy_margin_top_8"
+                    android:text="@string/contact_email_label"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/contactName" />
+
+                <TextView
+                    android:id="@+id/contactEmail"
+                    style="@style/RegularTextStyle.16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/detail_vacancy_margin_top_4"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/black"
+                    android:autoLink="email"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/contactEmailLabel"
+                    app:layout_constraintTop_toTopOf="@+id/contactEmailLabel"
+                    tools:text="ivan@company.ru" />
+
+                <TextView
+                    android:id="@+id/contactPhoneLabel"
+                    style="@style/MediumTextStyle.16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/detail_vacancy_margin_top_8"
+                    android:text="@string/contact_phone_label"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/contactEmail" />
+
+                <TextView
+                    android:id="@+id/contactPhone"
+                    style="@style/RegularTextStyle.16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/detail_vacancy_margin_top_4"
+                    android:textColor="@color/black"
+                    android:textColorLink="@color/black"
+                    android:autoLink="phone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/contactPhoneLabel"
+                    app:layout_constraintTop_toTopOf="@+id/contactPhoneLabel"
+                    tools:text="+7 (999) 123-45-67" />
+
+                <TextView
+                    android:id="@+id/contactPhoneCommentLabel"
+                    style="@style/MediumTextStyle.16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/detail_vacancy_margin_top_8"
+                    android:text="@string/contact_comment_label"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/contactPhone" />
+
+                <TextView
+                    android:id="@+id/contactPhoneComment"
+                    style="@style/RegularTextStyle.16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/detail_vacancy_margin_top_4"
+                    android:textColor="@color/black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/contactPhoneCommentLabel"
+                    app:layout_constraintTop_toTopOf="@+id/contactPhoneCommentLabel"
+                    tools:text="Доб. 123" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
