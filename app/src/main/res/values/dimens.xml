@@ -74,4 +74,6 @@
 
     <dimen name="detail_vacancy_card_logo_margin">16dp</dimen>
 
+
+    <dimen name="team_padding_vertical">16dp</dimen>
 </resources>
