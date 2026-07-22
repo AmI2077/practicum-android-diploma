@@ -13,6 +13,7 @@ import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
 import ru.practicum.android.diploma.databinding.ItemVacancyBinding
 import java.util.Locale
 
+
 class VacancyAdapter(
     private val onItemClick: (VacancyCard) -> Unit
 ) : RecyclerView.Adapter<VacancyAdapter.VacancyViewHolder>() {

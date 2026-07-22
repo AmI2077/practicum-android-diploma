@@ -17,22 +17,40 @@ import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
 
 val dataModule = module {
     single<SearchRepository> {
-        SearchRepositoryImpl(get(), get())
+        SearchRepositoryImpl(
+            networkClient = get(),
+            dispatcher = get()
+        )
     }
 
     single<DetailsRepository> {
-        DetailsRepositoryImpl(get(), get(), get())
+        DetailsRepositoryImpl(
+            networkClient = get(),
+//            vacancyDao = get(),
+            dispatcher = get()
+        )
     }
 
     single<FavouritesRepository> {
-        FavouritesRepositoryImpl(get(), get())
+        FavouritesRepositoryImpl(
+            vacancyDao = get(),
+            dispatcher = get()
+        )
     }
 
     single<VacancyDao> {
         get<AppDatabase>().getVacancyDao()
     }
 
-    single<NetworkClient> { RetrofitClient }
-    single<AppDatabase> { AppDatabase.createInstance(androidContext()) }
-    single<CoroutineDispatcher> { Dispatchers.IO }
+    single<NetworkClient> {
+        RetrofitClient
+    }
+
+    single<AppDatabase> {
+        AppDatabase.createInstance(androidContext())
+    }
+
+    single<CoroutineDispatcher> {
+        Dispatchers.IO
+    }
 }

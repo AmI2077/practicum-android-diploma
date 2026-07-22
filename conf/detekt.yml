@@ -773,3 +773,17 @@ style:
         excludeImports: [ 'java.util.*', 'kotlinx.android.synthetic.*' ]
         excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**' ]
 
+libraries:
+    # Выключено, потому что наши core-модули могут выставлять наружу data class-ы
+    ForbiddenPublicDataClass:
+        active: false
+        excludes: [ '**' ]
+        ignorePackages: [ '*.internal', '*.internal.*' ]
+    LibraryCodeMustSpecifyReturnType:
+        active: true
+        excludes: [ '**' ]
+    # Выключено, потому что наши core-модули могут выставлять наружу свои классы,
+    # не закрытые интерфейсами
+    LibraryEntitiesShouldNotBePublic:
+        active: false
+        excludes: [ '**' ]

@@ -1,17 +1,13 @@
 plugins {
     `kotlin-dsl`
-    id("io.gitlab.arturbosch.detekt")
 }
 
 group = "ru.practicum.android.buildlogic"
 
-
 dependencies {
     implementation(projects.gradleExt)
 
-    implementation(libs.detekt.gradle.plugin)
-
-    detektPlugins(libs.detekt.formatting)
-
+    implementation(libs.staticAnalysis.detektPlugin)
+    // workaround for https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }

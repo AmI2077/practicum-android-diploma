@@ -23,91 +23,65 @@ class VacancyDetailViewModel(
 
     private var currentVacancy: VacancyDetails? = null
 
-    fun loadVacancyDetail(
-        vacancyId: String
-    ) {
-        _state.value =
-            VacancyDetailState.Loading
+    fun loadVacancyDetail(vacancyId: String) {
+        _state.value = VacancyDetailState.Loading
 
         viewModelScope.launch {
+            val result = getVacancyDetailUseCase(vacancyId)
 
-            getVacancyDetailUseCase(vacancyId)
-                .collect { result ->
+            when (result) {
+                is Result.Content -> {
+                    val vacancy = result.data
 
-                    when(result) {
+                    if (vacancy != null) {
+                        currentVacancy = vacancy
 
-                        is Result.Content -> {
+                        val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
 
-                            val vacancy = result.data
-
-                            if (vacancy != null) {
-
-                                currentVacancy = vacancy
-
-                                checkFavouriteStatus(vacancy)
-
-                            } else {
-
-
-                                _state.value =
-                                    VacancyDetailState.NotFound
-
-                            }
-                        }
-
-                        is Result.Error -> {
-
-                            _state.value =
-                                when(result.error) {
-
-                                    NetworkErrors.NoInternetConnectionError ->
-                                        VacancyDetailState.NoInternet
-
-                                    NetworkErrors.NotFoundError ->
-                                        VacancyDetailState.NotFound
-
-                                    NetworkErrors.ServerError ->
-                                        VacancyDetailState.Error
-                                }
-                        }
+                        _state.value = VacancyDetailState.Content(
+                            vacancy = vacancy,
+                            isFavourite = isFavourite
+                        )
+                    } else {
+                        _state.value = VacancyDetailState.NotFound
                     }
                 }
+
+                is Result.Error -> {
+                    _state.value = when (result.error) {
+                        NetworkErrors.NoInternetConnectionError -> VacancyDetailState.NoInternet
+                        NetworkErrors.NotFoundError -> VacancyDetailState.NotFound
+                        NetworkErrors.ServerError -> VacancyDetailState.Error
+                    }
+                }
+            }
         }
     }
-    private fun checkFavouriteStatus(
-        vacancy: VacancyDetails
-    ) {
-        viewModelScope.launch {
-            val isFavourite =
-                favouritesInteractor
-                    .isVacancyFavourite(vacancy.id)
-            _state.value =
-                VacancyDetailState.Content(
-                    vacancy = vacancy,
-                    isFavourite = isFavourite
-                )
-        }
-    }
+
 
     fun addToFavourite() {
+        currentVacancy?.let { vacancy ->
+            viewModelScope.launch {
+                favouritesInteractor.addVacancyToFavourites(vacancy)
 
-        viewModelScope.launch {
-            currentVacancy?.let { vacancy ->
-                favouritesInteractor
-                    .addVacancyToFavourites(vacancy)
-                checkFavouriteStatus(vacancy)
+                // Перепроверяем статус, чтобы UI был консистентным
+                val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
+
+                _state.value = (state.value as? VacancyDetailState.Content)?.copy(isFavourite = isFavourite)
             }
         }
     }
 
     fun removeFromFavourite() {
-        viewModelScope.launch {
-            currentVacancy?.let { vacancy ->
-                favouritesInteractor
-                    .deleteVacancyFromFavourites(vacancy)
-                checkFavouriteStatus(vacancy)
+        currentVacancy?.let { vacancy ->
+            viewModelScope.launch {
+                favouritesInteractor.deleteVacancyFromFavourites(vacancy)
 
+                val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
+
+                _state.value = (state.value as? VacancyDetailState.Content)?.copy(isFavourite = isFavourite)
             }
         }
     }
+
 }

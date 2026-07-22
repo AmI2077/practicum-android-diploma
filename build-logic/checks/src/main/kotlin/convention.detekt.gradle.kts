@@ -11,11 +11,11 @@ fun Detekt.setupCommonDetektSettings() {
     parallel = true
     autoCorrect = false
     disableDefaultRuleSets = false
-    buildUponDefaultConfig = true
+    buildUponDefaultConfig = false
 
     // workaround for https://github.com/gradle/gradle/issues/15383
     project.withVersionCatalog { libs ->
-        jvmTarget = "JVM_${libs.versions.java.get()}"
+        jvmTarget = JavaVersion.valueOf(libs.versions.java.get()).toString()
     }
 
     // Setup sources for run
@@ -70,7 +70,7 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
 
     // workaround for https://github.com/gradle/gradle/issues/15383
     project.withVersionCatalog { libs ->
-        jvmTarget = JavaVersion.toVersion(libs.versions.java.get()).toString()
+        jvmTarget = JavaVersion.valueOf(libs.versions.java.get()).toString()
     }
 
     // Configuration
@@ -78,10 +78,10 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
 }
 
 // workaround for https://github.com/gradle/gradle/issues/15383
-//project.withVersionCatalog { libs ->
-//    dependencies {
-//        add("detekt", libs.staticAnalysis.detektCli)
-//        add("detektPlugins", libs.staticAnalysis.detektFormatting)
-//        add("detektPlugins", libs.staticAnalysis.detektLibraries)
-//    }
-//}
+project.withVersionCatalog { libs ->
+    dependencies {
+        add("detekt", libs.staticAnalysis.detektCli)
+        add("detektPlugins", libs.staticAnalysis.detektFormatting)
+        add("detektPlugins", libs.staticAnalysis.detektLibraries)
+    }
+}

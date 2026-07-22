@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 
 includeBuild("build-logic")
-
 include(":app")
