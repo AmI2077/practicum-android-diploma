@@ -37,7 +37,6 @@
     <string name="vacancy_description">Описание вакансии</string>
     <string name="key_skills">Ключевые навыки</string>
     <string name="contacts">Контакты</string>
-    <string name="phone">Телефон</string>
     <string name="contact_name_label">ФИО:</string>
     <string name="contact_email_label">Почта:</string>
     <string name="contact_phone_label">Телефон:</string>
@@ -66,4 +65,6 @@
 
     <string name="not_specified">Не указано</string>
     <string name="no_contacts">Контакты не указаны</string>
+
+    <string name="share_vacancy">Поделиться вакансией</string>
 </resources>

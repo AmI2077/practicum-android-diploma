@@ -20,6 +20,9 @@ import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailVie
 import java.util.Locale
 import kotlin.getValue
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailBinding
+import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailNavigationCommand
+import ru.practicum.android.diploma.feature.sharing.domain.SharingInteractor
+import org.koin.android.ext.android.inject
 
 class VacancyDetailFragment : Fragment() {
 
@@ -29,6 +32,8 @@ class VacancyDetailFragment : Fragment() {
     private val args: VacancyDetailFragmentArgs by navArgs()
 
     private val viewModel: VacancyDetailViewModel by viewModel()
+
+    private val sharingInteractor: SharingInteractor by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +48,10 @@ class VacancyDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupBackButton()
+        setupShareButton()
         observeState()
+        observeNavigation()
+
 
         viewModel.loadVacancyDetail(args.vacancyId)
     }
@@ -51,6 +59,15 @@ class VacancyDetailFragment : Fragment() {
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
+        }
+    }
+
+    private fun setupShareButton() {
+        binding.sharingButton.setOnClickListener {
+            val currentState = viewModel.state.value
+            if (currentState is VacancyDetailState.Content) {
+                viewModel.onShareClick(currentState.vacancy.url)
+            }
         }
     }
 
@@ -62,6 +79,19 @@ class VacancyDetailFragment : Fragment() {
                 is VacancyDetailState.Error -> showError()
                 is VacancyDetailState.NotFound -> showNotFound()
                 is VacancyDetailState.NoInternet -> showNoInternet()
+            }
+        }
+    }
+
+    private fun observeNavigation() {
+        viewModel.navigationCommand.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { command ->
+                when (command) {
+                    is VacancyDetailNavigationCommand.ShareVacancy -> {
+                        val shareIntent = sharingInteractor.createShareIntent(command.url)
+                        startActivity(shareIntent)
+                    }
+                }
             }
         }
     }
