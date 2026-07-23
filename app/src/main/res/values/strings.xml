@@ -68,6 +68,18 @@
 
     <string name="share_vacancy">Поделиться вакансией</string>
 
+    <string name="work_place_hint">Место работы</string>
+    <string name="industry_hint">Отрасль</string>
+    <string name="expected_salary">Ожидаемая зарплата</string>
+    <string name="enter_salary_hint">Введите сумму</string>
+    <string name="hide_without_salary">Не показывать без зарплаты</string>
+
+    <string name="industry_selection_title">Выбор отрасли</string>
+    <string name="search_industry_hint">Введите отрасль</string>
+
+    <string name="work_place_title">Выбор места работы</string>
+    <string name="plaintive_cries_of_kittens">Заглушка\n Нас всего трое и у нас лапки!!!</string>
+
 
     <!-- Team -->
     <string name="team_title">Над приложением работали</string>

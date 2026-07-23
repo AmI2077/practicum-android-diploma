@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@id/header">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/searchFieldContainer"
+            android:id="@+id/searchIndustryContainer"
             android:layout_width="0dp"
             android:layout_height="@dimen/search_field_height"
             android:layout_marginStart="@dimen/search_field_margin_horizontal"
@@ -93,7 +93,7 @@
             app:cardBackgroundColor="?attr/colorPrimaryContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/searchFieldContainer">
+            app:layout_constraintTop_toBottomOf="@id/searchIndustryContainer">
 
             <TextView
                 android:id="@+id/statusVacancies"

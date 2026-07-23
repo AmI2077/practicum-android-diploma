@@ -34,7 +34,16 @@
         android:id="@+id/filter_screen"
         android:name="ru.practicum.android.diploma.feature.search.ui.FilterFragment"
         android:label="FilterFragment"
-        tools:layout="@layout/fragment_filter"/>
+        tools:layout="@layout/fragment_filter">
+
+        <action
+            android:id="@+id/action_filter_screen_to_work_place_filter"
+            app:destination="@id/work_place_filter" />
+
+        <action
+            android:id="@+id/action_filter_screen_to_industry_filter"
+            app:destination="@id/industry_filter" />
+    </fragment>
 
     <fragment
         android:id="@+id/vacancyDetailFragment"
@@ -45,5 +54,17 @@
             android:name="vacancyId"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/work_place_filter"
+        android:name="ru.practicum.android.diploma.feature.filter.ui.WorkPlaceFilterFragment"
+        android:label="WorkPlaceFilterFragment"
+        tools:layout="@layout/fragment_work_place_filter" />
+
+    <fragment
+        android:id="@+id/industry_filter"
+        android:name="ru.practicum.android.diploma.feature.filter.ui.IndustryFilterFragment"
+        android:label="IndustryFilterFragment"
+        tools:layout="@layout/fragment_industry_filter" />
 
 </navigation>
