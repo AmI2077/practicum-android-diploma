@@ -30,7 +30,7 @@ val dataModule = module {
     single<DetailsRepository> {
         DetailsRepositoryImpl(
             networkClient = get(),
-            vacancyDao = get(),
+//            vacancyDao = get(),
             dispatcher = get()
         )
     }

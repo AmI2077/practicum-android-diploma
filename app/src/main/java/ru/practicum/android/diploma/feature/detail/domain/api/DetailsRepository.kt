@@ -8,16 +8,4 @@ interface DetailsRepository {
     suspend fun fetchVacancyDetails(
         vacancyId: String
     ): Result<VacancyDetails?>
-
-    suspend fun addVacancyToFavourites(
-        vacancyDetails: VacancyDetails
-    )
-
-    suspend fun deleteVacancyFromFavourites(
-        vacancyDetails: VacancyDetails
-    )
-
-    suspend fun isVacancyFavourite(
-        vacancyId: String
-    ): Boolean
 }

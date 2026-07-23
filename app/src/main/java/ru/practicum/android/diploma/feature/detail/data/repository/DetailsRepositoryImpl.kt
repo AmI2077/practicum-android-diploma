@@ -15,7 +15,7 @@ import ru.practicum.android.diploma.feature.detail.domain.api.DetailsRepository
 
 class DetailsRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val vacancyDao: VacancyDao,
+//    private val vacancyDao: VacancyDao,
     private val dispatcher: CoroutineDispatcher,
 ): DetailsRepository {
 
@@ -45,30 +45,22 @@ class DetailsRepositoryImpl(
         }
     }
 
+// Методы добавления и удаления вакансий из избранного перенесены в FavouritesRepositoryImpl.
 
-    override suspend fun addVacancyToFavourites(vacancyDetails: VacancyDetails) {
-        withContext(dispatcher) {
-            vacancyDao.insertVacancyToFavourites(vacancyDetails.toEntity())
-        }
-    }
-
-    override suspend fun deleteVacancyFromFavourites(vacancyDetails: VacancyDetails) {
-        withContext(dispatcher) {
-            vacancyDao.deleteVacancyFromFavourites(vacancyDetails.toEntity())
-        }
-    }
-
-    override suspend fun isVacancyFavourite(
-        vacancyId: String
-    ): Boolean {
-
-        return withContext(dispatcher) {
-            vacancyDao.getVacancyFromFavouritesById(vacancyId) != null
-        }
-    }
+//    override suspend fun addVacancyToFavourites(vacancyDetails: VacancyDetails) {
+//        withContext(dispatcher) {
+//            vacancyDao.insertVacancyToFavourites(vacancyDetails.toEntity())
+//        }
+//    }
+//
+//    override suspend fun deleteVacancyFromFavourites(vacancyDetails: VacancyDetails) {
+//        withContext(dispatcher) {
+//            vacancyDao.deleteVacancyFromFavourites(vacancyDetails.toEntity())
+//        }
+//    }
 
     private fun parseHtml(raw: String): String {
-       return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
+        return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
     }
 }
 
