@@ -77,4 +77,7 @@
     <string name="industry_selection_title">Выбор отрасли</string>
     <string name="search_industry_hint">Введите отрасль</string>
 
+    <string name="work_place_title">Выбор места работы</string>
+    <string name="plaintive_cries_of_kittens">Заглушка\n Нас всего трое и у нас лапки!!!</string>
+
 </resources>
