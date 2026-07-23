@@ -74,4 +74,14 @@
 
     <dimen name="detail_vacancy_card_logo_margin">16dp</dimen>
 
+
+    <dimen name="filter_padding_horizontal">16dp</dimen>
+    <dimen name="filter_padding_top">16dp</dimen>
+    <dimen name="filter_height">48dp</dimen>
+    <dimen name="filter_height_check_box">60dp</dimen>
+    <dimen name="filter_margin_top">16dp</dimen>
+    <dimen name="filter_section_margin_top">24dp</dimen>
+
+
+
 </resources>

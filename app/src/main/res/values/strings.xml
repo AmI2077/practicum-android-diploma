@@ -67,4 +67,11 @@
     <string name="no_contacts">Контакты не указаны</string>
 
     <string name="share_vacancy">Поделиться вакансией</string>
+
+    <string name="work_place_hint">Место работы</string>
+    <string name="industry_hint">Отрасль</string>
+    <string name="expected_salary">Ожидаемая зарплата</string>
+    <string name="enter_salary_hint">Введите сумму</string>
+    <string name="hide_without_salary">Не показывать без зарплаты</string>
+
 </resources>
