@@ -17,47 +17,30 @@ class FavouritesRepositoryImpl(
     private val dispatcher: CoroutineDispatcher,
 ): FavouritesRepository {
 
-    override fun getAllFavouritesVacancies():
-        Flow<List<VacancyDetails>> {
-
+    override fun getAllFavouritesVacancies(): Flow<List<VacancyDetails>> {
         return vacancyDao
             .getAllVacanciesFromFavourites()
             .map { entities ->
-
-                entities.map {
-                    it.toModel()
-                }
-
+                entities.map { it.toModel() }
             }
-            .flowOn(dispatcher)
     }
 
-    override suspend fun addVacancyToFavourites(
-        vacancy: VacancyDetails
-    ) {
+    override suspend fun addVacancyToFavourites(vacancy: VacancyDetails) {
         withContext(dispatcher) {
-            vacancyDao.insertVacancyToFavourites(
-                vacancy.toEntity()
-            )
+            vacancyDao.insertVacancyToFavourites(vacancy.toEntity())
         }
     }
 
-    override suspend fun deleteVacancyFromFavourites(
-        vacancy: VacancyDetails
-    ) {
+    override suspend fun deleteVacancyFromFavourites(vacancy: VacancyDetails) {
         withContext(dispatcher) {
-            vacancyDao.deleteVacancyFromFavourites(
-                vacancy.toEntity()
-            )
+            vacancyDao.deleteVacancyFromFavourites(vacancy.toEntity())
         }
     }
 
     override suspend fun getFavouriteVacancyById(
         vacancyId: String
     ): VacancyDetails? {
-
         return withContext(dispatcher) {
-
             vacancyDao
                 .getVacancyFromFavouritesById(vacancyId)
                 ?.toModel()
