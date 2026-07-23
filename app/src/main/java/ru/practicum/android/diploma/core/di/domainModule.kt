@@ -10,22 +10,15 @@ import ru.practicum.android.diploma.feature.search.domain.usecase.SearchVacancie
 
 val domainModule = module {
 
-    single {
+    factory {
         GetVacancyDetailUseCase(get())
     }
 
-    single {
+    factory {
         SearchVacanciesUseCase(get())
     }
 
-    single<FavouritesRepository> {
-        FavouritesRepositoryImpl(
-            vacancyDao = get(),
-            dispatcher = get()
-        )
-    }
-
-    single<FavouritesInteractor> {
+    factory<FavouritesInteractor> {
         FavouritesInteractorImpl(
             repository = get()
         )

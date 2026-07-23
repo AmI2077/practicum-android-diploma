@@ -80,4 +80,20 @@
     <string name="work_place_title">Выбор места работы</string>
     <string name="plaintive_cries_of_kittens">Заглушка\n Нас всего трое и у нас лапки!!!</string>
 
+
+    <!-- Team -->
+    <string name="team_title">Над приложением работали</string>
+
+    <string name="team_role_leader">Посол доброй воли к Бэкенду (Но без дипломатического иммунитета)</string>
+    <string name="team_role_domain">Создательница мостов между Данными и Экранчиками</string>
+    <string name="team_role_ui">Художник, рисует квадратики и красит кнопочки </string>
+    <string name="team_role_reviewers">Смотрители кривого кода</string>
+    <string name="team_role_curator">Повелительница спринтов и котиков</string>
+
+    <string name="team_name_leader">Новохатский Дмитрий</string>
+    <string name="team_name_domain">Камалян Сюзанна</string>
+    <string name="team_name_ui">Кривошеев Евгений</string>
+    <string name="team_name_reviewer1">Денисенко Борис</string>
+    <string name="team_name_reviewer2">Казаков Илья</string>
+    <string name="team_name_curator">Михеева Алина</string>
 </resources>
