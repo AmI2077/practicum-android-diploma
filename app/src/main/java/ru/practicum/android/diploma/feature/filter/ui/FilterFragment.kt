@@ -33,9 +33,11 @@ class FilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.backButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
+
+        setupWorkPlaceButton()
+        setupIndustryButton()
+        setupBackButton()
+
 
         binding.salaryEdit.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -88,6 +90,29 @@ class FilterFragment : Fragment() {
                 R.drawable.ic_check_box_off_24
         )
     }
+
+    private fun setupBackButton() {
+        binding.backButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun setupWorkPlaceButton() {
+        binding.workPlaceContainer.setOnClickListener {
+            findNavController().navigate(
+                FilterFragmentDirections.actionFilterScreenToWorkPlaceFilter()
+            )
+        }
+    }
+
+    private fun setupIndustryButton() {
+        binding.industryContainer.setOnClickListener {
+            findNavController().navigate(
+                FilterFragmentDirections.actionFilterScreenToIndustryFilter()
+            )
+        }
+    }
+
 
     //заделка на будущее, поведение иконки и цвета текста
     private fun updateIndustryTextIcon(workPlace: String?) {
