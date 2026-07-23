@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 import ru.practicum.android.diploma.databinding.FragmentIndustryFilterBinding
 import ru.practicum.android.diploma.feature.filter.ui.utils.IndustryMocks
 
@@ -15,6 +16,7 @@ class IndustryFilterFragment : Fragment() {
     private var _binding: FragmentIndustryFilterBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: IndustryAdapter
+    private var selectedIndustryId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +29,7 @@ class IndustryFilterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupBackButton()
         setupRecyclerView()
         loadMockData()
@@ -40,7 +43,7 @@ class IndustryFilterFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = IndustryAdapter { industry ->
-            // TODO: Обработка нажатия на отрасль (будет добавлена позже)
+            handleIndustryClick(industry)
         }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -48,10 +51,21 @@ class IndustryFilterFragment : Fragment() {
         }
     }
 
+    private fun handleIndustryClick(industry: FilterIndustry) {
+        val newSelectedId = if (selectedIndustryId == industry.id) {
+            null
+        } else {
+            industry.id
+        }
+        selectedIndustryId = newSelectedId
+        adapter.setSelectedIndustryId(selectedIndustryId)
+    }
+
     private fun loadMockData() {
-        // TODO: Заменить на реальные данные из API
+        // Заменить на реальные данные API сейчас моки
         val mockIndustries = IndustryMocks.getMockIndustries()
         adapter.submitList(mockIndustries)
+        adapter.setSelectedIndustryId(null)
     }
 
     override fun onDestroyView() {

@@ -115,9 +115,9 @@ class FilterFragment : Fragment() {
 
 
     //заделка на будущее, поведение иконки и цвета текста
-    private fun updateIndustryTextIcon(workPlace: String?) {
+    private fun updateIndustryTextIcon(industry: String?) {
 
-        if (workPlace == null) {
+        if (industry == null) {
             binding.industryHint.setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.gray)
             )
@@ -127,7 +127,7 @@ class FilterFragment : Fragment() {
             binding.industryHint.setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.black)
             )
-            binding.industryHint.text = workPlace
+            binding.industryHint.text = industry
             binding.IndustryIcon.setImageResource(R.drawable.ic_search_clean_24)
         }
     }

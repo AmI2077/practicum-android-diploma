@@ -13,12 +13,45 @@ class IndustryAdapter(
 ) : RecyclerView.Adapter<IndustryAdapter.IndustryViewHolder>() {
 
     private var items: List<FilterIndustry> = emptyList()
+    private var selectedIndustryId: Int? = null
 
     fun submitList(newItems: List<FilterIndustry>) {
         val diffCallback = IndustryDiffCallback(items, newItems)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         items = newItems
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun setSelectedIndustryId(industryId: Int?) {
+        val oldPosition = if (selectedIndustryId != null) {
+            items.indexOfFirst { it.id == selectedIndustryId }
+        } else -1
+
+        selectedIndustryId = industryId
+
+        val newPosition = if (industryId != null) {
+            items.indexOfFirst { it.id == industryId }
+        } else -1
+
+        // Обновляем только изменившиеся элементы
+        when {
+            oldPosition == -1 && newPosition == -1 -> {
+                // Ничего не выбрано - ничего не делаем
+            }
+            oldPosition == -1 && newPosition != -1 -> {
+                notifyItemChanged(newPosition)
+            }
+            oldPosition != -1 && newPosition == -1 -> {
+                notifyItemChanged(oldPosition)
+            }
+            oldPosition != -1 && newPosition != -1 && oldPosition != newPosition -> {
+                notifyItemChanged(oldPosition)
+                notifyItemChanged(newPosition)
+            }
+            oldPosition != -1 && newPosition != -1 && oldPosition == newPosition -> {
+                notifyItemChanged(oldPosition)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IndustryViewHolder {
@@ -31,7 +64,7 @@ class IndustryAdapter(
     }
 
     override fun onBindViewHolder(holder: IndustryViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], selectedIndustryId)
     }
 
     override fun getItemCount(): Int = items.size
@@ -41,13 +74,18 @@ class IndustryAdapter(
         private val onItemClick: (FilterIndustry) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(industry: FilterIndustry) {
+        fun bind(industry: FilterIndustry, selectedIndustryId: Int?) {
             binding.apply {
-                binding.industryName.text = industry.name
+                industryName.text = industry.name
 
-                // Здесь в будущем будет логика для отображения выбранной отрасли
-                // Пока просто показываем radio button off
-                industryIconCheck.setImageResource(R.drawable.ic_radio_button_off_24)
+                val isSelected = industry.id == selectedIndustryId
+                industryIconCheck.setImageResource(
+                    if (isSelected) {
+                        R.drawable.ic_radio_button_on_24
+                    } else {
+                        R.drawable.ic_radio_button_off_24
+                    }
+                )
 
                 itemView.setOnClickListener {
                     onItemClick(industry)
