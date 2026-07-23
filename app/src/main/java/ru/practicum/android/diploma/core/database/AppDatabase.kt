@@ -9,7 +9,7 @@ import ru.practicum.android.diploma.core.database.entities.VacancyEntity
 
 @Database(
     entities = [VacancyEntity::class],
-    version = 2
+    version = 1
 )
 abstract class AppDatabase: RoomDatabase() {
 
