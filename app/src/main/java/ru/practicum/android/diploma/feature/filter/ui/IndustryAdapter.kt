@@ -23,33 +23,31 @@ class IndustryAdapter(
     }
 
     fun setSelectedIndustryId(industryId: Int?) {
-        val oldPosition = if (selectedIndustryId != null) {
-            items.indexOfFirst { it.id == selectedIndustryId }
-        } else -1
-
+        val oldPosition = findPositionById(selectedIndustryId)
         selectedIndustryId = industryId
+        val newPosition = findPositionById(industryId)
+        notifyPositionsChanged(oldPosition, newPosition)
+    }
 
-        val newPosition = if (industryId != null) {
-            items.indexOfFirst { it.id == industryId }
-        } else -1
+    private fun findPositionById(id: Int?): Int {
+        return if (id != null) {
+            items.indexOfFirst { it.id == id }
+        } else {
+            -1
+        }
+    }
 
-        // Обновляем только изменившиеся элементы
+    private fun notifyPositionsChanged(oldPosition: Int, newPosition: Int) {
         when {
-            oldPosition == -1 && newPosition == -1 -> {
-                // Ничего не выбрано - ничего не делаем
-            }
-            oldPosition == -1 && newPosition != -1 -> {
-                notifyItemChanged(newPosition)
-            }
-            oldPosition != -1 && newPosition == -1 -> {
-                notifyItemChanged(oldPosition)
-            }
-            oldPosition != -1 && newPosition != -1 && oldPosition != newPosition -> {
-                notifyItemChanged(oldPosition)
-                notifyItemChanged(newPosition)
-            }
-            oldPosition != -1 && newPosition != -1 && oldPosition == newPosition -> {
-                notifyItemChanged(oldPosition)
+            oldPosition == -1 && newPosition != -1 -> notifyItemChanged(newPosition)
+            oldPosition != -1 && newPosition == -1 -> notifyItemChanged(oldPosition)
+            oldPosition != -1 && newPosition != -1 -> {
+                if (oldPosition != newPosition) {
+                    notifyItemChanged(oldPosition)
+                    notifyItemChanged(newPosition)
+                } else {
+                    notifyItemChanged(oldPosition)
+                }
             }
         }
     }

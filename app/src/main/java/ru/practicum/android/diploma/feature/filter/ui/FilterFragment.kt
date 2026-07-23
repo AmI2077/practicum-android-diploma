@@ -18,7 +18,6 @@ class FilterFragment : Fragment() {
 
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
-
     private var hideWithoutSalary = false
 
     override fun onCreateView(
@@ -33,11 +32,9 @@ class FilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         setupWorkPlaceButton()
         setupIndustryButton()
         setupBackButton()
-
 
         binding.salaryEdit.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -70,7 +67,7 @@ class FilterFragment : Fragment() {
         hideKeyboard()
     }
 
-    private fun hideKeyboard(){
+    private fun hideKeyboard() {
         val imm =
             requireContext()
                 .getSystemService(
@@ -113,28 +110,8 @@ class FilterFragment : Fragment() {
         }
     }
 
-
-    //заделка на будущее, поведение иконки и цвета текста
-    private fun updateIndustryTextIcon(industry: String?) {
-
-        if (industry == null) {
-            binding.industryHint.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.gray)
-            )
-            binding.industryHint.text = getString(R.string.industry_hint)
-            binding.IndustryIcon.setImageResource(R.drawable.ic_arrow_forward_24)
-        } else {
-            binding.industryHint.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.black)
-            )
-            binding.industryHint.text = industry
-            binding.IndustryIcon.setImageResource(R.drawable.ic_search_clean_24)
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
