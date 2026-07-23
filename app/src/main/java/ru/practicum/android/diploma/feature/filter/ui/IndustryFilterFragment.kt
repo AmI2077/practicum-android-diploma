@@ -6,18 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import ru.practicum.android.diploma.databinding.FragmentIndustryFilterBinding
+import ru.practicum.android.diploma.feature.filter.ui.utils.IndustryMocks
 
 class IndustryFilterFragment : Fragment() {
 
     private var _binding: FragmentIndustryFilterBinding? = null
     private val binding get() = _binding!!
+    private lateinit var adapter: IndustryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentIndustryFilterBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -25,12 +28,30 @@ class IndustryFilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupBackButton()
+        setupRecyclerView()
+        loadMockData()
     }
 
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
+    }
+
+    private fun setupRecyclerView() {
+        adapter = IndustryAdapter { industry ->
+            // TODO: Обработка нажатия на отрасль (будет добавлена позже)
+        }
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@IndustryFilterFragment.adapter
+        }
+    }
+
+    private fun loadMockData() {
+        // TODO: Заменить на реальные данные из API
+        val mockIndustries = IndustryMocks.getMockIndustries()
+        adapter.submitList(mockIndustries)
     }
 
     override fun onDestroyView() {
