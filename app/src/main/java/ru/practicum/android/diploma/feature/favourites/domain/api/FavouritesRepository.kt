@@ -19,9 +19,4 @@ interface FavouritesRepository {
     suspend fun getFavouriteVacancyById(
         vacancyId: String
     ): VacancyDetails?
-
-    suspend fun isFavourite(
-        vacancyId: String
-    ): Boolean
-
 }

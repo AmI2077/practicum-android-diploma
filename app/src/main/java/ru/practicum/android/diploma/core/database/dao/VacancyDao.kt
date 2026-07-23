@@ -23,5 +23,5 @@ interface VacancyDao {
     @Query("SELECT * FROM Vacancy WHERE id = :vacancyId LIMIT 1")
     suspend fun getVacancyFromFavouritesById(
         vacancyId: String
-    ): VacancyEntity?//получить одну вакансию по id
+    ): VacancyEntity?
 }
