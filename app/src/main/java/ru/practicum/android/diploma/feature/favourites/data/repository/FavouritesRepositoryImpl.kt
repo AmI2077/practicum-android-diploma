@@ -23,31 +23,24 @@ class FavouritesRepositoryImpl(
             .map { entities ->
                 entities.map { it.toModel() }
             }
-            .flowOn(dispatcher)
     }
 
     override suspend fun addVacancyToFavourites(vacancy: VacancyDetails) {
         withContext(dispatcher) {
-            // Ставим флаг избранного перед сохранением
-            val entity = vacancy.toEntity().copy(isFavourite = true)
-            vacancyDao.insertVacancyToFavourites(entity)
+            vacancyDao.insertVacancyToFavourites(vacancy.toEntity())
         }
     }
 
     override suspend fun deleteVacancyFromFavourites(vacancy: VacancyDetails) {
         withContext(dispatcher) {
-            val entity = vacancy.toEntity().copy(isFavourite = false)
-            vacancyDao.insertVacancyToFavourites(entity)
+            vacancyDao.deleteVacancyFromFavourites(vacancy.toEntity())
         }
     }
-
 
     override suspend fun getFavouriteVacancyById(
         vacancyId: String
     ): VacancyDetails? {
-
         return withContext(dispatcher) {
-
             vacancyDao
                 .getVacancyFromFavouritesById(vacancyId)
                 ?.toModel()

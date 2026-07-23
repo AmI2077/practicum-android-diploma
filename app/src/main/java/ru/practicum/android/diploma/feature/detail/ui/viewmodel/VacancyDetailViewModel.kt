@@ -21,8 +21,6 @@ class VacancyDetailViewModel(
     private val _state = MutableLiveData<VacancyDetailState>(VacancyDetailState.Loading)
     val state: LiveData<VacancyDetailState> = _state
 
-    private var currentVacancy: VacancyDetails? = null
-
     fun loadVacancyDetail(vacancyId: String) {
         _state.value = VacancyDetailState.Loading
 
@@ -32,15 +30,11 @@ class VacancyDetailViewModel(
             when (result) {
                 is Result.Content -> {
                     val vacancy = result.data
-
                     if (vacancy != null) {
-                        currentVacancy = vacancy
-
                         val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
-
                         _state.value = VacancyDetailState.Content(
                             vacancy = vacancy,
-                            isFavourite = isFavourite
+                            isFavourite = isFavourite,
                         )
                     } else {
                         _state.value = VacancyDetailState.NotFound
@@ -60,28 +54,30 @@ class VacancyDetailViewModel(
 
 
     fun addToFavourite() {
-        currentVacancy?.let { vacancy ->
-            viewModelScope.launch {
-                favouritesInteractor.addVacancyToFavourites(vacancy)
+        val vacancy = (state.value as? VacancyDetailState.Content)?.vacancy ?: return
 
-                // Перепроверяем статус, чтобы UI был консистентным
-                val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
+        viewModelScope.launch {
+            favouritesInteractor.addVacancyToFavourites(vacancy)
 
-                _state.value = (state.value as? VacancyDetailState.Content)?.copy(isFavourite = isFavourite)
+            val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
+            val currentState = state.value
+            if (currentState is VacancyDetailState.Content) {
+                _state.value = currentState.copy(isFavourite = isFavourite)
             }
         }
     }
 
     fun removeFromFavourite() {
-        currentVacancy?.let { vacancy ->
-            viewModelScope.launch {
-                favouritesInteractor.deleteVacancyFromFavourites(vacancy)
+        val vacancy = (state.value as? VacancyDetailState.Content)?.vacancy ?: return
 
-                val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
+        viewModelScope.launch {
+            favouritesInteractor.deleteVacancyFromFavourites(vacancy)
 
-                _state.value = (state.value as? VacancyDetailState.Content)?.copy(isFavourite = isFavourite)
+            val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
+            val currentState = state.value
+            if (currentState is VacancyDetailState.Content) {
+                _state.value = currentState.copy(isFavourite = isFavourite)
             }
         }
     }
-
 }

@@ -17,7 +17,6 @@ class FavouritesViewModel(
 
     val state: LiveData<FavouritesState> = _state
 
-
     init {
         loadFavourites()
     }

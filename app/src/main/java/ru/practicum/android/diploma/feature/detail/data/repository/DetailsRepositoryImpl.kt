@@ -60,7 +60,7 @@ class DetailsRepositoryImpl(
 //    }
 
     private fun parseHtml(raw: String): String {
-       return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
+        return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
     }
 }
 

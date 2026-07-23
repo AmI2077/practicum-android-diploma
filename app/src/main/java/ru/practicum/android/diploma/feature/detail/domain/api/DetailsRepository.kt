@@ -8,5 +8,4 @@ interface DetailsRepository {
     suspend fun fetchVacancyDetails(
         vacancyId: String
     ): Result<VacancyDetails?>
-
 }

@@ -32,5 +32,4 @@ data class VacancyEntity(
     val skills: List<String>,
     val url: String,
     val industry: FilterIndustry,
-    val isFavourite: Boolean = false
 )

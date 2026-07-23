@@ -14,15 +14,14 @@ interface VacancyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVacancyToFavourites(vacancyEntity: VacancyEntity)
 
-//    @Query("SELECT * FROM Vacancy")
-//    fun getAllVacanciesFromFavourites(): Flow<VacancyEntity>
-
-    @Query("SELECT * FROM Vacancy WHERE isFavourite = 1")
+    @Query("SELECT * FROM Vacancy")
     fun getAllVacanciesFromFavourites(): Flow<List<VacancyEntity>>
 
     @Delete
     suspend fun deleteVacancyFromFavourites(vacancyEntity: VacancyEntity)
 
-    @Query("SELECT * FROM Vacancy WHERE id = :vacancyId AND isFavourite = 1 LIMIT 1")
-    suspend fun getVacancyFromFavouritesById(vacancyId: String): VacancyEntity? //получить одну вакансию по id
+    @Query("SELECT * FROM Vacancy WHERE id = :vacancyId LIMIT 1")
+    suspend fun getVacancyFromFavouritesById(
+        vacancyId: String
+    ): VacancyEntity?
 }
