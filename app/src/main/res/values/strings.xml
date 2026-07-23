@@ -74,4 +74,7 @@
     <string name="enter_salary_hint">Введите сумму</string>
     <string name="hide_without_salary">Не показывать без зарплаты</string>
 
+    <string name="industry_selection_title">Выбор отрасли</string>
+    <string name="search_industry_hint">Введите отрасль</string>
+
 </resources>

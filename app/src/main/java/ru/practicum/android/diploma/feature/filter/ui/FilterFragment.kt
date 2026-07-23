@@ -89,6 +89,24 @@ class FilterFragment : Fragment() {
         )
     }
 
+    //заделка на будущее, поведение иконки и цвета текста
+    private fun updateIndustryTextIcon(workPlace: String?) {
+
+        if (workPlace == null) {
+            binding.industryHint.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.gray)
+            )
+            binding.industryHint.text = getString(R.string.industry_hint)
+            binding.IndustryIcon.setImageResource(R.drawable.ic_arrow_forward_24)
+        } else {
+            binding.industryHint.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.black)
+            )
+            binding.industryHint.text = workPlace
+            binding.IndustryIcon.setImageResource(R.drawable.ic_search_clean_24)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
