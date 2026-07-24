@@ -7,22 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
-import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailState
-import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailViewModel
-import java.util.Locale
-import kotlin.getValue
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailBinding
 import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailNavigationCommand
+import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailState
+import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailViewModel
 import ru.practicum.android.diploma.feature.sharing.domain.SharingInteractor
-import org.koin.android.ext.android.inject
+import java.util.Locale
 
 class VacancyDetailFragment : Fragment() {
 
@@ -52,7 +55,6 @@ class VacancyDetailFragment : Fragment() {
         observeState()
         observeNavigation()
 
-
         viewModel.loadVacancyDetail(args.vacancyId)
     }
 
@@ -72,26 +74,36 @@ class VacancyDetailFragment : Fragment() {
     }
 
     private fun observeState() {
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is VacancyDetailState.Loading -> showLoading()
-                is VacancyDetailState.Content -> showVacancyDetail(state.vacancy)
-                is VacancyDetailState.Error -> showError()
-                is VacancyDetailState.NotFound -> showNotFound()
-                is VacancyDetailState.NoInternet -> showNoInternet()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    when (state) {
+                        is VacancyDetailState.Loading -> showLoading()
+                        is VacancyDetailState.Content -> showVacancyDetail(state.vacancy)
+                        is VacancyDetailState.Error -> showError()
+                        is VacancyDetailState.NotFound -> showNotFound()
+                        is VacancyDetailState.NoInternet -> showNoInternet()
+                    }
+                }
             }
         }
     }
 
     private fun observeNavigation() {
-        viewModel.navigationCommand.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { command ->
-                when (command) {
-                    is VacancyDetailNavigationCommand.ShareVacancy -> {
-                        val shareIntent = sharingInteractor.createShareIntent(command.url)
-                        startActivity(shareIntent)
-                    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationCommand.collect { command ->
+                    handleNavigationCommand(command)
                 }
+            }
+        }
+    }
+
+    private fun handleNavigationCommand(command: VacancyDetailNavigationCommand) {
+        when (command) {
+            is VacancyDetailNavigationCommand.ShareVacancy -> {
+                val shareIntent = sharingInteractor.createShareIntent(command.url)
+                startActivity(shareIntent)
             }
         }
     }
