@@ -10,23 +10,23 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.models.NetworkErrors
 import ru.practicum.android.diploma.core.models.Result
-import ru.practicum.android.diploma.core.models.details.VacancyDetails
 import ru.practicum.android.diploma.feature.detail.domain.usecase.GetVacancyDetailUseCase
+import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailState
 import ru.practicum.android.diploma.feature.favourites.domain.interactor.FavouritesInteractor
+import kotlin.time.Duration.Companion.milliseconds
 
 
 class VacancyDetailViewModel(
     private val getVacancyDetailUseCase: GetVacancyDetailUseCase,
     private val favouritesInteractor: FavouritesInteractor
-
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<VacancyDetailState>(VacancyDetailState.Loading)
     val state: StateFlow<VacancyDetailState> = _state.asStateFlow()
+
     private val _navigationCommand = MutableSharedFlow<VacancyDetailNavigationCommand>()
     val navigationCommand: SharedFlow<VacancyDetailNavigationCommand> = _navigationCommand.asSharedFlow()
 
@@ -37,9 +37,8 @@ class VacancyDetailViewModel(
         _state.value = VacancyDetailState.Loading
 
         viewModelScope.launch {
-            val result = getVacancyDetailUseCase(vacancyId)
 
-            when (result) {
+            when (val result = getVacancyDetailUseCase(vacancyId)) {
                 is Result.Content -> {
                     val vacancy = result.data
                     if (vacancy != null) {
@@ -64,32 +63,35 @@ class VacancyDetailViewModel(
         }
     }
 
-
-    fun addToFavourite() {
-        val vacancy = (state.value as? VacancyDetailState.Content)?.vacancy ?: return
+    private fun addToFavourite() {
+        val vacancy = (state.value as VacancyDetailState.Content).vacancy
 
         viewModelScope.launch {
             favouritesInteractor.addVacancyToFavourites(vacancy)
-
-            val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
-            val currentState = state.value
-            if (currentState is VacancyDetailState.Content) {
-                _state.value = currentState.copy(isFavourite = isFavourite)
-            }
         }
     }
 
-    fun removeFromFavourite() {
-        val vacancy = (state.value as? VacancyDetailState.Content)?.vacancy ?: return
+    private fun removeFromFavourite() {
+        val vacancy = (state.value as VacancyDetailState.Content).vacancy
 
         viewModelScope.launch {
             favouritesInteractor.deleteVacancyFromFavourites(vacancy)
+        }
+    }
 
-            val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
-            val currentState = state.value
-            if (currentState is VacancyDetailState.Content) {
-                _state.value = currentState.copy(isFavourite = isFavourite)
-            }
+    fun onFavouritesClick() {
+        val currentState = _state.value as VacancyDetailState.Content
+
+        if (!currentState.isFavourite) {
+            addToFavourite()
+            _state.value = currentState.copy(
+                isFavourite = true
+            )
+        } else {
+            removeFromFavourite()
+            _state.value = currentState.copy(
+                isFavourite = false
+            )
         }
     }
 
@@ -107,7 +109,7 @@ class VacancyDetailViewModel(
             isClickAllowed = false
             clickJob?.cancel()
             clickJob = viewModelScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
+                delay(CLICK_DEBOUNCE_DELAY.milliseconds)
                 isClickAllowed = true
             }
         }
