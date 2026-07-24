@@ -12,5 +12,5 @@ interface NetworkClient {
 
     suspend fun fetchVacancyDetails(vacancyId: String): NetworkResult<VacancyDetailsDto?>
 
-    suspend fun fetchIndustries(): NetworkResult<List<IndustryDto>>
+//    suspend fun fetchIndustries(): NetworkResult<List<IndustryDto>>
 }
