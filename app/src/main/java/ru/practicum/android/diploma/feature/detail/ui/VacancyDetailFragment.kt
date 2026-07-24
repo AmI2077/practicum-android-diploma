@@ -143,12 +143,8 @@ class VacancyDetailFragment : Fragment() {
                 else -> getString(R.string.not_specified)
             }
 
-            vacancy.description?.let {
-                description.text = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
-                description.isVisible = true
-            } ?: run {
-                description.isVisible = false
-            }
+            description.text = Html.fromHtml(vacancy.description, Html.FROM_HTML_MODE_COMPACT)
+            description.isVisible = true
 
             if (vacancy.skills.isNotEmpty()) {
                 val skillsText = vacancy.skills.joinToString("\n") { "• $it" }

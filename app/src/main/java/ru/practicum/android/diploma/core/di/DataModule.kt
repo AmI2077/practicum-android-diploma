@@ -8,8 +8,10 @@ import ru.practicum.android.diploma.core.database.AppDatabase
 import ru.practicum.android.diploma.core.database.dao.VacancyDao
 import ru.practicum.android.diploma.core.network.client.NetworkClient
 import ru.practicum.android.diploma.core.network.client.RetrofitClient
+import ru.practicum.android.diploma.core.utils.HtmlParser
 import ru.practicum.android.diploma.feature.detail.data.repository.DetailsRepositoryImpl
 import ru.practicum.android.diploma.feature.detail.domain.api.DetailsRepository
+import ru.practicum.android.diploma.feature.detail.utils.DetailsHtmlParserImpl
 import ru.practicum.android.diploma.feature.favourites.data.repository.FavouritesRepositoryImpl
 import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepository
 import ru.practicum.android.diploma.feature.search.data.SearchRepositoryImpl
@@ -30,8 +32,8 @@ val dataModule = module {
     single<DetailsRepository> {
         DetailsRepositoryImpl(
             networkClient = get(),
-//            vacancyDao = get(),
-            dispatcher = get()
+            dispatcher = get(),
+            htmlParser = get()
         )
     }
 
@@ -57,6 +59,7 @@ val dataModule = module {
     single<CoroutineDispatcher> {
         Dispatchers.IO
     }
+    single<HtmlParser> { DetailsHtmlParserImpl() }
 
     // Компоненты для фичи Sharing (из ветки develop)
     single<SharingRepository> {
