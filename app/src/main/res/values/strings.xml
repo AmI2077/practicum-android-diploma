@@ -96,4 +96,6 @@
     <string name="team_name_reviewer1">Денисенко Борис</string>
     <string name="team_name_reviewer2">Казаков Илья</string>
     <string name="team_name_curator">Михеева Алина</string>
+
+    <string name="list_empty">Список пуст</string>
 </resources>
