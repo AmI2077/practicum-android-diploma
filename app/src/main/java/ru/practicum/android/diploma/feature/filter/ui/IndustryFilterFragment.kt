@@ -14,11 +14,7 @@ import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryState
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
 
 // Загрузка данных перенесена во ViewModel.
-// Fragment отвечает только за отображение состояния UI.
-// ViewModel самостоятельно вызывает Interactor при создании.
 // Моки закомментированы  после подключения реального источника данных через ViewModel.
-// Данные теперь приходят через IndustryState.
-// ViewModel получает данные через Domain-слой.
 
 class IndustryFilterFragment : Fragment() {
 
