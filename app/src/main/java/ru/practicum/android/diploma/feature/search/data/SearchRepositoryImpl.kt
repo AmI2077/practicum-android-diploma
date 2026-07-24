@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import ru.practicum.android.diploma.core.extensions.toDto
 import ru.practicum.android.diploma.core.extensions.toModel
+import ru.practicum.android.diploma.core.models.NetworkErrors
 import ru.practicum.android.diploma.core.models.Result
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.core.models.VacancySearchParams
@@ -26,26 +27,13 @@ class SearchRepositoryImpl(
                         result.codeToError()
                     )
                 }
-
-//                is NetworkResult.Success -> {
-//                    val vacancies = result.data?.items?.map {
-//                        it.toModel()
-//                    } ?: emptyList()
-//
-//                    Result.Content(vacancies)
-//                }
                 is NetworkResult.Success -> {
 
                     val response = result.data
 
                     if (response == null) {
-                        Result.Content(
-                            VacancySearchResult(
-                                vacancies = emptyList(),
-                                page = 0,
-                                pages = 0
-                            )
-                        )
+                        Result.Error(NetworkErrors.ServerError)
+
                     } else {
                         Result.Content(
                             response.toModel()
