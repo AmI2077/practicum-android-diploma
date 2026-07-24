@@ -22,7 +22,11 @@
         android:id="@+id/favourites_screen_tab"
         android:name="ru.practicum.android.diploma.feature.favourites.ui.FavouritesFragment"
         android:label="FavouritesFragment"
-        tools:layout="@layout/fragment_favourites"/>
+        tools:layout="@layout/fragment_favourites">
+        <action
+            android:id="@+id/action_favourites_screen_tab_to_vacancyDetailFragment"
+            app:destination="@id/vacancyDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/team_screen_tab"
