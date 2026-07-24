@@ -45,20 +45,6 @@ class DetailsRepositoryImpl(
         }
     }
 
-// Методы добавления и удаления вакансий из избранного перенесены в FavouritesRepositoryImpl.
-
-//    override suspend fun addVacancyToFavourites(vacancyDetails: VacancyDetails) {
-//        withContext(dispatcher) {
-//            vacancyDao.insertVacancyToFavourites(vacancyDetails.toEntity())
-//        }
-//    }
-//
-//    override suspend fun deleteVacancyFromFavourites(vacancyDetails: VacancyDetails) {
-//        withContext(dispatcher) {
-//            vacancyDao.deleteVacancyFromFavourites(vacancyDetails.toEntity())
-//        }
-//    }
-
     private fun parseHtml(raw: String): String {
         return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
     }

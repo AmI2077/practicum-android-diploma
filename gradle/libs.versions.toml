@@ -14,6 +14,9 @@ navigation = "2.7.6"
 room = "2.8.4"
 ksp = "2.0.21-1.0.25"
 
+# Jsoup
+jsoup = "1.22.2"
+
 # Koin
 koinAndroid = "3.3.0"
 koinAndroidxWorkmanager = "3.5.0"
@@ -25,12 +28,9 @@ glide = "4.14.2"
 coreKtx = "1.17.0"
 appcompat = "1.7.1"
 material = "1.13.0"
-# minSdk = "26" Дублириование, он сразу падает с ошибкой Duplicated alias name.
 okhttp = "5.4.0"
-# targetSdk = "33" Дублириование, он сразу падает с ошибкой Duplicated alias name.
 
 # AndroidX
-# appcompat = "1.7.1" Дублириование, он сразу падает с ошибкой Duplicated alias name.
 constraintlayout = "2.2.1"
 activity = "1.11.0"
 lifecycle = "2.6.2"
@@ -90,6 +90,9 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
+# Jsoup
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+
 # Static analysis
 staticAnalysis-detektApi = { module = "io.gitlab.arturbosch.detekt:detekt-api", version.ref = "detekt" }
 staticAnalysis-detektCli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", version.ref = "detekt" }
@@ -100,7 +103,6 @@ staticAnalysis-detektTest = { module = "io.gitlab.arturbosch.detekt:detekt-test"
 staticAnalysis-detektTwitterComposeRules = { module = "com.twitter.compose.rules:detekt", version.ref = "detektTwitterComposeRules" }
 
 [plugins]
-kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
