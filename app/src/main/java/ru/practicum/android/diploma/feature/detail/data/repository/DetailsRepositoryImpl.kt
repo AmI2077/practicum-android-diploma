@@ -1,11 +1,7 @@
 package ru.practicum.android.diploma.feature.detail.data.repository
 
-import androidx.core.text.HtmlCompat
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
-import ru.practicum.android.diploma.core.database.dao.VacancyDao
-import ru.practicum.android.diploma.core.extensions.toEntity
 import ru.practicum.android.diploma.core.extensions.toModel
 import ru.practicum.android.diploma.core.models.Result
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
