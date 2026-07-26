@@ -7,14 +7,22 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 import ru.practicum.android.diploma.databinding.FragmentIndustryFilterBinding
-import ru.practicum.android.diploma.feature.filter.ui.utils.IndustryMocks
+import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryState
+import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
+
+// Загрузка данных перенесена во ViewModel.
+// Моки закомментированы  после подключения реального источника данных через ViewModel.
 
 class IndustryFilterFragment : Fragment() {
 
     private var _binding: FragmentIndustryFilterBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: IndustryViewModel by viewModel()
+
     private lateinit var adapter: IndustryAdapter
     private var selectedIndustryId: Int? = null
 
@@ -32,7 +40,8 @@ class IndustryFilterFragment : Fragment() {
 
         setupBackButton()
         setupRecyclerView()
-        loadMockData()
+//        loadMockData()
+        observeState()
     }
 
     private fun setupBackButton() {
@@ -61,11 +70,34 @@ class IndustryFilterFragment : Fragment() {
         adapter.setSelectedIndustryId(selectedIndustryId)
     }
 
-    private fun loadMockData() {
-        // Заменить на реальные данные API сейчас моки
-        val mockIndustries = IndustryMocks.getMockIndustries()
-        adapter.submitList(mockIndustries)
-        adapter.setSelectedIndustryId(null)
+    // Теперь метод больше не нужен
+//    private fun loadMockData() {
+//        // Заменить на реальные данные API сейчас моки
+//        val mockIndustries = IndustryMocks.getMockIndustries()
+//        adapter.submitList(mockIndustries)
+//        adapter.setSelectedIndustryId(null)
+//    }
+
+    private fun observeState() {
+        viewModel.state.observe(
+            viewLifecycleOwner
+        ) { state ->
+
+            when (state) {
+
+                IndustryState.Loading -> {
+                    // TODO:
+                }
+
+                is IndustryState.Content -> {
+                    adapter.submitList(state.industries)
+                }
+
+                IndustryState.Error -> {
+                    // TODO:
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
