@@ -28,12 +28,21 @@ class SearchViewModel(
     private var isLoadingNextPage = false
     private var isNewSearch = false
 
+    private var lastSearchResults: SearchState.Content? = null
+
     companion object {
         private const val SEARCH_DELAY = 2000L
     }
 
+    init {
+        restoreStateIfNeeded()
+    }
+
     fun search(query: String) {
         searchJob?.cancel()
+        if (currentQuery == query && lastSearchResults != null) {
+            return
+        }
         currentQuery = query
 
         if (query.isBlank()) {
@@ -42,6 +51,7 @@ class SearchViewModel(
             totalPages = 0
             isLoadingNextPage = false
             isNewSearch = false
+            lastSearchResults = null
             _state.value = SearchState.Initial
             return
         }
@@ -77,17 +87,21 @@ class SearchViewModel(
                 vacancies.addAll(newVacancies)
 
                 if (vacancies.isEmpty()) {
+                    lastSearchResults = null
                     _state.value = SearchState.EmptyResult
                 } else {
-                    _state.value = SearchState.Content(
+                    val contentState = SearchState.Content(
                         vacancies = vacancies.toList(),
                         isLoadingNextPage = isLoadingNextPage,
                         isNewSearch = isNewSearch
                     )
+                    lastSearchResults = contentState
+                    _state.value = contentState
                     isNewSearch = false
                 }
             }
             is Result.Error -> {
+                lastSearchResults = null
                 _state.value = SearchState.Error(result.error)
                 isNewSearch = false
             }
@@ -117,11 +131,21 @@ class SearchViewModel(
 
             isLoadingNextPage = false
 
-            _state.value = SearchState.Content(
+            val contentState = SearchState.Content(
                 vacancies = vacancies.toList(),
                 isLoadingNextPage = false,
                 isNewSearch = false
             )
+            lastSearchResults = contentState
+            _state.value = contentState
+        }
+    }
+
+    fun restoreStateIfNeeded() {
+        if (currentQuery.isNotEmpty() && lastSearchResults != null) {
+            _state.value = lastSearchResults!!
+        } else if (currentQuery.isNotEmpty() && _state.value !is SearchState.Content) {
+            search(currentQuery)
         }
     }
 

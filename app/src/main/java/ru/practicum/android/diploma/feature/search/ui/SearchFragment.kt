@@ -67,6 +67,7 @@ class SearchFragment : Fragment() {
         setupFilterButton()
         setupScrollListener()
         observeState()
+        viewModel.restoreStateIfNeeded()
     }
 
     private fun setupRecyclerView() {
