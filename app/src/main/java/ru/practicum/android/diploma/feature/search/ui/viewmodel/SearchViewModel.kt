@@ -17,37 +17,52 @@ class SearchViewModel(
     private val searchVacanciesUseCase: SearchVacanciesUseCase
 ) : ViewModel() {
 
-
-    private val _state =
-        MutableLiveData<SearchState>(SearchState.Initial)
+    private val _state = MutableLiveData<SearchState>(SearchState.Initial)
     val state: LiveData<SearchState> = _state
 
     private var searchJob: Job? = null
     private var currentQuery = ""
-    private var currentPage = 0
+    private var currentPage = 1
     private var totalPages = 0
+    private var totalFound = 0
     private val vacancies = mutableListOf<VacancyCard>()
     private var isLoadingNextPage = false
+    private var isNewSearch = false
+
+    private var lastSearchResults: SearchState.Content? = null
     private val loadedPages = mutableSetOf<Int>()
 
     companion object {
         private const val SEARCH_DELAY = 2000L
     }
 
+    init {
+        restoreStateIfNeeded()
+    }
+
     fun search(query: String) {
         searchJob?.cancel()
+        if (currentQuery == query && lastSearchResults != null) {
+            return
+        }
         currentQuery = query
 
         if (query.isBlank()) {
             vacancies.clear()
+            currentPage = 1
+            totalPages = 0
+            isLoadingNextPage = false
+            isNewSearch = false
+            lastSearchResults = null
             _state.value = SearchState.Initial
             return
         }
 
+        isNewSearch = true
+
         searchJob = viewModelScope.launch {
             delay(SEARCH_DELAY)
-
-            currentPage = 0
+            currentPage = 1
             totalPages = 0
 
             vacancies.clear()
@@ -61,36 +76,6 @@ class SearchViewModel(
         }
     }
 
-    fun loadNextPage() {
-
-        if (isLoadingNextPage) return
-
-        val nextPage = currentPage + 1
-
-        if (nextPage >= totalPages) return
-
-        if (nextPage in loadedPages) return
-
-
-        searchJob = viewModelScope.launch {
-
-            isLoadingNextPage = true
-
-            _state.value = SearchState.Content(
-                vacancies = vacancies.toList(),
-                isLoadingNextPage = true
-            )
-
-            loadVacancies(nextPage)
-
-            isLoadingNextPage = false
-        }
-    }
-
-    fun isLoadingNextPage(): Boolean {
-        return isLoadingNextPage
-    }
-
     private suspend fun loadVacancies(page: Int) {
 
         val params = VacancySearchParams(
@@ -99,7 +84,6 @@ class SearchViewModel(
         )
 
         when (val result = searchVacanciesUseCase(params)) {
-
             is Result.Content -> {
 
                 loadedPages.add(page)
@@ -107,6 +91,7 @@ class SearchViewModel(
                 currentPage = page
 
                 totalPages = result.data.pages
+                totalFound = result.data.found
 
                 val newVacancies = result.data.vacancies.filter { vacancy ->
                     vacancies.none { it.id == vacancy.id }
@@ -115,19 +100,68 @@ class SearchViewModel(
                 vacancies.addAll(newVacancies)
 
                 if (vacancies.isEmpty()) {
+                    lastSearchResults = null
                     _state.value = SearchState.EmptyResult
                 } else {
-                    _state.value = SearchState.Content(
+                    val contentState = SearchState.Content(
                         vacancies = vacancies.toList(),
-                        isLoadingNextPage = isLoadingNextPage
+                        totalFound = totalFound,
+                        isLoadingNextPage = isLoadingNextPage,
+                        isNewSearch = isNewSearch
                     )
+                    lastSearchResults = contentState
+                    _state.value = contentState
+                    isNewSearch = false
                 }
             }
-
             is Result.Error -> {
+                lastSearchResults = null
                 _state.value = SearchState.Error(result.error)
+                isNewSearch = false
             }
         }
     }
-}
 
+    fun loadNextPage() {
+        val nextPage = currentPage + 1
+
+        if (isLoadingNextPage || nextPage >= totalPages || currentQuery.isBlank()) {
+            return
+        }
+
+        isNewSearch = false
+
+        searchJob = viewModelScope.launch {
+            isLoadingNextPage = true
+
+            _state.value = SearchState.Content(
+                vacancies = vacancies.toList(),
+                totalFound = totalFound,
+                isLoadingNextPage = true,
+                isNewSearch = false
+            )
+
+            currentPage++
+            loadVacancies(nextPage)
+
+            isLoadingNextPage = false
+
+            val contentState = SearchState.Content(
+                vacancies = vacancies.toList(),
+                totalFound = totalFound,
+                isLoadingNextPage = false,
+                isNewSearch = false
+            )
+            lastSearchResults = contentState
+            _state.value = contentState
+        }
+    }
+
+    fun restoreStateIfNeeded() {
+        if (currentQuery.isNotEmpty() && lastSearchResults != null) {
+            _state.value = lastSearchResults!!
+        } else if (currentQuery.isNotEmpty() && _state.value !is SearchState.Content) {
+            search(currentQuery)
+        }
+    }
+}

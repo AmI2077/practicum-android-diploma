@@ -98,6 +98,7 @@
             <TextView
                 android:id="@+id/statusVacancies"
                 style="@style/StatusText"
+                android:gravity="center"
                 tools:text="@string/vacancies_found_zero" />
         </androidx.cardview.widget.CardView>
 
@@ -175,7 +176,7 @@
             android:id="@+id/errorServer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -203,7 +204,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/recycler_view_margin_top"
-            android:visibility="visible"
+            android:visibility="gone"
             android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

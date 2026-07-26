@@ -88,4 +88,6 @@
     <dimen name="recycler_view_margin_top_industry">16dp</dimen>
 
     <dimen name="team_padding_vertical">16dp</dimen>
+
+    <dimen name="bottom_navigation_height">16dp</dimen>
 </resources>
