@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.core.models.details
 
+import ru.practicum.android.diploma.core.models.card.VacancyCard
+import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
 import ru.practicum.android.diploma.core.models.filter.FilterArea
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 
@@ -20,4 +22,21 @@ data class VacancyDetails(
     val industry: FilterIndustry
 )
 
+fun VacancyDetails.toCard(): VacancyCard {
+    return VacancyCard(
+        id = this.id,
+        name = this.name,
+        company = this.employer.name,
+        city = this.address?.city,
+        salary = this.salary?.toVacancyCardSalary(),
+        logo = this.employer.logo
+    )
+}
 
+fun Salary.toVacancyCardSalary(): VacancyCardSalary {
+    return VacancyCardSalary(
+        from = this.from,
+        to = this.to,
+        currency = this.currency
+    )
+}

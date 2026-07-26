@@ -1,7 +1,10 @@
 package ru.practicum.android.diploma.feature.favourites.domain.interactor
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
+import ru.practicum.android.diploma.core.models.details.toCard
 import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepository
 
 
@@ -10,9 +13,14 @@ class FavouritesInteractorImpl(
 ) : FavouritesInteractor {
 
     override fun getAllFavouritesVacancies():
-        Flow<List<VacancyDetails>> {
+        Flow<List<VacancyCard>> {
 
         return repository.getAllFavouritesVacancies()
+            .map { vacancies ->
+                vacancies.map {
+                    it.toCard()
+                }
+            }
     }
 
     override suspend fun addVacancyToFavourites(

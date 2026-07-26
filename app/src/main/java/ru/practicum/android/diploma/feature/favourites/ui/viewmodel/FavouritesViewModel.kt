@@ -27,6 +27,7 @@ class FavouritesViewModel(
             favouritesInteractor
                 .getAllFavouritesVacancies()
                 .catch { e ->
+                    println(e.message)
                     _state.value = FavouritesState.Error
                 }
                 .collect { vacancies ->
