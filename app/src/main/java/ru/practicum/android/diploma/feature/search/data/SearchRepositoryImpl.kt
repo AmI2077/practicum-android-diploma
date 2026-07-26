@@ -42,6 +42,7 @@ class SearchRepositoryImpl(
                         Result.Content(
                             VacancySearchResult(
                                 vacancies = emptyList(),
+                                found = 0,
                                 page = 0,
                                 pages = 0
                             )

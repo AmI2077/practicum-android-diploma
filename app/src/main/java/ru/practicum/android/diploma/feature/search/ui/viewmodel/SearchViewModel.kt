@@ -24,6 +24,7 @@ class SearchViewModel(
     private var currentQuery = ""
     private var currentPage = 1
     private var totalPages = 0
+    private var totalFound = 0
     private val vacancies = mutableListOf<VacancyCard>()
     private var isLoadingNextPage = false
     private var isNewSearch = false
@@ -79,6 +80,7 @@ class SearchViewModel(
         when (val result = searchVacanciesUseCase(params)) {
             is Result.Content -> {
                 totalPages = result.data.pages
+                totalFound = result.data.found
 
                 val newVacancies = result.data.vacancies.filter { vacancy ->
                     vacancies.none { it.id == vacancy.id }
@@ -92,6 +94,7 @@ class SearchViewModel(
                 } else {
                     val contentState = SearchState.Content(
                         vacancies = vacancies.toList(),
+                        totalFound = totalFound,
                         isLoadingNextPage = isLoadingNextPage,
                         isNewSearch = isNewSearch
                     )
@@ -122,6 +125,7 @@ class SearchViewModel(
 
             _state.value = SearchState.Content(
                 vacancies = vacancies.toList(),
+                totalFound = totalFound,
                 isLoadingNextPage = true,
                 isNewSearch = false
             )
@@ -133,6 +137,7 @@ class SearchViewModel(
 
             val contentState = SearchState.Content(
                 vacancies = vacancies.toList(),
+                totalFound = totalFound,
                 isLoadingNextPage = false,
                 isNewSearch = false
             )
@@ -147,9 +152,5 @@ class SearchViewModel(
         } else if (currentQuery.isNotEmpty() && _state.value !is SearchState.Content) {
             search(currentQuery)
         }
-    }
-
-    fun isLoadingNextPage(): Boolean {
-        return isLoadingNextPage
     }
 }

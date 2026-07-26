@@ -183,6 +183,7 @@ fun VacancyResponseDto.toModel(): VacancySearchResult {
         vacancies = items.map {
             it.toModel()
         },
+        found = found,
         page = page,
         pages = pages
     )

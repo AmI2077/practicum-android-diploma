@@ -149,6 +149,7 @@ class SearchFragment : Fragment() {
                 is SearchState.Content -> {
                     showSearchResult(
                         state.vacancies,
+                        state.totalFound,
                         state.isLoadingNextPage
                     )
                 }
@@ -204,6 +205,7 @@ class SearchFragment : Fragment() {
     }
     private fun showSearchResult(
         vacancies: List<VacancyCard>,
+        totalFound: Int,
         isLoadingNextPage: Boolean
     ) {
         hideAllImageStates()
@@ -213,7 +215,7 @@ class SearchFragment : Fragment() {
         binding.statusVacancies.text =
             getString(
                 R.string.vacancies_found,
-                vacancies.size
+                totalFound
             )
         adapter?.submitList(vacancies)
         if (isLoadingNextPage) {
