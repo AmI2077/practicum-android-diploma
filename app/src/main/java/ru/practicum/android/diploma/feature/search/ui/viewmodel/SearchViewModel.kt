@@ -76,36 +76,6 @@ class SearchViewModel(
         }
     }
 
-    fun loadNextPage() {
-
-        if (isLoadingNextPage) return
-
-        val nextPage = currentPage + 1
-
-        if (nextPage >= totalPages) return
-
-        if (nextPage in loadedPages) return
-
-
-        searchJob = viewModelScope.launch {
-
-            isLoadingNextPage = true
-
-            _state.value = SearchState.Content(
-                vacancies = vacancies.toList(),
-                isLoadingNextPage = true
-            )
-
-            loadVacancies(nextPage)
-
-            isLoadingNextPage = false
-        }
-    }
-
-    fun isLoadingNextPage(): Boolean {
-        return isLoadingNextPage
-    }
-
     private suspend fun loadVacancies(page: Int) {
 
         val params = VacancySearchParams(
@@ -172,7 +142,7 @@ class SearchViewModel(
             )
 
             currentPage++
-            loadVacancies()
+            loadVacancies(nextPage)
 
             isLoadingNextPage = false
 
