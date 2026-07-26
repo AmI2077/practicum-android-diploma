@@ -50,8 +50,7 @@
         android:src="@drawable/ic_favorites_off_24"
         app:layout_constraintBottom_toBottomOf="@id/header"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/header"
-        app:tint="@color/black" />
+        app:layout_constraintTop_toTopOf="@id/header" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/detailScrollView"
