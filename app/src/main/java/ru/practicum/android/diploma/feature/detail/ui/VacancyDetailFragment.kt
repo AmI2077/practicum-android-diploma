@@ -52,6 +52,7 @@ class VacancyDetailFragment : Fragment() {
 
         setupBackButton()
         setupShareButton()
+        setupFavouriteButton()
         observeState()
         observeNavigation()
 
@@ -73,13 +74,33 @@ class VacancyDetailFragment : Fragment() {
         }
     }
 
+    private fun setupFavouriteButton() {
+        binding.favoritesButton.setOnClickListener {
+            val currentState = viewModel.state.value
+            if (currentState is VacancyDetailState.Content) {
+                viewModel.onFavouritesClick()
+            }
+        }
+    }
+
+    private fun renderFavouriteButton(isFavourite: Boolean) {
+        when (isFavourite) {
+            true -> binding.favoritesButton.setImageResource(R.drawable.ic_favorites_on_24)
+            false -> binding.favoritesButton.setImageResource(R.drawable.ic_favorites_off_24)
+        }
+    }
+
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     when (state) {
                         is VacancyDetailState.Loading -> showLoading()
-                        is VacancyDetailState.Content -> showVacancyDetail(state.vacancy)
+                        is VacancyDetailState.Content -> {
+                            showVacancyDetail(state.vacancy)
+                            renderFavouriteButton(state.isFavourite)
+                        }
+
                         is VacancyDetailState.Error -> showError()
                         is VacancyDetailState.NotFound -> showNotFound()
                         is VacancyDetailState.NoInternet -> showNoInternet()
@@ -143,12 +164,8 @@ class VacancyDetailFragment : Fragment() {
                 else -> getString(R.string.not_specified)
             }
 
-            vacancy.description?.let {
-                description.text = Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
-                description.isVisible = true
-            } ?: run {
-                description.isVisible = false
-            }
+            description.text = Html.fromHtml(vacancy.description, Html.FROM_HTML_MODE_COMPACT)
+            description.isVisible = true
 
             if (vacancy.skills.isNotEmpty()) {
                 val skillsText = vacancy.skills.joinToString("\n") { "• $it" }

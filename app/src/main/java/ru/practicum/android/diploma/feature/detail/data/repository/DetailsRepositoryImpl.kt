@@ -1,22 +1,20 @@
 package ru.practicum.android.diploma.feature.detail.data.repository
 
-import androidx.core.text.HtmlCompat
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import ru.practicum.android.diploma.core.database.dao.VacancyDao
-import ru.practicum.android.diploma.core.extensions.toEntity
 import ru.practicum.android.diploma.core.extensions.toModel
 import ru.practicum.android.diploma.core.models.Result
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
 import ru.practicum.android.diploma.core.network.NetworkResult
 import ru.practicum.android.diploma.core.network.client.NetworkClient
 import ru.practicum.android.diploma.core.network.codeToError
+import ru.practicum.android.diploma.core.utils.HtmlParser
 import ru.practicum.android.diploma.feature.detail.domain.api.DetailsRepository
 
 class DetailsRepositoryImpl(
     private val networkClient: NetworkClient,
-//    private val vacancyDao: VacancyDao,
     private val dispatcher: CoroutineDispatcher,
+    private val htmlParser: HtmlParser,
 ): DetailsRepository {
 
     override suspend fun fetchVacancyDetails(
@@ -34,6 +32,7 @@ class DetailsRepositoryImpl(
                 is NetworkResult.Success -> {
                     result.data?.let {
                         val description = parseHtml(it.description)
+                        println("DESCRIPTION: $description")
                         Result.Content(
                             data = result.data.copy(
                                 description = description
@@ -45,22 +44,8 @@ class DetailsRepositoryImpl(
         }
     }
 
-// Методы добавления и удаления вакансий из избранного перенесены в FavouritesRepositoryImpl.
-
-//    override suspend fun addVacancyToFavourites(vacancyDetails: VacancyDetails) {
-//        withContext(dispatcher) {
-//            vacancyDao.insertVacancyToFavourites(vacancyDetails.toEntity())
-//        }
-//    }
-//
-//    override suspend fun deleteVacancyFromFavourites(vacancyDetails: VacancyDetails) {
-//        withContext(dispatcher) {
-//            vacancyDao.deleteVacancyFromFavourites(vacancyDetails.toEntity())
-//        }
-//    }
-
     private fun parseHtml(raw: String): String {
-        return HtmlCompat.fromHtml(raw, HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
+        return htmlParser.parse(raw)
     }
 }
 

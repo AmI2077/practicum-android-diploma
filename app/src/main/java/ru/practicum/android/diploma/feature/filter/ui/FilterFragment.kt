@@ -12,13 +12,21 @@ import androidx.annotation.AttrRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
+import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterState
+import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterViewModel
+
+// Подключена FilterViewModel.
 
 class FilterFragment : Fragment() {
 
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: FilterViewModel by viewModel()
     private var hideWithoutSalary = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +43,7 @@ class FilterFragment : Fragment() {
         setupWorkPlaceButton()
         setupIndustryButton()
         setupBackButton()
+        observeState()
 
         binding.salaryEdit.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -110,6 +119,24 @@ class FilterFragment : Fragment() {
         }
     }
 
+    private fun observeState() {
+        viewModel.state.observe(
+            viewLifecycleOwner
+        ) { state ->
+
+            when (state) {
+                is FilterState.Content -> {
+                    binding.salaryEdit.setText(
+                        state.salary
+                    )
+                    hideWithoutSalary =
+                        state.hideWithoutSalary
+                    updateSalaryCheckBox()
+                    // TODO:
+                }
+            }
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

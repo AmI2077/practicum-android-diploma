@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.core.models.NetworkErrors
 import ru.practicum.android.diploma.core.models.Result
 import ru.practicum.android.diploma.core.models.VacancySearchParams
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.feature.search.domain.usecase.SearchVacanciesUseCase
+
 
 class SearchViewModel(
     private val searchVacanciesUseCase: SearchVacanciesUseCase
@@ -30,6 +30,7 @@ class SearchViewModel(
     private var isNewSearch = false
 
     private var lastSearchResults: SearchState.Content? = null
+    private val loadedPages = mutableSetOf<Int>()
 
     companion object {
         private const val SEARCH_DELAY = 2000L
@@ -63,22 +64,62 @@ class SearchViewModel(
             delay(SEARCH_DELAY)
             currentPage = 1
             totalPages = 0
+
             vacancies.clear()
+            loadedPages.clear()
+
             isLoadingNextPage = false
+
             _state.value = SearchState.Loading
 
-            loadVacancies()
+            loadVacancies(currentPage)
         }
     }
 
-    private suspend fun loadVacancies() {
+    fun loadNextPage() {
+
+        if (isLoadingNextPage) return
+
+        val nextPage = currentPage + 1
+
+        if (nextPage >= totalPages) return
+
+        if (nextPage in loadedPages) return
+
+
+        searchJob = viewModelScope.launch {
+
+            isLoadingNextPage = true
+
+            _state.value = SearchState.Content(
+                vacancies = vacancies.toList(),
+                isLoadingNextPage = true
+            )
+
+            loadVacancies(nextPage)
+
+            isLoadingNextPage = false
+        }
+    }
+
+    fun isLoadingNextPage(): Boolean {
+        return isLoadingNextPage
+    }
+
+    private suspend fun loadVacancies(page: Int) {
+
         val params = VacancySearchParams(
             text = currentQuery,
-            page = currentPage
+            page = page
         )
 
         when (val result = searchVacanciesUseCase(params)) {
             is Result.Content -> {
+
+                loadedPages.add(page)
+
+                currentPage = page
+
                 totalPages = result.data.pages
                 totalFound = result.data.found
 
