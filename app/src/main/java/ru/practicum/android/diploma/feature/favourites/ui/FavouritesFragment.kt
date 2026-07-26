@@ -59,7 +59,7 @@ class FavouritesFragment : Fragment() {
                 showErrorView()
             }
             FavouritesState.Loading -> {
-
+                showLoadingView()
             }
         }
     }
@@ -72,6 +72,11 @@ class FavouritesFragment : Fragment() {
     private fun showErrorView() {
         hideViews()
         binding.errorState.isVisible = true
+    }
+
+    private fun showLoadingView() {
+        hideViews()
+        binding.progressBar.isVisible = true
     }
 
     private fun showContent(vacancies: List<VacancyCard>) {
@@ -103,6 +108,7 @@ class FavouritesFragment : Fragment() {
         binding.recyclerView.isVisible = false
         binding.errorState.isVisible = false
         binding.stateEmpty.isVisible = false
+        binding.progressBar.isVisible = false
     }
 
 
