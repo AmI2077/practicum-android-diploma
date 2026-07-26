@@ -11,6 +11,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.NetworkErrors
@@ -64,6 +65,7 @@ class SearchFragment : Fragment() {
         setupSearchEditText()
         setupClearButton()
         setupFilterButton()
+        setupScrollListener()
         observeState()
     }
 
@@ -77,6 +79,22 @@ class SearchFragment : Fragment() {
             adapter =
                 this@SearchFragment.adapter
         }
+    }
+
+    private fun setupScrollListener() {
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
+                    val totalItemCount = adapter?.itemCount ?: 0
+                    if (lastVisiblePosition >= totalItemCount - 1) {
+                        viewModel.loadNextPage()
+                    }
+                }
+            }
+        })
     }
 
     private fun setupSearchEditText() {
@@ -129,7 +147,8 @@ class SearchFragment : Fragment() {
                 }
                 is SearchState.Content -> {
                     showSearchResult(
-                        state.vacancies
+                        state.vacancies,
+                        state.isLoadingNextPage
                     )
                 }
                 SearchState.EmptyResult -> {
@@ -172,6 +191,7 @@ class SearchFragment : Fragment() {
         binding.statusContainer.isVisible = false
         hideAllImageStates()
         binding.imageStateEmpty.isVisible = true
+        adapter?.hideLoadingFooter()
     }
 
     private fun showLoadingState() {
@@ -179,10 +199,11 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = true
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
-
+        adapter?.hideLoadingFooter()
     }
     private fun showSearchResult(
-        vacancies: List<VacancyCard>
+        vacancies: List<VacancyCard>,
+        isLoadingNextPage: Boolean
     ) {
         hideAllImageStates()
         binding.progressBar.isVisible = false
@@ -194,12 +215,18 @@ class SearchFragment : Fragment() {
                 vacancies.size
             )
         adapter?.submitList(vacancies)
+        if (isLoadingNextPage) {
+            adapter?.showLoadingFooter()
+        } else {
+            adapter?.hideLoadingFooter()
+        }
     }
 
     private fun showEmptyResultState() {
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = true
+        adapter?.hideLoadingFooter()
         binding.statusVacancies.text =
             getString(
                 R.string.vacancies_not_found
@@ -213,6 +240,7 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
+        adapter?.hideLoadingFooter()
         showImageState(
             ImageState.SERVER_ERROR
         )
@@ -222,6 +250,7 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
+        adapter?.hideLoadingFooter()
         showImageState(
             ImageState.NO_INTERNET
         )

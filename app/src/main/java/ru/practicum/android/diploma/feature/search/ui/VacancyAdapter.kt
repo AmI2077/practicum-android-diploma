@@ -11,14 +11,21 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
 import ru.practicum.android.diploma.databinding.ItemVacancyBinding
+import ru.practicum.android.diploma.databinding.ItemLoadingFooterBinding
 import java.util.Locale
 
 
 class VacancyAdapter(
     private val onItemClick: (VacancyCard) -> Unit
-) : RecyclerView.Adapter<VacancyAdapter.VacancyViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        private const val VIEW_TYPE_VACANCY = 0
+        private const val VIEW_TYPE_LOADING = 1
+    }
 
     private var items: List<VacancyCard> = emptyList()
+    private var showLoadingFooter = false
 
     fun submitList(newItems: List<VacancyCard>) {
         val diffCallback = VacancyDiffCallback(items, newItems)
@@ -27,23 +34,63 @@ class VacancyAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyViewHolder {
-        val binding = ItemVacancyBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return VacancyViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: VacancyViewHolder, position: Int) {
-        holder.bind(items[position])
-        holder.itemView.setOnClickListener {
-            onItemClick(items[position])
+    fun showLoadingFooter() {
+        if (!showLoadingFooter) {
+            showLoadingFooter = true
+            notifyItemInserted(itemCount)
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    fun hideLoadingFooter() {
+        if (showLoadingFooter) {
+            showLoadingFooter = false
+            notifyItemRemoved(itemCount)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == itemCount - 1 && showLoadingFooter) {
+            VIEW_TYPE_LOADING
+        } else {
+            VIEW_TYPE_VACANCY
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_VACANCY -> {
+                val binding = ItemVacancyBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                VacancyViewHolder(binding)
+            }
+            VIEW_TYPE_LOADING -> {
+                val binding = ItemLoadingFooterBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                LoadingViewHolder(binding)
+            }
+            else -> throw IllegalArgumentException("Неизвестный тип view")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is VacancyViewHolder) {
+            val vacancy = items[position]
+            holder.bind(vacancy)
+            holder.itemView.setOnClickListener {
+                onItemClick(vacancy)
+            }
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return items.size + if (showLoadingFooter) 1 else 0
+    }
 
     class VacancyViewHolder(
         private val binding: ItemVacancyBinding
@@ -139,6 +186,10 @@ class VacancyAdapter(
             return binding.root.context.getString(resId)
         }
     }
+
+    class LoadingViewHolder(
+        private val binding: ItemLoadingFooterBinding
+    ) : RecyclerView.ViewHolder(binding.root)
 
     class VacancyDiffCallback(
         private val oldList: List<VacancyCard>,
