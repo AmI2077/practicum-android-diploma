@@ -36,7 +36,7 @@
 
     <fragment
         android:id="@+id/filter_screen"
-        android:name="ru.practicum.android.diploma.feature.search.ui.FilterFragment"
+        android:name="ru.practicum.android.diploma.feature.filter.ui.FilterFragment"
         android:label="FilterFragment"
         tools:layout="@layout/fragment_filter">
 

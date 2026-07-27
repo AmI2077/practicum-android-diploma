@@ -9,10 +9,7 @@ class FilterViewModel(
     private val filterInteractor: FilterInteractor
 ): ViewModel() {
 
-
-    private val _state =
-        MutableLiveData<FilterState>()
-
+    private val _state = MutableLiveData<FilterState>()
     val state: LiveData<FilterState> = _state
 
     init {
@@ -20,8 +17,7 @@ class FilterViewModel(
     }
 
     private fun loadSettings() {
-        val settings =
-            filterInteractor.getSettings()
+        val settings = filterInteractor.getSettings()
         _state.value =
             FilterState.Content(
                 salary = settings.salary?.toString().orEmpty(),
@@ -31,8 +27,7 @@ class FilterViewModel(
     }
 
     fun saveSalary(value: Int?) {
-        val current =
-            filterInteractor.getSettings()
+        val current = filterInteractor.getSettings()
         filterInteractor.saveSettings(
             current.copy(
                 salary = value

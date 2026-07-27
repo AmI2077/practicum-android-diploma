@@ -1,5 +1,6 @@
-package ru.practicum.android.diploma.feature.search.ui
+package ru.practicum.android.diploma.feature.filter.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import ru.practicum.android.diploma.R
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterState
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterViewModel
@@ -32,7 +34,7 @@ class FilterFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFilterBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -62,6 +64,28 @@ class FilterFragment : Fragment() {
 
         binding.mainContainer.setOnClickListener {
             clearSalaryFocus()
+        }
+    }
+
+    private fun getIndustryResult() {
+        parentFragmentManager.setFragmentResultListener(
+            IndustryFilterFragment.INDUSTRY_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val industry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getParcelable(IndustryFilterFragment.INDUSTRY_KEY, FilterIndustry::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                bundle.getParcelable(IndustryFilterFragment.INDUSTRY_KEY)
+            }
+
+            if (industry != null) {
+                // Успешно получили объект, обновляем UI или ViewModel
+                // viewModel.saveIndustry(industry)
+            } else {
+                // Объект не был передан (например, выбор сбросили)
+                // viewModel.clearIndustry()
+            }
         }
     }
 

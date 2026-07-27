@@ -26,11 +26,11 @@ import ru.practicum.android.diploma.feature.detail.data.dto.EmployerDto
 import ru.practicum.android.diploma.feature.detail.data.dto.EmploymentDto
 import ru.practicum.android.diploma.feature.detail.data.dto.ExperienceDto
 import ru.practicum.android.diploma.feature.detail.data.dto.FilterAreaDto
-import ru.practicum.android.diploma.feature.detail.data.dto.FilterIndustryDto
 import ru.practicum.android.diploma.feature.detail.data.dto.PhoneDto
 import ru.practicum.android.diploma.feature.detail.data.dto.SalaryDto
 import ru.practicum.android.diploma.feature.detail.data.dto.ScheduleDto
 import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
+import ru.practicum.android.diploma.feature.filter.data.dto.FilterIndustryDto
 
 fun VacancyDetails.toEntity(): VacancyEntity {
     return VacancyEntity(
@@ -173,10 +173,12 @@ fun FilterAreaDto.toModel(): FilterArea = FilterArea(
     areas = this.areas.map { it.toModel() }
 )
 
-fun FilterIndustryDto.toModel() = FilterIndustry(
+
+fun FilterIndustryDto.toModel(): FilterIndustry = FilterIndustry(
     id = this.id,
     name = this.name
 )
+
 fun VacancyResponseDto.toModel(): VacancySearchResult {
 
     return VacancySearchResult(

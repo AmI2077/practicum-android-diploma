@@ -6,6 +6,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
 import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
+import ru.practicum.android.diploma.feature.filter.data.dto.FilterIndustryDto
 
 interface VacanciesApiService {
 
@@ -23,4 +24,7 @@ interface VacanciesApiService {
     suspend fun fetchVacancyDetails(
         @Path("id") vacancyId: String,
     ): Response<VacancyDetailsDto>
+
+    @GET("/industries")
+    suspend fun fetchIndustries(): Response<List<FilterIndustryDto>>
 }

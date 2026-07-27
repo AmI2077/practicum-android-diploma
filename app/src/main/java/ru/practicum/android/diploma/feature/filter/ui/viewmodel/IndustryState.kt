@@ -11,6 +11,4 @@ sealed interface IndustryState {
     ): IndustryState
 
     data object Error : IndustryState
-
-
 }

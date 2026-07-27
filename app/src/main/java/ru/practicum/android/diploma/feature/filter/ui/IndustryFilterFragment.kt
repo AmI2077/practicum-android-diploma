@@ -13,9 +13,6 @@ import ru.practicum.android.diploma.databinding.FragmentIndustryFilterBinding
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryState
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
 
-// Загрузка данных перенесена во ViewModel.
-// Моки закомментированы  после подключения реального источника данных через ViewModel.
-
 class IndustryFilterFragment : Fragment() {
 
     private var _binding: FragmentIndustryFilterBinding? = null
@@ -24,7 +21,7 @@ class IndustryFilterFragment : Fragment() {
     private val viewModel: IndustryViewModel by viewModel()
 
     private lateinit var adapter: IndustryAdapter
-    private var selectedIndustryId: Int? = null
+    private var selectedIndustry: FilterIndustry? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,14 +37,23 @@ class IndustryFilterFragment : Fragment() {
 
         setupBackButton()
         setupRecyclerView()
-//        loadMockData()
         observeState()
     }
 
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
+            setIndustryResult()
+
             findNavController().navigateUp()
         }
+    }
+
+    private fun setIndustryResult() {
+        val result = Bundle().apply {
+            putParcelable(INDUSTRY_KEY, selectedIndustry)
+        }
+
+        parentFragmentManager.setFragmentResult(INDUSTRY_KEY, result)
     }
 
     private fun setupRecyclerView() {
@@ -61,22 +67,14 @@ class IndustryFilterFragment : Fragment() {
     }
 
     private fun handleIndustryClick(industry: FilterIndustry) {
-        val newSelectedId = if (selectedIndustryId == industry.id) {
+        val newSelected = if (selectedIndustry == industry) {
             null
         } else {
-            industry.id
+            industry
         }
-        selectedIndustryId = newSelectedId
-        adapter.setSelectedIndustryId(selectedIndustryId)
+        selectedIndustry = newSelected
+        adapter.setSelectedIndustryId(selectedIndustry?.id)
     }
-
-    // Теперь метод больше не нужен
-//    private fun loadMockData() {
-//        // Заменить на реальные данные API сейчас моки
-//        val mockIndustries = IndustryMocks.getMockIndustries()
-//        adapter.submitList(mockIndustries)
-//        adapter.setSelectedIndustryId(null)
-//    }
 
     private fun observeState() {
         viewModel.state.observe(
@@ -86,7 +84,7 @@ class IndustryFilterFragment : Fragment() {
             when (state) {
 
                 IndustryState.Loading -> {
-                    // TODO:
+
                 }
 
                 is IndustryState.Content -> {
@@ -94,7 +92,7 @@ class IndustryFilterFragment : Fragment() {
                 }
 
                 IndustryState.Error -> {
-                    // TODO:
+
                 }
             }
         }
@@ -103,5 +101,9 @@ class IndustryFilterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val INDUSTRY_KEY = "INDUSTRY"
     }
 }

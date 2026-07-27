@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.feature.detail.data.dto
 
 import com.google.gson.annotations.SerializedName
+import ru.practicum.android.diploma.feature.filter.data.dto.FilterIndustryDto
 
 data class VacancyDetailsDto(
     @SerializedName("id") val id: String,
@@ -71,9 +72,4 @@ data class FilterAreaDto(
     @SerializedName("name") val name: String,
     @SerializedName("parentId") val parentId: Int,
     @SerializedName("areas") val areas: List<FilterAreaDto>
-)
-
-data class FilterIndustryDto(
-    @SerializedName("id") val id: Int,
-    @SerializedName("name") val name: String
 )

@@ -12,6 +12,7 @@ import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
 import ru.practicum.android.diploma.core.network.HttpCodes
 import ru.practicum.android.diploma.core.network.NetworkResult
 import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
+import ru.practicum.android.diploma.feature.filter.data.dto.FilterIndustryDto
 
 object RetrofitClient : NetworkClient {
 
@@ -52,6 +53,12 @@ object RetrofitClient : NetworkClient {
     override suspend fun fetchVacancyDetails(vacancyId: String): NetworkResult<VacancyDetailsDto?> {
         return safeApiCall {
             apiService.fetchVacancyDetails(vacancyId)
+        }
+    }
+
+    override suspend fun fetchIndustries(): NetworkResult<List<FilterIndustryDto>?> {
+        return safeApiCall {
+            apiService.fetchIndustries()
         }
     }
 
