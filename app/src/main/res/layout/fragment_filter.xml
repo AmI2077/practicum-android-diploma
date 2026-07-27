@@ -182,6 +182,53 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonsContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/button_padding_horizontal_1"
+            android:paddingBottom="@dimen/button_padding_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/applyButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/apply_button"
+                android:textColor="@color/whiteUniversal"
+                android:background="@drawable/button_apply_background"
+                app:layout_constraintCircleRadius="@dimen/corner_radius"
+                style="@style/RegularTextStyle.16"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:stateListAnimator="@null"
+                app:layout_constraintBottom_toTopOf="@id/resetButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/resetButton"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/reset_button"
+                android:textColor="@color/red"
+                android:background="@drawable/button_reset_background"
+                android:layout_marginTop="@dimen/button_margin_top"
+                android:gravity="center"
+                style="@style/RegularTextStyle.16"
+                android:textAllCaps="false"
+                android:stateListAnimator="@null"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/applyButton" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
