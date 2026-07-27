@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.core.di
 
+
+import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
@@ -14,6 +16,10 @@ import ru.practicum.android.diploma.feature.detail.domain.api.DetailsRepository
 import ru.practicum.android.diploma.feature.detail.utils.DetailsHtmlParserImpl
 import ru.practicum.android.diploma.feature.favourites.data.repository.FavouritesRepositoryImpl
 import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepository
+import ru.practicum.android.diploma.feature.filter.data.FilterRepositoryImpl
+import ru.practicum.android.diploma.feature.filter.data.IndustryRepositoryImpl
+import ru.practicum.android.diploma.feature.filter.domain.api.FilterRepository
+import ru.practicum.android.diploma.feature.filter.domain.api.IndustryRepository
 import ru.practicum.android.diploma.feature.search.data.SearchRepositoryImpl
 import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
 import ru.practicum.android.diploma.feature.sharing.data.SharingRepositoryImpl
@@ -67,9 +73,29 @@ val dataModule = module {
             context = androidContext()
         )
     }
+
+    single<SharedPreferences> {
+        androidContext().getSharedPreferences(
+            "filter_prefs",
+            android.content.Context.MODE_PRIVATE
+        )
+    }
+
     single<SharingInteractor> {
         SharingInteractorImpl(
             repository = get()
+        )
+    }
+
+    single<FilterRepository> {
+        FilterRepositoryImpl(
+            sharedPreferences = get()
+        )
+    }
+
+    single<IndustryRepository> {
+        IndustryRepositoryImpl(
+            networkClient = get()
         )
     }
 }

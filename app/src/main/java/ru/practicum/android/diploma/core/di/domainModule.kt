@@ -6,6 +6,8 @@ import ru.practicum.android.diploma.feature.favourites.data.repository.Favourite
 import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepository
 import ru.practicum.android.diploma.feature.favourites.domain.interactor.FavouritesInteractor
 import ru.practicum.android.diploma.feature.favourites.domain.interactor.FavouritesInteractorImpl
+import ru.practicum.android.diploma.feature.filter.domain.interactor.FilterInteractor
+import ru.practicum.android.diploma.feature.filter.domain.interactor.FilterInteractorImpl
 import ru.practicum.android.diploma.feature.filter.domain.interactor.GetIndustriesInteractor
 import ru.practicum.android.diploma.feature.filter.domain.interactor.GetIndustriesInteractorImpl
 import ru.practicum.android.diploma.feature.search.domain.usecase.SearchVacanciesUseCase
@@ -31,5 +33,9 @@ val domainModule = module {
             repository = get()
         )
     }
+    factory<FilterInteractor> {
+        FilterInteractorImpl(get())
+    }
+
 
 }
