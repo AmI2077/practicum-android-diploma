@@ -87,6 +87,12 @@
 
     <dimen name="recycler_view_margin_top_industry">16dp</dimen>
 
+    <dimen name="button_height">59dp</dimen>
+    <dimen name="button_margin_top">8dp</dimen>
+    <dimen name="button_padding_horizontal_1">1dp</dimen>
+    <dimen name="button_padding_horizontal_17">17dp</dimen>
+    <dimen name="button_padding_bottom">24dp</dimen>
+
     <dimen name="team_padding_vertical">16dp</dimen>
 
     <dimen name="bottom_navigation_height">16dp</dimen>
