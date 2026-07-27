@@ -7,11 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 import ru.practicum.android.diploma.databinding.FragmentIndustryFilterBinding
+import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryState
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
+import kotlin.getValue
 
 class IndustryFilterFragment : Fragment() {
 
@@ -19,6 +23,7 @@ class IndustryFilterFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: IndustryViewModel by viewModel()
+    private val filterViewModel: FilterViewModel by koinNavGraphViewModel(R.id.filter_screen)
 
     private lateinit var adapter: IndustryAdapter
     private var selectedIndustry: FilterIndustry? = null
@@ -36,24 +41,26 @@ class IndustryFilterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupBackButton()
+        setupSelectButton()
         setupRecyclerView()
         observeState()
     }
 
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
-            setIndustryResult()
-
-            findNavController().navigateUp()
+            closeFragment()
         }
     }
 
-    private fun setIndustryResult() {
-        val result = Bundle().apply {
-            putParcelable(INDUSTRY_KEY, selectedIndustry)
+    private fun setupSelectButton() {
+        binding.selectButton.setOnClickListener {
+            closeFragment()
         }
+    }
 
-        parentFragmentManager.setFragmentResult(INDUSTRY_KEY, result)
+    private fun closeFragment() {
+        filterViewModel.saveIndustry(selectedIndustry)
+        findNavController().navigateUp()
     }
 
     private fun setupRecyclerView() {

@@ -3,52 +3,52 @@ package ru.practicum.android.diploma.feature.filter.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.practicum.android.diploma.feature.filter.domain.interactor.FilterInteractor
+import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 
-class FilterViewModel(
-    private val filterInteractor: FilterInteractor
-): ViewModel() {
+class FilterViewModel(): ViewModel() {
 
-    private val _state = MutableLiveData<FilterState>()
+    private val _state = MutableLiveData(FilterState())
     val state: LiveData<FilterState> = _state
 
-    init {
-        loadSettings()
-    }
-
-    private fun loadSettings() {
-        val settings = filterInteractor.getSettings()
-        _state.value =
-            FilterState.Content(
-                salary = settings.salary?.toString().orEmpty(),
-                hideWithoutSalary = settings.hideWithoutSalary,
-                industry = settings.industry
-            )
-    }
-
     fun saveSalary(value: Int?) {
-        val current = filterInteractor.getSettings()
-        filterInteractor.saveSettings(
-            current.copy(
-                salary = value
-            )
+        updateState(
+            salary = value
+        )
+    }
+
+    fun saveIndustry(filterIndustry: FilterIndustry?) {
+        updateState(
+            industry = filterIndustry
         )
     }
 
     fun saveHideWithoutSalary(
         checked: Boolean
     ) {
-        val current =
-            filterInteractor.getSettings()
-        filterInteractor.saveSettings(
-            current.copy(
-                hideWithoutSalary = checked
-            )
+        updateState(
+            hideWithoutSalary = checked
         )
     }
 
     fun clearFilter() {
-        filterInteractor.clearSettings()
-        loadSettings()
+        updateState(
+            salary = 0,
+            hideWithoutSalary = false,
+            industry = null
+        )
+    }
+
+    private fun updateState(
+        salary: Int? = null,
+        hideWithoutSalary: Boolean? = null,
+        industry: FilterIndustry? = null
+    ) {
+        val currentState = _state.value ?: return
+
+        _state.value = currentState.copy(
+            salary = salary ?: currentState.salary,
+            hideWithoutSalary = hideWithoutSalary ?: currentState.hideWithoutSalary,
+            industry = industry ?: currentState.industry
+        )
     }
 }

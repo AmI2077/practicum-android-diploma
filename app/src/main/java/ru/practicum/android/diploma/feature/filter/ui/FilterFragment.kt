@@ -13,22 +13,20 @@ import androidx.annotation.AttrRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterState
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterViewModel
 
-// Подключена FilterViewModel.
-
 class FilterFragment : Fragment() {
 
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: FilterViewModel by viewModel()
+    private val viewModel: FilterViewModel by koinNavGraphViewModel(R.id.filter_screen)
     private var hideWithoutSalary = false
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +44,8 @@ class FilterFragment : Fragment() {
         setupIndustryButton()
         setupBackButton()
         observeState()
+
+        getIndustryResult()
 
         binding.salaryEdit.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -78,14 +78,7 @@ class FilterFragment : Fragment() {
                 @Suppress("DEPRECATION")
                 bundle.getParcelable(IndustryFilterFragment.INDUSTRY_KEY)
             }
-
-            if (industry != null) {
-                // Успешно получили объект, обновляем UI или ViewModel
-                // viewModel.saveIndustry(industry)
-            } else {
-                // Объект не был передан (например, выбор сбросили)
-                // viewModel.clearIndustry()
-            }
+            viewModel.saveIndustry(industry)
         }
     }
 
@@ -147,16 +140,14 @@ class FilterFragment : Fragment() {
         viewModel.state.observe(
             viewLifecycleOwner
         ) { state ->
+            hideWithoutSalary =
+                state.hideWithoutSalary
+            updateSalaryCheckBox()
 
-            when (state) {
-                is FilterState.Content -> {
-                    binding.salaryEdit.setText(
-                        state.salary
-                    )
-                    hideWithoutSalary =
-                        state.hideWithoutSalary
-                    updateSalaryCheckBox()
-                    // TODO:
+            state.industry?.let {
+                binding.industryHint.apply {
+                    text = it.name
+                    setTextColor(resources.getColor(R.color.black))
                 }
             }
         }
