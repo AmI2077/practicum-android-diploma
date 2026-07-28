@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.navigation.koinNavGraphViewModel
@@ -137,40 +138,44 @@ class SearchFragment : Fragment() {
 
     private fun setupLoadStateListener() {
         adapter?.addLoadStateListener { loadStates ->
-            val refreshState = loadStates.refresh
-            val itemCount = adapter?.itemCount ?: 0
-            val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
-
-            val hasFilters = viewModel.filterState.value?.let {
-                it.salary != null && it.salary != 0 || it.hideWithoutSalary || it.industry != null
-            } ?: false
-
-            val isSearching = !isQueryBlank || hasFilters
-
-            val isInitialState = !isSearching
-
-            val isLoading = refreshState is LoadState.Loading && isSearching
-
-            val isSuccess = refreshState is LoadState.NotLoading && itemCount > 0 && isSearching
-
-            val isEmptyResult = refreshState is LoadState.NotLoading && itemCount == 0 && isSearching
-
-            binding.statusContainer.isVisible = (isSuccess || isEmptyResult) && true
-
-            when {
-                isInitialState -> showInitialState()
-                isLoading -> showLoadingState()
-                isSuccess -> showSearchResultState()
-                isEmptyResult -> showEmptyResultState()
-                refreshState is LoadState.Error -> {
-                    val error = refreshState.error
-                    if (error.message?.contains("ServerError") == true) {
-                        showServerErrorState()
-                    } else {
-                        showNoInternetState()
-                    }
-                }
+            when (val uiState = calculatePagingUiState(loadStates)) {
+                is PagingUiState.Initial -> showInitialState()
+                is PagingUiState.Loading -> showLoadingState()
+                is PagingUiState.Success -> showSearchResultState()
+                is PagingUiState.Empty -> showEmptyResultState()
+                is PagingUiState.Error -> handlePagingError(uiState.error)
             }
+        }
+    }
+
+    private fun calculatePagingUiState(loadStates: CombinedLoadStates): PagingUiState {
+        val refreshState = loadStates.refresh
+        val itemCount = adapter?.itemCount ?: 0
+        val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
+
+        val hasFilters = viewModel.filterState.value?.let {
+            (it.salary != null && it.salary != 0) || it.hideWithoutSalary || it.industry != null
+        } ?: false
+
+        val isSearching = !isQueryBlank || hasFilters
+
+        binding.statusContainer.isVisible = refreshState is LoadState.NotLoading && isSearching
+
+        return when {
+            !isSearching -> PagingUiState.Initial
+            refreshState is LoadState.Loading -> PagingUiState.Loading
+            refreshState is LoadState.NotLoading && itemCount > 0 -> PagingUiState.Success
+            refreshState is LoadState.NotLoading && itemCount == 0 -> PagingUiState.Empty
+            refreshState is LoadState.Error -> PagingUiState.Error(refreshState.error)
+            else -> PagingUiState.Initial
+        }
+    }
+
+    private fun handlePagingError(error: Throwable) {
+        if (error.message?.contains("ServerError") == true) {
+            showServerErrorState()
+        } else {
+            showNoInternetState()
         }
     }
 
