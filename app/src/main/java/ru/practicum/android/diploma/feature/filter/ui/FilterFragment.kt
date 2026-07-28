@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.filter.ui
 
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import ru.practicum.android.diploma.R
@@ -11,22 +10,19 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.navigation.koinNavGraphViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
-import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterState
-import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterViewModel
+import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
 
 class FilterFragment : Fragment() {
 
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: FilterViewModel by koinNavGraphViewModel(R.id.filter_screen)
-    private var hideWithoutSalary = false
+    private val viewModel: SearchViewModelWithPaging by koinNavGraphViewModel(R.id.search_screen_tab)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +41,33 @@ class FilterFragment : Fragment() {
         setupBackButton()
         observeState()
 
-        getIndustryResult()
+        setupEditText()
 
+        setupClickListeners()
+    }
+
+    private fun setupClickListeners() {
+        binding.hideWithoutSalaryContainer.setOnClickListener {
+            val checked = viewModel.filterState.value?.hideWithoutSalary ?: false
+
+            viewModel.saveHideWithoutSalary(!checked)
+        }
+
+        binding.mainContainer.setOnClickListener {
+            clearSalaryFocus()
+        }
+
+        binding.resetButton.setOnClickListener {
+            viewModel.clearFilter()
+        }
+
+        binding.applyButton.setOnClickListener {
+            viewModel.applyFilters()
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun setupEditText() {
         binding.salaryEdit.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.salaryLabel.setTextColor(
@@ -57,28 +78,10 @@ class FilterFragment : Fragment() {
             }
         }
 
-        binding.hideWithoutSalaryContainer.setOnClickListener {
-            hideWithoutSalary = !hideWithoutSalary
-            updateSalaryCheckBox()
-        }
-
-        binding.mainContainer.setOnClickListener {
-            clearSalaryFocus()
-        }
-    }
-
-    private fun getIndustryResult() {
-        parentFragmentManager.setFragmentResultListener(
-            IndustryFilterFragment.INDUSTRY_KEY,
-            viewLifecycleOwner
-        ) { _, bundle ->
-            val industry = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bundle.getParcelable(IndustryFilterFragment.INDUSTRY_KEY, FilterIndustry::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                bundle.getParcelable(IndustryFilterFragment.INDUSTRY_KEY)
+        binding.salaryEdit.doOnTextChanged { text, _, _, _ ->
+            text?.let {
+                viewModel.saveSalary(text.toString())
             }
-            viewModel.saveIndustry(industry)
         }
     }
 
@@ -105,15 +108,6 @@ class FilterFragment : Fragment() {
         )
     }
 
-    private fun updateSalaryCheckBox() {
-        binding.salaryCheckBox.setImageResource(
-            if (hideWithoutSalary)
-                R.drawable.ic_check_box_on_24
-            else
-                R.drawable.ic_check_box_off_24
-        )
-    }
-
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
@@ -137,21 +131,38 @@ class FilterFragment : Fragment() {
     }
 
     private fun observeState() {
-        viewModel.state.observe(
-            viewLifecycleOwner
-        ) { state ->
-            hideWithoutSalary =
-                state.hideWithoutSalary
-            updateSalaryCheckBox()
+        viewModel.filterState.observe(viewLifecycleOwner) { state ->
+            binding.salaryCheckBox.setImageResource(
+                if (state.hideWithoutSalary)
+                    R.drawable.ic_check_box_on_24
+                else
+                    R.drawable.ic_check_box_off_24
+            )
+            val newSalary = state.salary
+            val currentInput = binding.salaryEdit.text.toString()
 
-            state.industry?.let {
+            val targetText = if (newSalary == 0 || newSalary == null) "" else newSalary.toString()
+
+            if (currentInput != targetText) {
+                binding.salaryEdit.setText(targetText)
+            }
+
+            val industry = state.industry
+
+            if (industry == null) {
                 binding.industryHint.apply {
-                    text = it.name
+                    text = getString(R.string.industry_hint)
+                    setTextColor(resources.getColor(R.color.gray))
+                }
+            } else {
+                binding.industryHint.apply {
+                    text = industry.name
                     setTextColor(resources.getColor(R.color.black))
                 }
             }
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

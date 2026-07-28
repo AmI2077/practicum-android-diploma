@@ -27,7 +27,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class SearchViewModelWithPaging(
     private val searchVacanciesUseCase: SearchVacanciesUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private var currentFilters = FilterSettings()
     private val _filterState = MutableLiveData(FilterState())
@@ -48,7 +48,9 @@ class SearchViewModelWithPaging(
     }
         .distinctUntilChanged()
         .flatMapLatest { (query, filters) ->
-            if (query.isEmpty()) {
+            val hasFilters = filters.salary != null || filters.hideWithoutSalary || filters.industry != null
+
+            if (query.isEmpty() && !hasFilters) {
                 flowOf(PagingData.empty())
             } else {
                 Pager(
@@ -71,7 +73,6 @@ class SearchViewModelWithPaging(
             }
         }.cachedIn(viewModelScope).asLiveData()
 
-
     fun search(query: String) {
         if (query.isBlank()) {
             queryFlow.value = ""
@@ -93,7 +94,7 @@ class SearchViewModelWithPaging(
     }
 
     fun saveSalary(text: String?) {
-        currentFilters = currentFilters.copy(salary = text?.toInt() ?: 0)
+        currentFilters = currentFilters.copy(salary = text?.toIntOrNull())
         syncFilterState()
     }
 

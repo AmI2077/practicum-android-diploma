@@ -5,7 +5,6 @@ import org.koin.dsl.module
 import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailViewModel
 import ru.practicum.android.diploma.feature.favourites.ui.viewmodel.FavouritesViewModel
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
-import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModel
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
 
 val viewModelModule = module {
@@ -15,10 +14,6 @@ val viewModelModule = module {
             getVacancyDetailUseCase = get(),
             favouritesInteractor = get()
         )
-    }
-
-    viewModel {
-        SearchViewModel(get())
     }
 
     viewModel {

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.feature.search.data
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.practicum.android.diploma.core.models.Result
@@ -25,7 +26,7 @@ class SearchPagingSource(
             onlyWithSalary = onlyWithSalary,
             industry = industryId
         )
-
+        Log.d("SEARCH_PARAMS", searchParams.toString())
         return when(val result = searchVacanciesUseCase(searchParams)) {
             is Result.Content -> {
                 val vacancies = result.data.vacancies

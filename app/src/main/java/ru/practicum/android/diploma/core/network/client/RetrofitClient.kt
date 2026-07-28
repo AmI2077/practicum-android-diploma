@@ -19,7 +19,7 @@ object RetrofitClient : NetworkClient {
     private const val BASE_URL = "https://android-diploma.education-services.ru"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.HEADERS
+        level = HttpLoggingInterceptor.Level.BODY
     }
     private val authInterceptor = AuthorizationInterceptor(token = BuildConfig.API_ACCESS_TOKEN)
 

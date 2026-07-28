@@ -12,9 +12,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 import ru.practicum.android.diploma.databinding.FragmentIndustryFilterBinding
-import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterViewModel
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryState
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
+import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
 import kotlin.getValue
 
 class IndustryFilterFragment : Fragment() {
@@ -23,7 +23,7 @@ class IndustryFilterFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: IndustryViewModel by viewModel()
-    private val filterViewModel: FilterViewModel by koinNavGraphViewModel(R.id.filter_screen)
+    private val filterViewModel: SearchViewModelWithPaging by koinNavGraphViewModel(R.id.search_screen_tab)
 
     private lateinit var adapter: IndustryAdapter
     private var selectedIndustry: FilterIndustry? = null
@@ -108,9 +108,5 @@ class IndustryFilterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        const val INDUSTRY_KEY = "INDUSTRY"
     }
 }

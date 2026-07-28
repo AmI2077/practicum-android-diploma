@@ -77,10 +77,6 @@ class SearchFragment : Fragment() {
                     query.isNotEmpty()
                 binding.searchButton.isVisible =
                     query.isEmpty()
-
-                if (query.isBlank()) {
-                    showInitialState()
-                }
                 viewModel.search(query)
             }
             setOnEditorActionListener { _, actionId, _ ->
@@ -146,13 +142,21 @@ class SearchFragment : Fragment() {
             val itemCount = adapter?.itemCount ?: 0
             val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
 
-            val isInitialState = isQueryBlank
+            val hasFilters = viewModel.filterState.value?.let {
+                it.salary != null && it.salary != 0 || it.hideWithoutSalary || it.industry != null
+            } ?: false
 
-            val isLoading = refreshState is LoadState.Loading && !isQueryBlank
+            val isSearching = !isQueryBlank || hasFilters
 
-            val isSuccess = refreshState is LoadState.NotLoading && itemCount > 0 && !isQueryBlank
+            val isInitialState = !isSearching
 
-            val isEmptyResult = refreshState is LoadState.NotLoading && itemCount == 0 && !isQueryBlank
+            val isLoading = refreshState is LoadState.Loading && isSearching
+
+            val isSuccess = refreshState is LoadState.NotLoading && itemCount > 0 && isSearching
+
+            val isEmptyResult = refreshState is LoadState.NotLoading && itemCount == 0 && isSearching
+
+            binding.statusContainer.isVisible = (isSuccess || isEmptyResult) && true
 
             when {
                 isInitialState -> showInitialState()
@@ -170,7 +174,6 @@ class SearchFragment : Fragment() {
             }
         }
     }
-
     private fun showSearchResultState() {
         hideAllImageStates()
         binding.progressBar.isVisible = false
