@@ -16,9 +16,7 @@ import ru.practicum.android.diploma.feature.detail.domain.api.DetailsRepository
 import ru.practicum.android.diploma.feature.detail.utils.DetailsHtmlParserImpl
 import ru.practicum.android.diploma.feature.favourites.data.repository.FavouritesRepositoryImpl
 import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepository
-import ru.practicum.android.diploma.feature.filter.data.FilterRepositoryImpl
 import ru.practicum.android.diploma.feature.filter.data.IndustryRepositoryImpl
-import ru.practicum.android.diploma.feature.filter.domain.api.FilterRepository
 import ru.practicum.android.diploma.feature.filter.domain.api.IndustryRepository
 import ru.practicum.android.diploma.feature.search.data.SearchRepositoryImpl
 import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
@@ -67,7 +65,6 @@ val dataModule = module {
     }
     single<HtmlParser> { DetailsHtmlParserImpl() }
 
-    // Компоненты для фичи Sharing (из ветки develop)
     single<SharingRepository> {
         SharingRepositoryImpl(
             context = androidContext()
@@ -84,12 +81,6 @@ val dataModule = module {
     single<SharingInteractor> {
         SharingInteractorImpl(
             repository = get()
-        )
-    }
-
-    single<FilterRepository> {
-        FilterRepositoryImpl(
-            sharedPreferences = get()
         )
     }
 
