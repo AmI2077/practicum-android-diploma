@@ -89,17 +89,13 @@ class IndustryFilterFragment : Fragment() {
 
             when (state) {
 
-                IndustryState.Loading -> {
-
-                }
+                IndustryState.Loading -> Unit
 
                 is IndustryState.Content -> {
                     adapter.submitList(state.industries)
                 }
 
-                IndustryState.Error -> {
-
-                }
+                IndustryState.Error -> Unit
             }
         }
     }

@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.feature.favourites.ui.viewmodel.FavouritesVi
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
 
-val viewModelModule = module {
+val viewModelModuleDI = module {
 
     viewModel {
         VacancyDetailViewModel(

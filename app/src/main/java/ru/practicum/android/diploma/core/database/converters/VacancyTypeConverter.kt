@@ -13,7 +13,7 @@ import ru.practicum.android.diploma.core.models.details.Schedule
 import ru.practicum.android.diploma.core.models.filter.FilterArea
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 
-class VacancyTypeConverter() {
+class VacancyTypeConverter {
     val gson = Gson()
 
     @TypeConverter

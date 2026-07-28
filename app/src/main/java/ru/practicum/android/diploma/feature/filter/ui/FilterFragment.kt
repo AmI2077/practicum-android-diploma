@@ -133,10 +133,11 @@ class FilterFragment : Fragment() {
     private fun observeState() {
         viewModel.filterState.observe(viewLifecycleOwner) { state ->
             binding.salaryCheckBox.setImageResource(
-                if (state.hideWithoutSalary)
+                if (state.hideWithoutSalary) {
                     R.drawable.ic_check_box_on_24
-                else
+                } else {
                     R.drawable.ic_check_box_off_24
+                }
             )
             val newSalary = state.salary
             val currentInput = binding.salaryEdit.text.toString()

@@ -52,7 +52,7 @@ class SearchFragment : Fragment() {
         observeState()
         setupLoadStateListener()
 
-        showInitialState()
+        updateUiState(PagingUiState.Initial)
     }
 
     private fun setupRecyclerView() {
@@ -138,97 +138,50 @@ class SearchFragment : Fragment() {
 
     private fun setupLoadStateListener() {
         adapter?.addLoadStateListener { loadStates ->
-            when (val uiState = calculatePagingUiState(loadStates)) {
-                is PagingUiState.Initial -> showInitialState()
-                is PagingUiState.Loading -> showLoadingState()
-                is PagingUiState.Success -> showSearchResultState()
-                is PagingUiState.Empty -> showEmptyResultState()
-                is PagingUiState.Error -> handlePagingError(uiState.error)
+            val refreshState = loadStates.refresh
+            val itemCount = adapter?.itemCount ?: 0
+            val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
+
+            val hasFilters = viewModel.filterState.value?.let {
+                (it.salary != null && it.salary != 0) || it.hideWithoutSalary || it.industry != null
+            } ?: false
+
+            val isSearching = !isQueryBlank || hasFilters
+
+            binding.statusContainer.isVisible = refreshState is LoadState.NotLoading && isSearching
+
+            val uiState = when {
+                !isSearching -> PagingUiState.Initial
+                refreshState is LoadState.Loading -> PagingUiState.Loading
+                refreshState is LoadState.NotLoading && itemCount > 0 -> PagingUiState.Success
+                refreshState is LoadState.NotLoading && itemCount == 0 -> PagingUiState.Empty
+                refreshState is LoadState.Error -> PagingUiState.Error(refreshState.error)
+                else -> PagingUiState.Initial
             }
+
+            updateUiState(uiState)
         }
     }
 
-    private fun calculatePagingUiState(loadStates: CombinedLoadStates): PagingUiState {
-        val refreshState = loadStates.refresh
-        val itemCount = adapter?.itemCount ?: 0
-        val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
+    private fun updateUiState(state: PagingUiState) {
+        binding.imageStateEmpty.isVisible = state is PagingUiState.Initial
+        binding.progressBar.isVisible = state is PagingUiState.Loading
+        binding.recyclerView.isVisible = state is PagingUiState.Success
 
-        val hasFilters = viewModel.filterState.value?.let {
-            (it.salary != null && it.salary != 0) || it.hideWithoutSalary || it.industry != null
-        } ?: false
+        binding.errorNoVacancies.isVisible = state is PagingUiState.Empty
 
-        val isSearching = !isQueryBlank || hasFilters
+        val isServerError = state is PagingUiState.Error && state.error.message?.contains("ServerError") == true
+        val isInternetError = state is PagingUiState.Error && !isServerError
 
-        binding.statusContainer.isVisible = refreshState is LoadState.NotLoading && isSearching
+        binding.errorServer.isVisible = isServerError
+        binding.errorNoInternet.isVisible = isInternetError
 
-        return when {
-            !isSearching -> PagingUiState.Initial
-            refreshState is LoadState.Loading -> PagingUiState.Loading
-            refreshState is LoadState.NotLoading && itemCount > 0 -> PagingUiState.Success
-            refreshState is LoadState.NotLoading && itemCount == 0 -> PagingUiState.Empty
-            refreshState is LoadState.Error -> PagingUiState.Error(refreshState.error)
-            else -> PagingUiState.Initial
+        if (state is PagingUiState.Initial || state is PagingUiState.Loading || state is PagingUiState.Error) {
+            binding.statusContainer.isVisible = false
         }
-    }
-
-    private fun handlePagingError(error: Throwable) {
-        if (error.message?.contains("ServerError") == true) {
-            showServerErrorState()
-        } else {
-            showNoInternetState()
+        if (state is PagingUiState.Empty) {
+            binding.statusVacancies.text = getString(R.string.vacancies_not_found)
         }
-    }
-
-    private fun showSearchResultState() {
-        hideAllImageStates()
-        binding.progressBar.isVisible = false
-        binding.recyclerView.isVisible = true
-    }
-
-    private fun showInitialState() {
-        hideAllImageStates()
-        binding.progressBar.isVisible = false
-        binding.recyclerView.isVisible = false
-        binding.statusContainer.isVisible = false
-        binding.imageStateEmpty.isVisible = true
-    }
-
-    private fun showLoadingState() {
-        hideAllImageStates()
-        binding.progressBar.isVisible = true
-        binding.recyclerView.isVisible = false
-        binding.statusContainer.isVisible = false
-    }
-
-    private fun showEmptyResultState() {
-        hideAllImageStates()
-        binding.progressBar.isVisible = false
-        binding.recyclerView.isVisible = false
-        binding.statusVacancies.text = getString(R.string.vacancies_not_found)
-        binding.errorNoVacancies.isVisible = true
-    }
-
-    private fun showServerErrorState() {
-        hideAllImageStates()
-        binding.progressBar.isVisible = false
-        binding.recyclerView.isVisible = false
-        binding.statusContainer.isVisible = false
-        binding.errorServer.isVisible = true
-    }
-
-    private fun showNoInternetState() {
-        hideAllImageStates()
-        binding.progressBar.isVisible = false
-        binding.recyclerView.isVisible = false
-        binding.statusContainer.isVisible = false
-        binding.errorNoInternet.isVisible = true
-    }
-
-    private fun hideAllImageStates() {
-        binding.imageStateEmpty.isVisible = false
-        binding.errorNoInternet.isVisible = false
-        binding.errorNoVacancies.isVisible = false
-        binding.errorServer.isVisible = false
     }
 
     private fun hideKeyboard() {

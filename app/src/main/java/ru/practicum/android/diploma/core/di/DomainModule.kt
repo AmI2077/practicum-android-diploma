@@ -8,7 +8,7 @@ import ru.practicum.android.diploma.feature.filter.domain.interactor.GetIndustri
 import ru.practicum.android.diploma.feature.filter.domain.interactor.GetIndustriesInteractorImpl
 import ru.practicum.android.diploma.feature.search.domain.usecase.SearchVacanciesUseCase
 
-val domainModule = module {
+val domainModuleDI = module {
 
     factory {
         GetVacancyDetailUseCase(get())
