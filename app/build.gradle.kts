@@ -88,7 +88,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    //Testing
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -98,6 +98,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    //Jsoup
+    // Paging
+    implementation(libs.androidx.paging.runtime)
+
+    // Jsoup
     implementation(libs.jsoup)
 }
