@@ -152,12 +152,12 @@ class FilterFragment : Fragment() {
             if (industry == null) {
                 binding.industryHint.apply {
                     text = getString(R.string.industry_hint)
-                    setTextColor(resources.getColor(R.color.gray))
+                    setTextColor(ContextCompat.getColor(requireContext(),R.color.gray))
                 }
             } else {
                 binding.industryHint.apply {
                     text = industry.name
-                    setTextColor(resources.getColor(R.color.black))
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                 }
             }
         }
