@@ -10,37 +10,21 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.models.NetworkErrors
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
-import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchState
-import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModel
+import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
+import kotlin.getValue
 
-
-/**
- * Что перенесено в SearchViewModel:
- * - выполнение поиска вакансий через SearchVacanciesUseCase
- * - debounce (задержка перед отправкой запроса)
- * - формирование параметров поиска VacancySearchParams
- * - обработка результата поиска (успех / пустой результат / ошибки сети)
- * - хранение состояния экрана через SearchState
- *
- * SearchFragment теперь отвечает только за:
- * - отображение UI-состояний
- * - обработку пользовательских действий
- * - подписку на изменения состояния ViewModel
- * - навигацию
- */
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: SearchViewModel by viewModel()
-    private var adapter: VacancyAdapter? = null
+    private val viewModel: SearchViewModelWithPaging by koinNavGraphViewModel(R.id.search_screen_tab)
+    private var adapter: PagingVacancyAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,37 +49,24 @@ class SearchFragment : Fragment() {
         setupSearchEditText()
         setupClearButton()
         setupFilterButton()
-        setupScrollListener()
         observeState()
-        viewModel.restoreStateIfNeeded()
+        setupLoadStateListener()
+
+        showInitialState()
     }
 
     private fun setupRecyclerView() {
-        adapter = VacancyAdapter { vacancy ->
+        adapter = PagingVacancyAdapter { vacancy ->
             openVacancyDetails(vacancy)
         }
         binding.recyclerView.apply {
             layoutManager =
                 LinearLayoutManager(requireContext())
             adapter =
-                this@SearchFragment.adapter
+                this@SearchFragment.adapter?.withLoadStateFooter(
+                    footer = VacancyLoadStateAdapter()
+                )
         }
-    }
-
-    private fun setupScrollListener() {
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
-                    val totalItemCount = adapter?.itemCount ?: 0
-                    if (lastVisiblePosition >= totalItemCount - 1) {
-                        viewModel.loadNextPage()
-                    }
-                }
-            }
-        })
     }
 
     private fun setupSearchEditText() {
@@ -106,6 +77,10 @@ class SearchFragment : Fragment() {
                     query.isNotEmpty()
                 binding.searchButton.isVisible =
                     query.isEmpty()
+
+                if (query.isBlank()) {
+                    showInitialState()
+                }
                 viewModel.search(query)
             }
             setOnEditorActionListener { _, actionId, _ ->
@@ -136,42 +111,20 @@ class SearchFragment : Fragment() {
     }
 
     private fun observeState() {
-        viewModel.state.observe(
-            viewLifecycleOwner
-        ) { state ->
-            when (state) {
-                SearchState.Initial -> {
-                    showInitialState()
-                }
-                SearchState.Loading -> {
-                    showLoadingState()
-                }
-                is SearchState.Content -> {
-                    showSearchResult(
-                        state.vacancies,
-                        state.totalFound,
-                        state.isLoadingNextPage
+        viewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
+            adapter?.submitData(lifecycle, pagingData)
+        }
+
+        viewModel.totalFound.observe(viewLifecycleOwner) { found ->
+            if (found > 0) {
+                binding.statusContainer.isVisible = true
+                binding.statusVacancies.text =
+                    getString(
+                        R.string.vacancies_found,
+                        found
                     )
-                }
-                SearchState.EmptyResult -> {
-                    showEmptyResultState()
-                }
-                is SearchState.Error -> {
-                    when (state.error) {
-                        NetworkErrors.ServerError -> {
-                            showServerErrorState()
-                        }
-
-                        NetworkErrors.NoInternetConnectionError -> {
-                            showNoInternetState()
-                        }
-
-                        NetworkErrors.NotFoundError -> {
-                            showEmptyResultState()
-                        }
-                    }
-                }
             }
+
         }
     }
 
@@ -187,13 +140,49 @@ class SearchFragment : Fragment() {
             .navigate(action)
     }
 
+    private fun setupLoadStateListener() {
+        adapter?.addLoadStateListener { loadStates ->
+            val refreshState = loadStates.refresh
+            val itemCount = adapter?.itemCount ?: 0
+            val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
+
+            val isInitialState = isQueryBlank
+
+            val isLoading = refreshState is LoadState.Loading && !isQueryBlank
+
+            val isSuccess = refreshState is LoadState.NotLoading && itemCount > 0 && !isQueryBlank
+
+            val isEmptyResult = refreshState is LoadState.NotLoading && itemCount == 0 && !isQueryBlank
+
+            when {
+                isInitialState -> showInitialState()
+                isLoading -> showLoadingState()
+                isSuccess -> showSearchResultState()
+                isEmptyResult -> showEmptyResultState()
+                refreshState is LoadState.Error -> {
+                    val error = refreshState.error
+                    if (error.message?.contains("ServerError") == true) {
+                        showServerErrorState()
+                    } else {
+                        showNoInternetState()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showSearchResultState() {
+        hideAllImageStates()
+        binding.progressBar.isVisible = false
+        binding.recyclerView.isVisible = true
+    }
+
     private fun showInitialState() {
+        hideAllImageStates()
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
-        hideAllImageStates()
         binding.imageStateEmpty.isVisible = true
-        adapter?.hideLoadingFooter()
     }
 
     private fun showLoadingState() {
@@ -201,62 +190,30 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = true
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
-        adapter?.hideLoadingFooter()
-    }
-    private fun showSearchResult(
-        vacancies: List<VacancyCard>,
-        totalFound: Int,
-        isLoadingNextPage: Boolean
-    ) {
-        hideAllImageStates()
-        binding.progressBar.isVisible = false
-        binding.recyclerView.isVisible = true
-        binding.statusContainer.isVisible = true
-        binding.statusVacancies.text =
-            getString(
-                R.string.vacancies_found,
-                totalFound
-            )
-        adapter?.submitList(vacancies)
-        if (isLoadingNextPage) {
-            adapter?.showLoadingFooter()
-        } else {
-            adapter?.hideLoadingFooter()
-        }
     }
 
     private fun showEmptyResultState() {
+        hideAllImageStates()
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
-        binding.statusContainer.isVisible = true
-        adapter?.hideLoadingFooter()
-        binding.statusVacancies.text =
-            getString(
-                R.string.vacancies_not_found
-            )
-        showImageState(
-            ImageState.NO_VACANCIES
-        )
+        binding.statusVacancies.text = getString(R.string.vacancies_not_found)
+        binding.errorNoVacancies.isVisible = true
     }
 
     private fun showServerErrorState() {
+        hideAllImageStates()
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
-        adapter?.hideLoadingFooter()
-        showImageState(
-            ImageState.SERVER_ERROR
-        )
+        binding.errorServer.isVisible = true
     }
 
     private fun showNoInternetState() {
+        hideAllImageStates()
         binding.progressBar.isVisible = false
         binding.recyclerView.isVisible = false
         binding.statusContainer.isVisible = false
-        adapter?.hideLoadingFooter()
-        showImageState(
-            ImageState.NO_INTERNET
-        )
+        binding.errorNoInternet.isVisible = true
     }
 
     private fun hideAllImageStates() {
@@ -264,29 +221,6 @@ class SearchFragment : Fragment() {
         binding.errorNoInternet.isVisible = false
         binding.errorNoVacancies.isVisible = false
         binding.errorServer.isVisible = false
-    }
-
-    private enum class ImageState {
-        EMPTY,
-        NO_INTERNET,
-        NO_VACANCIES,
-        SERVER_ERROR
-    }
-
-    private fun showImageState(
-        state: ImageState
-    ) {
-        hideAllImageStates()
-        when (state) {
-            ImageState.EMPTY ->
-                binding.imageStateEmpty.isVisible = true
-            ImageState.NO_INTERNET ->
-                binding.errorNoInternet.isVisible = true
-            ImageState.NO_VACANCIES ->
-                binding.errorNoVacancies.isVisible = true
-            ImageState.SERVER_ERROR ->
-                binding.errorServer.isVisible = true
-        }
     }
 
     private fun hideKeyboard(){
@@ -303,6 +237,7 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        adapter = null
         _binding = null
     }
 }
