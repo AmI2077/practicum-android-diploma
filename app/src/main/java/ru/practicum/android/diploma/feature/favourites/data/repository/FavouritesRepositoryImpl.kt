@@ -1,7 +1,6 @@
 package ru.practicum.android.diploma.feature.favourites.data.repository
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -15,7 +14,7 @@ import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepo
 class FavouritesRepositoryImpl(
     private val vacancyDao: VacancyDao,
     private val dispatcher: CoroutineDispatcher,
-): FavouritesRepository {
+) : FavouritesRepository {
 
     override fun getAllFavouritesVacancies(): Flow<List<VacancyDetails>> {
         return vacancyDao

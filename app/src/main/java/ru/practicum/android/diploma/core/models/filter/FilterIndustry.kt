@@ -7,4 +7,4 @@ import kotlinx.parcelize.Parcelize
 data class FilterIndustry(
     val id: Int,
     val name: String,
-): Parcelable
+) : Parcelable

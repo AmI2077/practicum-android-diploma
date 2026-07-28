@@ -6,7 +6,7 @@ import ru.practicum.android.diploma.feature.filter.domain.api.IndustryRepository
 
 class GetIndustriesInteractorImpl(
     private val repository: IndustryRepository
-): GetIndustriesInteractor {
+) : GetIndustriesInteractor {
 
     override suspend fun invoke(): Result<List<FilterIndustry>> {
         return repository.getIndustries()

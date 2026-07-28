@@ -48,16 +48,19 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun render(state: FavouritesState) {
-        when(state) {
+        when (state) {
             is FavouritesState.Content -> {
                 showContent(state.vacancies)
             }
+
             FavouritesState.Empty -> {
                 showEmptyView()
             }
+
             FavouritesState.Error -> {
                 showErrorView()
             }
+
             FavouritesState.Loading -> {
                 showLoadingView()
             }

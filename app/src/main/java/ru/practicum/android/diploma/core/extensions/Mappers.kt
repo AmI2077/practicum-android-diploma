@@ -5,9 +5,9 @@ import ru.practicum.android.diploma.core.dto.request.VacancyRequestDto
 import ru.practicum.android.diploma.core.dto.response.VacancyCardDto
 import ru.practicum.android.diploma.core.dto.response.VacancyCardSalaryDto
 import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
+import ru.practicum.android.diploma.core.models.VacancySearchParams
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
-import ru.practicum.android.diploma.core.models.VacancySearchParams
 import ru.practicum.android.diploma.core.models.details.Address
 import ru.practicum.android.diploma.core.models.details.Contacts
 import ru.practicum.android.diploma.core.models.details.Employer

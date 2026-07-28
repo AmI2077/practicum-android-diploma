@@ -15,7 +15,6 @@ import ru.practicum.android.diploma.databinding.FragmentIndustryFilterBinding
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryState
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
-import kotlin.getValue
 
 class IndustryFilterFragment : Fragment() {
 

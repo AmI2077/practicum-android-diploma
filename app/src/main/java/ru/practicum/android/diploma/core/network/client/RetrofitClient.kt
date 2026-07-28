@@ -62,7 +62,7 @@ object RetrofitClient : NetworkClient {
         }
     }
 
-    private suspend fun <T>safeApiCall(
+    private suspend fun <T> safeApiCall(
         call: suspend () -> Response<T>
     ): NetworkResult<T?> {
         return try {

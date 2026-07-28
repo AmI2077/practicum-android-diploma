@@ -7,7 +7,8 @@ import ru.practicum.android.diploma.feature.detail.domain.api.DetailsRepository
 class GetVacancyDetailUseCase(
     private val repository: DetailsRepository
 ) {
-    suspend operator fun invoke(vacancyId: String
+    suspend operator fun invoke(
+        vacancyId: String
     ): Result<VacancyDetails?> {
 
         return repository.fetchVacancyDetails(vacancyId)

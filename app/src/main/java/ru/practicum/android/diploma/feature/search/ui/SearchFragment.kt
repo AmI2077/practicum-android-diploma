@@ -17,7 +17,6 @@ import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
-import kotlin.getValue
 
 class SearchFragment : Fragment() {
 
@@ -174,6 +173,7 @@ class SearchFragment : Fragment() {
             }
         }
     }
+
     private fun showSearchResultState() {
         hideAllImageStates()
         binding.progressBar.isVisible = false
@@ -226,7 +226,7 @@ class SearchFragment : Fragment() {
         binding.errorServer.isVisible = false
     }
 
-    private fun hideKeyboard(){
+    private fun hideKeyboard() {
         val imm =
             requireContext()
                 .getSystemService(

@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.feature.filter.ui
 
 import android.os.Bundle
 import android.util.TypedValue
-import ru.practicum.android.diploma.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.navigation.koinNavGraphViewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
 
@@ -152,7 +152,7 @@ class FilterFragment : Fragment() {
             if (industry == null) {
                 binding.industryHint.apply {
                     text = getString(R.string.industry_hint)
-                    setTextColor(ContextCompat.getColor(requireContext(),R.color.gray))
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
                 }
             } else {
                 binding.industryHint.apply {

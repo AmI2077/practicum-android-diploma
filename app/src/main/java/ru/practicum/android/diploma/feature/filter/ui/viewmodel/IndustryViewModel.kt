@@ -10,7 +10,7 @@ import ru.practicum.android.diploma.feature.filter.domain.interactor.GetIndustri
 
 class IndustryViewModel(
     private val getIndustriesInteractor: GetIndustriesInteractor
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableLiveData<IndustryState>()
     val state: LiveData<IndustryState> = _state
@@ -22,12 +22,13 @@ class IndustryViewModel(
     private fun loadIndustries() {
         viewModelScope.launch {
             _state.value = IndustryState.Loading
-            when(
+            when (
                 val result = getIndustriesInteractor()
             ) {
                 is Result.Content -> {
                     _state.value = IndustryState.Content(result.data)
                 }
+
                 is Result.Error -> {
                     _state.value = IndustryState.Error
                 }

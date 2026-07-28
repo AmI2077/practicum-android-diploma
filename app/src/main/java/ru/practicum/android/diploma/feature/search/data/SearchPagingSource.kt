@@ -15,7 +15,7 @@ class SearchPagingSource(
     private val onlyWithSalary: Boolean,
     private val industryId: Int?,
     private val onTotalFoundLoaded: (totalPages: Int) -> Unit
-): PagingSource<Int, VacancyCard>() {
+) : PagingSource<Int, VacancyCard>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, VacancyCard> {
         val page = params.key ?: 1
 
@@ -27,7 +27,7 @@ class SearchPagingSource(
             industry = industryId
         )
         Log.d("SEARCH_PARAMS", searchParams.toString())
-        return when(val result = searchVacanciesUseCase(searchParams)) {
+        return when (val result = searchVacanciesUseCase(searchParams)) {
             is Result.Content -> {
                 val vacancies = result.data.vacancies
                 val totalPages = result.data.pages
@@ -43,6 +43,7 @@ class SearchPagingSource(
                     nextKey = nextKey
                 )
             }
+
             is Result.Error -> {
                 LoadResult.Error(
                     Exception(result.error.toString())
