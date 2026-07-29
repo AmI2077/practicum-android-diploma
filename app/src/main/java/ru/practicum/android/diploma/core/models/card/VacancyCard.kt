@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.core.models.card
 
+import ru.practicum.android.diploma.core.models.details.Salary
+
 data class VacancyCard(
     val id: String,
     val name: String,
@@ -14,3 +16,11 @@ data class VacancyCardSalary(
     val to: Int?,
     val currency: String?
 )
+
+fun VacancyCardSalary.toSalary(): Salary {
+    return Salary(
+        from = this.from,
+        to = this.to,
+        currency = this.currency
+    )
+}
