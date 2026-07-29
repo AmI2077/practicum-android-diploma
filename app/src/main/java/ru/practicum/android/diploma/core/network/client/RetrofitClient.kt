@@ -13,6 +13,7 @@ import ru.practicum.android.diploma.core.network.HttpCodes
 import ru.practicum.android.diploma.core.network.NetworkResult
 import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
 import ru.practicum.android.diploma.feature.filter.data.dto.FilterIndustryDto
+import java.io.IOException
 
 object RetrofitClient : NetworkClient {
 
@@ -33,7 +34,6 @@ object RetrofitClient : NetworkClient {
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()
-
 
     private val apiService = retrofit.create(VacanciesApiService::class.java)
 
@@ -72,7 +72,7 @@ object RetrofitClient : NetworkClient {
             } else {
                 NetworkResult.Error(HttpCodes.fromInt(response.code()))
             }
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             Log.d("RETROFIT_CLIENT", "FETCH", e)
             NetworkResult.Error(HttpCodes.NO_INTERNET_CONNECTION_ERROR_CODE)
         }

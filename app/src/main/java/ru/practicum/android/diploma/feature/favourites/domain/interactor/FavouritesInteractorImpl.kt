@@ -7,7 +7,6 @@ import ru.practicum.android.diploma.core.models.details.VacancyDetails
 import ru.practicum.android.diploma.core.models.details.toCard
 import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepository
 
-
 class FavouritesInteractorImpl(
     private val repository: FavouritesRepository
 ) : FavouritesInteractor {

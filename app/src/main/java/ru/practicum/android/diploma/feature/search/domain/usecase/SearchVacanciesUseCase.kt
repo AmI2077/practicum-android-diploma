@@ -8,11 +8,9 @@ import ru.practicum.android.diploma.feature.search.domain.api.SearchRepository
 class SearchVacanciesUseCase(
     private val repository: SearchRepository
 ) {
-
     suspend operator fun invoke(
         params: VacancySearchParams
     ): Result<VacancySearchResult> {
-
         return repository.fetchVacancies(params)
     }
 }

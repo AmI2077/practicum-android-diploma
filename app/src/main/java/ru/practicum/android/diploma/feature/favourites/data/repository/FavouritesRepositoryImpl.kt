@@ -10,7 +10,6 @@ import ru.practicum.android.diploma.core.extensions.toModel
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
 import ru.practicum.android.diploma.feature.favourites.domain.api.FavouritesRepository
 
-
 class FavouritesRepositoryImpl(
     private val vacancyDao: VacancyDao,
     private val dispatcher: CoroutineDispatcher,

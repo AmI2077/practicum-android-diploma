@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.sharing.data
 
-
 import android.content.Context
 import android.content.Intent
 import ru.practicum.android.diploma.R

@@ -33,7 +33,6 @@ class FavouritesFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -113,7 +112,6 @@ class FavouritesFragment : Fragment() {
         binding.stateEmpty.isVisible = false
         binding.progressBar.isVisible = false
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
