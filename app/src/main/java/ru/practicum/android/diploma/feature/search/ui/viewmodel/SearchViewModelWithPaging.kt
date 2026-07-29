@@ -19,25 +19,28 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
+import ru.practicum.android.diploma.feature.filter.domain.interactor.FilterInteractor
 import ru.practicum.android.diploma.feature.filter.domain.models.FilterSettings
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterState
+import ru.practicum.android.diploma.feature.filter.ui.viewmodel.toFilterState
 import ru.practicum.android.diploma.feature.search.data.SearchPagingSource
 import ru.practicum.android.diploma.feature.search.domain.usecase.SearchVacanciesUseCase
 import kotlin.time.Duration.Companion.milliseconds
 
 class SearchViewModelWithPaging(
-    private val searchVacanciesUseCase: SearchVacanciesUseCase
+    private val searchVacanciesUseCase: SearchVacanciesUseCase,
+    private val filterInteractor: FilterInteractor
 ) : ViewModel() {
 
-    private var currentFilters = FilterSettings()
-    private val _filterState = MutableLiveData(FilterState())
+    private var currentFilters = filterInteractor.get()
+    private val _filterState = MutableLiveData(currentFilters.toFilterState())
     val filterState: LiveData<FilterState> = _filterState
 
     private var _totalFound = MutableLiveData<Int>()
     val totalFound = _totalFound
 
     val queryFlow = MutableStateFlow("")
-    private val appliedFiltersFlow = MutableStateFlow(FilterSettings())
+    private val appliedFiltersFlow = MutableStateFlow(currentFilters)
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val pagingData: LiveData<PagingData<VacancyCard>> = combine(
@@ -82,19 +85,19 @@ class SearchViewModelWithPaging(
     }
 
     fun applyFilters() {
+        filterInteractor.save(currentFilters)
         appliedFiltersFlow.value = currentFilters
     }
 
     private fun syncFilterState() {
-        _filterState.value = FilterState(
-            salary = currentFilters.salary,
-            hideWithoutSalary = currentFilters.hideWithoutSalary,
-            industry = currentFilters.industry
-        )
+        _filterState.value = currentFilters.toFilterState()
     }
 
-    fun saveSalary(text: String?) {
-        currentFilters = currentFilters.copy(salary = text?.toIntOrNull())
+    fun saveSalary(text: String) {
+        currentFilters = currentFilters.copy(
+            salary = text.toIntOrNull()
+                ?.takeIf { it > 0 }
+        )
         syncFilterState()
     }
 
@@ -110,7 +113,8 @@ class SearchViewModelWithPaging(
 
     fun clearFilter() {
         currentFilters = FilterSettings()
-        appliedFiltersFlow.value = FilterSettings()
+        filterInteractor.clear()
+        appliedFiltersFlow.value = currentFilters
         syncFilterState()
     }
 
