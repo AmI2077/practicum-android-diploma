@@ -52,7 +52,7 @@ data class EmploymentDto(
 data class ContactsDto(
     @SerializedName("id") val id: String,
     @SerializedName("name") val name: String,
-    @SerializedName("email") val email: String,
+    @SerializedName("email") val email: String?,
     @SerializedName("phones") val phones: List<PhoneDto>
 )
 
