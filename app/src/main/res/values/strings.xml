@@ -101,5 +101,6 @@
     <string name="apply_button">Принять</string>
     <string name="reset_button">Сбросить</string>
     <string name="select_button">Выбрать</string>
+    <string name="no_industries_title">Не удалось получить список отраслей</string>
 
 </resources>

@@ -98,14 +98,21 @@ class IndustryFilterFragment : Fragment() {
         ) { state ->
 
             when (state) {
-                IndustryState.Loading -> Unit
+
+                IndustryState.Loading -> {
+                    showLoading()
+                }
 
                 is IndustryState.Content -> {
+                    showIndustries()
+
                     adapter?.submitList(state.industries)
                     adapter?.setSelectedIndustryId(selectedIndustry?.id)
                 }
 
-                IndustryState.Error -> Unit
+                IndustryState.Error -> {
+                    showError()
+                }
             }
         }
     }
@@ -132,5 +139,23 @@ class IndustryFilterFragment : Fragment() {
 
     private fun updateSelectButtonVisibility() {
         binding.buttonsContainer.isVisible = selectedIndustry != null
+    }
+
+    private fun showLoading() {
+        binding.recyclerView.isVisible = false
+        binding.errorNoIndustries.isVisible = false
+    }
+
+
+    private fun showIndustries() {
+        binding.recyclerView.isVisible = true
+        binding.errorNoIndustries.isVisible = false
+    }
+
+
+    private fun showError() {
+        binding.recyclerView.isVisible = false
+        binding.errorNoIndustries.isVisible = true
+        binding.buttonsContainer.isVisible = false
     }
 }

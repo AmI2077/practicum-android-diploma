@@ -81,6 +81,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- Список отраслей -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
@@ -95,9 +96,101 @@
             tools:itemCount="7"
             tools:listitem="@layout/item_industry"/>
 
+        <!-- Нет интернета -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/errorNoInternet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5">
+
+            <ImageView
+                android:id="@+id/errorNoInternetImage"
+                style="@style/ErrorImage"
+                android:src="@drawable/ic_no_internet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                style="@style/ErrorTitle"
+                android:text="@string/no_internet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/errorNoInternetImage"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Ошибка сервера -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/errorServer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5">
+
+            <ImageView
+                android:id="@+id/errorServerImage"
+                style="@style/ErrorImage"
+                android:src="@drawable/ic_server_error"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                style="@style/ErrorTitle"
+                android:text="@string/server_error_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/errorServerImage"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Не удалось получить список отраслей -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/errorNoIndustries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5">
+
+
+            <ImageView
+                android:id="@+id/errorNoIndustriesImage"
+                style="@style/ErrorImage"
+                android:src="@drawable/ic_industry_filter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
+            <TextView
+                style="@style/ErrorTitle"
+                android:text="@string/no_industries_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/errorNoIndustriesImage"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+
+    <!-- Кнопка выбора -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonsContainer"
         android:layout_width="0dp"
@@ -108,6 +201,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/selectButton"
@@ -123,10 +217,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
