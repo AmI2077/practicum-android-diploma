@@ -96,7 +96,22 @@ class VacancyDetailFragment : Fragment() {
                 }
             }
         }
+        binding.contactPhone.setOnClickListener {
+            val currentState = viewModel.state.value as? VacancyDetailState.Content ?: return@setOnClickListener
 
+            val phone = currentState.vacancy.contacts
+                ?.phones
+                ?.firstOrNull()
+                ?.formatted
+                ?.filterNot { it.isWhitespace() }
+                ?: return@setOnClickListener
+
+            val intent = Intent(Intent.ACTION_DIAL).apply {
+                data = Uri.parse("tel:$phone")
+            }
+
+            startActivity(Intent.createChooser(intent, null))
+        }
 
     }
 
