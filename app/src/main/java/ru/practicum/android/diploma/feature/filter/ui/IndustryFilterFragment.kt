@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,11 +45,16 @@ class IndustryFilterFragment : Fragment() {
         setupSelectButton()
         setupRecyclerView()
         observeState()
+        setupSearch()
+
+        selectedIndustry = filterViewModel.filterState.value?.industry
+        adapter?.setSelectedIndustryId(selectedIndustry?.id)
+        updateSelectButtonVisibility()
     }
 
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
-            closeFragment()
+            findNavController().navigateUp()
         }
     }
 
@@ -58,7 +65,9 @@ class IndustryFilterFragment : Fragment() {
     }
 
     private fun closeFragment() {
-        filterViewModel.saveIndustry(selectedIndustry)
+        if (selectedIndustry != null) {
+            filterViewModel.saveIndustry(selectedIndustry)
+        }
         findNavController().navigateUp()
     }
 
@@ -73,13 +82,14 @@ class IndustryFilterFragment : Fragment() {
     }
 
     private fun handleIndustryClick(industry: FilterIndustry) {
-        val newSelected = if (selectedIndustry == industry) {
-            null
-        } else {
-            industry
-        }
-        selectedIndustry = newSelected
+        selectedIndustry =
+            if (selectedIndustry == industry) {
+                null
+            } else {
+                industry
+            }
         adapter?.setSelectedIndustryId(selectedIndustry?.id)
+        updateSelectButtonVisibility()
     }
 
     private fun observeState() {
@@ -92,6 +102,7 @@ class IndustryFilterFragment : Fragment() {
 
                 is IndustryState.Content -> {
                     adapter?.submitList(state.industries)
+                    adapter?.setSelectedIndustryId(selectedIndustry?.id)
                 }
 
                 IndustryState.Error -> Unit
@@ -102,5 +113,24 @@ class IndustryFilterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupSearch() {
+        binding.searchEditText.doAfterTextChanged { editable ->
+            val text = editable?.toString().orEmpty()
+
+            viewModel.searchIndustry(text)
+
+            binding.clearButton.isVisible = text.isNotBlank()
+            binding.searchButton.isVisible = text.isBlank()
+        }
+
+        binding.clearButton.setOnClickListener {
+            binding.searchEditText.text?.clear()
+        }
+    }
+
+    private fun updateSelectButtonVisibility() {
+        binding.buttonsContainer.isVisible = selectedIndustry != null
     }
 }

@@ -186,6 +186,7 @@
             android:id="@+id/buttonsContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:paddingHorizontal="@dimen/button_padding_horizontal_1"
             android:paddingBottom="@dimen/button_padding_bottom"
             app:layout_constraintBottom_toBottomOf="parent"

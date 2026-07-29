@@ -110,6 +110,7 @@ class SearchViewModelWithPaging(
 
     fun clearFilter() {
         currentFilters = FilterSettings()
+        appliedFiltersFlow.value = FilterSettings()
         syncFilterState()
     }
 
