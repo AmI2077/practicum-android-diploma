@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.navigation.koinNavGraphViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.filter.FilterIndustry
 import ru.practicum.android.diploma.databinding.FragmentIndustryFilterBinding
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryState
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.IndustryViewModel
-
-// Загрузка данных перенесена во ViewModel.
-// Моки закомментированы  после подключения реального источника данных через ViewModel.
+import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
 
 class IndustryFilterFragment : Fragment() {
 
@@ -22,9 +22,10 @@ class IndustryFilterFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: IndustryViewModel by viewModel()
+    private val filterViewModel: SearchViewModelWithPaging by koinNavGraphViewModel(R.id.search_screen_tab)
 
     private lateinit var adapter: IndustryAdapter
-    private var selectedIndustryId: Int? = null
+    private var selectedIndustry: FilterIndustry? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,15 +40,26 @@ class IndustryFilterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupBackButton()
+        setupSelectButton()
         setupRecyclerView()
-//        loadMockData()
         observeState()
     }
 
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
-            findNavController().navigateUp()
+            closeFragment()
         }
+    }
+
+    private fun setupSelectButton() {
+        binding.selectButton.setOnClickListener {
+            closeFragment()
+        }
+    }
+
+    private fun closeFragment() {
+        filterViewModel.saveIndustry(selectedIndustry)
+        findNavController().navigateUp()
     }
 
     private fun setupRecyclerView() {
@@ -61,22 +73,14 @@ class IndustryFilterFragment : Fragment() {
     }
 
     private fun handleIndustryClick(industry: FilterIndustry) {
-        val newSelectedId = if (selectedIndustryId == industry.id) {
+        val newSelected = if (selectedIndustry == industry) {
             null
         } else {
-            industry.id
+            industry
         }
-        selectedIndustryId = newSelectedId
-        adapter.setSelectedIndustryId(selectedIndustryId)
+        selectedIndustry = newSelected
+        adapter.setSelectedIndustryId(selectedIndustry?.id)
     }
-
-    // Теперь метод больше не нужен
-//    private fun loadMockData() {
-//        // Заменить на реальные данные API сейчас моки
-//        val mockIndustries = IndustryMocks.getMockIndustries()
-//        adapter.submitList(mockIndustries)
-//        adapter.setSelectedIndustryId(null)
-//    }
 
     private fun observeState() {
         viewModel.state.observe(
@@ -85,17 +89,13 @@ class IndustryFilterFragment : Fragment() {
 
             when (state) {
 
-                IndustryState.Loading -> {
-                    // TODO:
-                }
+                IndustryState.Loading -> Unit
 
                 is IndustryState.Content -> {
                     adapter.submitList(state.industries)
                 }
 
-                IndustryState.Error -> {
-                    // TODO:
-                }
+                IndustryState.Error -> Unit
             }
         }
     }

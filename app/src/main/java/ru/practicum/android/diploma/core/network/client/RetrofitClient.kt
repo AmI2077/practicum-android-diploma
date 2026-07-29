@@ -12,13 +12,14 @@ import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
 import ru.practicum.android.diploma.core.network.HttpCodes
 import ru.practicum.android.diploma.core.network.NetworkResult
 import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
+import ru.practicum.android.diploma.feature.filter.data.dto.FilterIndustryDto
 
 object RetrofitClient : NetworkClient {
 
     private const val BASE_URL = "https://android-diploma.education-services.ru"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.HEADERS
+        level = HttpLoggingInterceptor.Level.BODY
     }
     private val authInterceptor = AuthorizationInterceptor(token = BuildConfig.API_ACCESS_TOKEN)
 
@@ -55,7 +56,13 @@ object RetrofitClient : NetworkClient {
         }
     }
 
-    private suspend fun <T>safeApiCall(
+    override suspend fun fetchIndustries(): NetworkResult<List<FilterIndustryDto>?> {
+        return safeApiCall {
+            apiService.fetchIndustries()
+        }
+    }
+
+    private suspend fun <T> safeApiCall(
         call: suspend () -> Response<T>
     ): NetworkResult<T?> {
         return try {

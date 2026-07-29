@@ -10,8 +10,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
-import ru.practicum.android.diploma.databinding.ItemVacancyBinding
 import ru.practicum.android.diploma.databinding.ItemLoadingFooterBinding
+import ru.practicum.android.diploma.databinding.ItemVacancyBinding
 import java.util.Locale
 
 
@@ -66,6 +66,7 @@ class VacancyAdapter(
                 )
                 VacancyViewHolder(binding)
             }
+
             VIEW_TYPE_LOADING -> {
                 val binding = ItemLoadingFooterBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -74,6 +75,7 @@ class VacancyAdapter(
                 )
                 LoadingViewHolder(binding)
             }
+
             else -> throw IllegalArgumentException("Неизвестный тип view")
         }
     }
@@ -131,12 +133,15 @@ class VacancyAdapter(
                     "${getString(R.string.salary_from)} ${formatNumber(from)} " +
                         "${getString(R.string.salary_to)} ${formatNumber(to)} $currencySymbol"
                 }
+
                 from != null -> {
                     "${getString(R.string.salary_from)} ${formatNumber(from)} $currencySymbol"
                 }
+
                 to != null -> {
                     "${getString(R.string.salary_to)} ${formatNumber(to)} $currencySymbol"
                 }
+
                 else -> {
                     getString(R.string.salary_not_specified)
                 }

@@ -3,7 +3,7 @@ package ru.practicum.android.diploma.feature.detail.utils
 import org.jsoup.Jsoup
 import ru.practicum.android.diploma.core.utils.HtmlParser
 
-class DetailsHtmlParserImpl: HtmlParser {
+class DetailsHtmlParserImpl : HtmlParser {
 
     override fun parse(rawHtml: String): String {
         val document = Jsoup.parse(rawHtml)

@@ -8,9 +8,7 @@ sealed interface IndustryState {
 
     data class Content(
         val industries: List<FilterIndustry>
-    ): IndustryState
+    ) : IndustryState
 
     data object Error : IndustryState
-
-
 }

@@ -72,22 +72,23 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     // Koin
-    implementation (libs.koin.android)
-    implementation (libs.koin.androidx.workmanager)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.workmanager)
+    implementation(libs.koin.androidx.navigation)
 
     // Glide
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
 
     // Navigation
-    implementation (libs.androidx.navigation.fragment.ktx)
-    implementation (libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     // Lifecycle
-    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    //Testing
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -97,6 +98,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    //Jsoup
+    // Paging
+    implementation(libs.androidx.paging.runtime)
+
+    // Jsoup
     implementation(libs.jsoup)
 }

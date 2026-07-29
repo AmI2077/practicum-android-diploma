@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.models.NetworkErrors
 import ru.practicum.android.diploma.core.models.Result
 import ru.practicum.android.diploma.feature.detail.domain.usecase.GetVacancyDetailUseCase
-import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailState
 import ru.practicum.android.diploma.feature.favourites.domain.interactor.FavouritesInteractor
 import kotlin.time.Duration.Companion.milliseconds
 

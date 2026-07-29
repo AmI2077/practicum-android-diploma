@@ -15,13 +15,13 @@ class DetailsRepositoryImpl(
     private val networkClient: NetworkClient,
     private val dispatcher: CoroutineDispatcher,
     private val htmlParser: HtmlParser,
-): DetailsRepository {
+) : DetailsRepository {
 
     override suspend fun fetchVacancyDetails(
         vacancyId: String
     ): Result<VacancyDetails?> {
         return withContext(dispatcher) {
-            when(
+            when (
                 val result = networkClient.fetchVacancyDetails(vacancyId)
             ) {
                 is NetworkResult.Error -> {
@@ -29,6 +29,7 @@ class DetailsRepositoryImpl(
                         result.codeToError()
                     )
                 }
+
                 is NetworkResult.Success -> {
                     result.data?.let {
                         val description = parseHtml(it.description)
