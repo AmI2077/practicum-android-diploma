@@ -35,7 +35,6 @@ class VacancyDetailViewModel(
         _state.value = VacancyDetailState.Loading
 
         viewModelScope.launch {
-
             when (val result = getVacancyDetailUseCase(vacancyId)) {
                 is Result.Content -> {
                     val vacancy = result.data

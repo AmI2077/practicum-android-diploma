@@ -88,7 +88,6 @@ class IndustryFilterFragment : Fragment() {
         ) { state ->
 
             when (state) {
-
                 IndustryState.Loading -> Unit
 
                 is IndustryState.Content -> {

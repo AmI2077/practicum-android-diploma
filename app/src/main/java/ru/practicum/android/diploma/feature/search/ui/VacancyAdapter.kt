@@ -4,18 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.core.extensions.loadCompanyLogo
 import ru.practicum.android.diploma.core.models.card.VacancyCard
-import ru.practicum.android.diploma.core.models.card.VacancyCardSalary
 import ru.practicum.android.diploma.core.models.card.toSalary
 import ru.practicum.android.diploma.databinding.ItemLoadingFooterBinding
 import ru.practicum.android.diploma.databinding.ItemVacancyBinding
 import ru.practicum.android.diploma.feature.detail.utils.VacancyDetailFragmentFormatters
-import java.util.Locale
 
 class VacancyAdapter(
     private val onItemClick: (VacancyCard) -> Unit
@@ -113,7 +108,7 @@ class VacancyAdapter(
     }
 
     class LoadingViewHolder(
-        private val binding: ItemLoadingFooterBinding
+        binding: ItemLoadingFooterBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
     class VacancyDiffCallback(

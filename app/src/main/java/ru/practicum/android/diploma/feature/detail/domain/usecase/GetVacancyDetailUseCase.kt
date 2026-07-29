@@ -10,7 +10,6 @@ class GetVacancyDetailUseCase(
     suspend operator fun invoke(
         vacancyId: String
     ): Result<VacancyDetails?> {
-
         return repository.fetchVacancyDetails(vacancyId)
     }
 }

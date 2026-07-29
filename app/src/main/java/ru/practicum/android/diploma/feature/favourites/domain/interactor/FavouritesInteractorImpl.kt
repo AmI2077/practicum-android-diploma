@@ -13,7 +13,6 @@ class FavouritesInteractorImpl(
 
     override fun getAllFavouritesVacancies():
         Flow<List<VacancyCard>> {
-
         return repository.getAllFavouritesVacancies()
             .map { vacancies ->
                 vacancies.map {
@@ -25,21 +24,18 @@ class FavouritesInteractorImpl(
     override suspend fun addVacancyToFavourites(
         vacancy: VacancyDetails
     ) {
-
         repository.addVacancyToFavourites(vacancy)
     }
 
     override suspend fun deleteVacancyFromFavourites(
         vacancy: VacancyDetails
     ) {
-
         repository.deleteVacancyFromFavourites(vacancy)
     }
 
     override suspend fun isVacancyFavourite(
         vacancyId: String
     ): Boolean {
-
         return repository
             .getFavouriteVacancyById(vacancyId) != null
     }
