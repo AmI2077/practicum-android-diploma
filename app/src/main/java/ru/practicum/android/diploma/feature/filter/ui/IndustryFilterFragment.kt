@@ -24,7 +24,7 @@ class IndustryFilterFragment : Fragment() {
     private val viewModel: IndustryViewModel by viewModel()
     private val filterViewModel: SearchViewModelWithPaging by koinNavGraphViewModel(R.id.search_screen_tab)
 
-    private lateinit var adapter: IndustryAdapter
+    private var adapter: IndustryAdapter? = null
     private var selectedIndustry: FilterIndustry? = null
 
     override fun onCreateView(
@@ -79,7 +79,7 @@ class IndustryFilterFragment : Fragment() {
             industry
         }
         selectedIndustry = newSelected
-        adapter.setSelectedIndustryId(selectedIndustry?.id)
+        adapter?.setSelectedIndustryId(selectedIndustry?.id)
     }
 
     private fun observeState() {
@@ -88,11 +88,10 @@ class IndustryFilterFragment : Fragment() {
         ) { state ->
 
             when (state) {
-
                 IndustryState.Loading -> Unit
 
                 is IndustryState.Content -> {
-                    adapter.submitList(state.industries)
+                    adapter?.submitList(state.industries)
                 }
 
                 IndustryState.Error -> Unit

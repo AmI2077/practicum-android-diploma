@@ -28,7 +28,6 @@ class SearchRepositoryImpl(
                 }
 
                 is NetworkResult.Success -> {
-
                     val response = result.data
 
                     if (response == null) {

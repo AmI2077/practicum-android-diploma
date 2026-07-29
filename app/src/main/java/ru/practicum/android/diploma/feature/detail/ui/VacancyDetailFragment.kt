@@ -5,6 +5,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -12,20 +13,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.extensions.loadCompanyLogo
+import ru.practicum.android.diploma.core.models.details.Contacts
+import ru.practicum.android.diploma.core.models.details.Phone
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailBinding
 import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailNavigationCommand
 import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailState
 import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailViewModel
+import ru.practicum.android.diploma.feature.detail.utils.VacancyDetailFragmentFormatters
 import ru.practicum.android.diploma.feature.sharing.domain.SharingInteractor
-import java.util.Locale
 
 class VacancyDetailFragment : Fragment() {
 
@@ -37,6 +38,10 @@ class VacancyDetailFragment : Fragment() {
     private val viewModel: VacancyDetailViewModel by viewModel()
 
     private val sharingInteractor: SharingInteractor by inject()
+
+    private val formatter by lazy {
+        VacancyDetailFragmentFormatters(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,31 +55,23 @@ class VacancyDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupBackButton()
-        setupShareButton()
-        setupFavouriteButton()
+        setupClickListeners()
         observeState()
         observeNavigation()
 
         viewModel.loadVacancyDetail(args.vacancyId)
     }
 
-    private fun setupBackButton() {
+    private fun setupClickListeners() {
         binding.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
-    }
-
-    private fun setupShareButton() {
         binding.sharingButton.setOnClickListener {
             val currentState = viewModel.state.value
             if (currentState is VacancyDetailState.Content) {
                 viewModel.onShareClick(currentState.vacancy.url)
             }
         }
-    }
-
-    private fun setupFavouriteButton() {
         binding.favoritesButton.setOnClickListener {
             val currentState = viewModel.state.value
             if (currentState is VacancyDetailState.Content) {
@@ -102,8 +99,8 @@ class VacancyDetailFragment : Fragment() {
                         }
 
                         is VacancyDetailState.Error -> showError()
-                        is VacancyDetailState.NotFound -> showNotFound()
-                        is VacancyDetailState.NoInternet -> showNoInternet()
+                        is VacancyDetailState.NotFound -> showError()
+                        is VacancyDetailState.NoInternet -> showError()
                     }
                 }
             }
@@ -145,10 +142,14 @@ class VacancyDetailFragment : Fragment() {
 
             jobTitle.text = vacancy.name
 
-            salary.text = formatSalary(vacancy.salary)
+            salary.text = formatter.formatSalary(vacancy.salary)
 
             company.text = vacancy.employer.name
-            loadCompanyLogo(vacancy.employer.logo)
+
+            companyLogo.loadCompanyLogo(
+                logoUrl = vacancy.employer.logo,
+                cornerRadius = resources.getDimension(R.dimen.corner_radius).toInt()
+            )
 
             val locationText = vacancy.address?.raw ?: vacancy.area.name
             city.text = locationText
@@ -180,74 +181,6 @@ class VacancyDetailFragment : Fragment() {
         }
     }
 
-    private fun formatSalary(salary: ru.practicum.android.diploma.core.models.details.Salary?): String {
-        if (salary == null) {
-            return getString(R.string.salary_not_specified)
-        }
-
-        val from = salary.from
-        val to = salary.to
-        val currencySymbol = getCurrencySymbol(salary.currency)
-
-        return when {
-            from != null && to != null -> {
-                "${getString(R.string.salary_from)} ${formatNumber(from)} " +
-                    "${getString(R.string.salary_to)} ${formatNumber(to)} $currencySymbol"
-            }
-
-            from != null -> {
-                "${getString(R.string.salary_from)} ${formatNumber(from)} $currencySymbol"
-            }
-
-            to != null -> {
-                "${getString(R.string.salary_to)} ${formatNumber(to)} $currencySymbol"
-            }
-
-            else -> {
-                getString(R.string.salary_not_specified)
-            }
-        }
-    }
-
-    private fun formatNumber(number: Int): String {
-        return String.format(Locale.getDefault(), "%,d", number).replace(',', ' ')
-    }
-
-    private fun getCurrencySymbol(currency: String?): String {
-        return when (currency) {
-            "RUR", "RUB" -> getString(R.string.currency_rub)
-            "USD" -> getString(R.string.currency_usd)
-            "EUR" -> getString(R.string.currency_eur)
-            "KZT" -> getString(R.string.currency_kzt)
-            "UAH" -> getString(R.string.currency_uah)
-            "BYR" -> getString(R.string.currency_byr)
-            "AZN" -> getString(R.string.currency_azn)
-            "UZS" -> getString(R.string.currency_uzs)
-            "GEL" -> getString(R.string.currency_gel)
-            "KGS" -> getString(R.string.currency_kgs)
-            else -> ""
-        }
-    }
-
-    private fun loadCompanyLogo(logoUrl: String?) {
-        val context = binding.root.context
-        val cornerRadius = context.resources.getDimension(R.dimen.corner_radius).toInt()
-
-        if (!logoUrl.isNullOrEmpty()) {
-            Glide.with(context)
-                .load(logoUrl)
-                .placeholder(R.drawable.ic_placeholder_32)
-                .error(R.drawable.ic_placeholder_32)
-                .transform(
-                    CenterCrop(),
-                    RoundedCorners(cornerRadius)
-                )
-                .into(binding.companyLogo)
-        } else {
-            binding.companyLogo.setImageResource(R.drawable.ic_placeholder_32)
-        }
-    }
-
     private fun showError() {
         with(binding) {
             detailScrollView.isVisible = false
@@ -257,7 +190,7 @@ class VacancyDetailFragment : Fragment() {
         }
     }
 
-    private fun displayContacts(contacts: ru.practicum.android.diploma.core.models.details.Contacts?) {
+    private fun displayContacts(contacts: Contacts?) {
         with(binding) {
             if (contacts == null) {
                 contactsCont.isVisible = false
@@ -266,51 +199,42 @@ class VacancyDetailFragment : Fragment() {
 
             contactsCont.isVisible = true
 
-            val hasName = !contacts.name.isNullOrEmpty()
-            contactNameLabel.isVisible = hasName
-            contactName.text = contacts.name ?: ""
-            contactName.isVisible = hasName
+            val hasName = setContactField(contactName, contactNameLabel, contacts.name)
+            val hasEmail = setContactField(contactEmail, contactEmailLabel, contacts.email)
+            val hasPhone = setupPhoneFields(contacts.phones)
 
-            val hasEmail = !contacts.email.isNullOrEmpty()
-            contactEmailLabel.isVisible = hasEmail
-            contactEmail.text = contacts.email ?: ""
-            contactEmail.isVisible = hasEmail
-
-            val phones = contacts.phones
-            val hasPhone = !phones.isNullOrEmpty()
-
-            if (hasPhone) {
-                val phone = phones.first()
-
-                contactPhoneLabel.isVisible = true
-                contactPhone.text = phone.formatted ?: ""
-                contactPhone.isVisible = true
-
-                val hasComment = !phone.comment.isNullOrEmpty()
-                contactPhoneCommentLabel.isVisible = hasComment
-                contactPhoneComment.text = phone.comment ?: ""
-                contactPhoneComment.isVisible = hasComment
-            } else {
-                contactPhoneLabel.isVisible = false
-                contactPhone.isVisible = false
-                contactPhoneCommentLabel.isVisible = false
-                contactPhoneComment.isVisible = false
-            }
-
-            val hasAnyContactInfo = hasName || hasEmail || hasPhone
-
-            if (!hasAnyContactInfo) {
-                contactsCont.isVisible = false
-            }
+            contactsCont.isVisible = hasName || hasEmail || hasPhone
         }
     }
 
-    private fun showNotFound() {
-        showError()
+    private fun setContactField(textView: TextView, labelView: View, text: String): Boolean {
+        val isValid = text.isNotEmpty()
+        textView.isVisible = isValid
+        labelView.isVisible = isValid
+        if (isValid) {
+            textView.text = text
+        }
+        return isValid
     }
 
-    private fun showNoInternet() {
-        showError()
+    private fun setupPhoneFields(phones: List<Phone>): Boolean {
+        val phone = phones.firstOrNull()
+        val hasPhone = phone != null
+
+        binding.contactPhoneLabel.isVisible = hasPhone
+        binding.contactPhone.isVisible = hasPhone
+        if (phone != null) {
+            binding.contactPhone.text = phone.formatted
+        }
+
+        val hasComment = phone != null && !phone.comment.isNullOrEmpty()
+        binding.contactPhoneCommentLabel.isVisible = hasComment
+        binding.contactPhoneComment.isVisible = hasComment
+        if (hasComment) {
+            binding.contactPhoneComment.text = phone.comment
+        }
+
+        return hasPhone
     }
 
     override fun onDestroyView() {

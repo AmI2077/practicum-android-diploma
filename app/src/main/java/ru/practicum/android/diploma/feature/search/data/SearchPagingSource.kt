@@ -26,7 +26,6 @@ class SearchPagingSource(
             onlyWithSalary = onlyWithSalary,
             industry = industryId
         )
-        Log.d("SEARCH_PARAMS", searchParams.toString())
         return when (val result = searchVacanciesUseCase(searchParams)) {
             is Result.Content -> {
                 val vacancies = result.data.vacancies

@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.core.di
 
-
 import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -90,5 +89,3 @@ val dataModule = module {
         )
     }
 }
-
-

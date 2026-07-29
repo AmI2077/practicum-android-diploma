@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.navigation.koinNavGraphViewModel
@@ -142,9 +141,7 @@ class SearchFragment : Fragment() {
             val itemCount = adapter?.itemCount ?: 0
             val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
 
-            val hasFilters = viewModel.filterState.value?.let {
-                (it.salary != null && it.salary != 0) || it.hideWithoutSalary || it.industry != null
-            } ?: false
+            val hasFilters = hasActiveFilters()
 
             val isSearching = !isQueryBlank || hasFilters
 
@@ -161,6 +158,12 @@ class SearchFragment : Fragment() {
 
             updateUiState(uiState)
         }
+    }
+
+    private fun hasActiveFilters(): Boolean {
+        return viewModel.filterState.value?.let {
+            it.salary != null && it.salary != 0 || it.hideWithoutSalary || it.industry != null
+        } ?: false
     }
 
     private fun updateUiState(state: PagingUiState) {

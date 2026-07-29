@@ -17,7 +17,6 @@ import ru.practicum.android.diploma.feature.detail.domain.usecase.GetVacancyDeta
 import ru.practicum.android.diploma.feature.favourites.domain.interactor.FavouritesInteractor
 import kotlin.time.Duration.Companion.milliseconds
 
-
 class VacancyDetailViewModel(
     private val getVacancyDetailUseCase: GetVacancyDetailUseCase,
     private val favouritesInteractor: FavouritesInteractor
@@ -36,7 +35,6 @@ class VacancyDetailViewModel(
         _state.value = VacancyDetailState.Loading
 
         viewModelScope.launch {
-
             when (val result = getVacancyDetailUseCase(vacancyId)) {
                 is Result.Content -> {
                     val vacancy = result.data
