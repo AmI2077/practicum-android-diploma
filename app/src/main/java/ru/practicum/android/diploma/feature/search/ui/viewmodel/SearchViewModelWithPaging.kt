@@ -37,7 +37,7 @@ class SearchViewModelWithPaging(
     val filterState: LiveData<FilterState> = _filterState
 
     private var _totalFound = MutableLiveData<Int>()
-    val totalFound = _totalFound
+    val totalFound: LiveData<Int?> = _totalFound
 
     val queryFlow = MutableStateFlow("")
     private val appliedFiltersFlow = MutableStateFlow(FilterSettings())
@@ -51,7 +51,13 @@ class SearchViewModelWithPaging(
     }
         .distinctUntilChanged()
         .flatMapLatest { (query, filters) ->
-            val hasFilters = filters.salary != null || filters.hideWithoutSalary || filters.industry != null
+
+            _totalFound.value = null
+
+            val hasFilters =
+                filters.salary != null ||
+                    filters.hideWithoutSalary ||
+                    filters.industry != null
 
             if (query.isEmpty() && !hasFilters) {
                 flowOf(PagingData.empty())

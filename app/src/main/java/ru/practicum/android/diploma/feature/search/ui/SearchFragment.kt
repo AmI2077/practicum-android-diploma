@@ -112,6 +112,11 @@ class SearchFragment : Fragment() {
 
         viewModel.totalFound.observe(viewLifecycleOwner) { found ->
 
+            if (found == null) {
+                binding.statusContainer.isVisible = false
+                return@observe
+            }
+
             binding.statusContainer.isVisible = found > 0
 
             if (found > 0) {
