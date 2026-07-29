@@ -39,7 +39,9 @@ class VacancyDetailFragment : Fragment() {
 
     private val sharingInteractor: SharingInteractor by inject()
 
-    private val formatter = VacancyDetailFragmentFormatters(requireContext())
+    private val formatter by lazy {
+        VacancyDetailFragmentFormatters(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

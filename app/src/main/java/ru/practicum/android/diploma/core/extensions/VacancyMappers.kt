@@ -87,7 +87,6 @@ fun VacancyDetailsDto.toModel(): VacancyDetails {
 }
 
 fun VacancyResponseDto.toModel(): VacancySearchResult {
-
     return VacancySearchResult(
         vacancies = items.map {
             it.toModel()
