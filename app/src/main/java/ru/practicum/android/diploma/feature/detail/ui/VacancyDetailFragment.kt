@@ -96,14 +96,15 @@ class VacancyDetailFragment : Fragment() {
                 }
             }
         }
+
         binding.contactPhone.setOnClickListener {
-            val currentState = viewModel.state.value as? VacancyDetailState.Content ?: return@setOnClickListener
+            val currentState = viewModel.state.value as? VacancyDetailState.Content
+                ?: return@setOnClickListener
 
             val phone = currentState.vacancy.contacts
                 ?.phones
                 ?.firstOrNull()
                 ?.formatted
-                ?.filterNot { it.isWhitespace() }
                 ?: return@setOnClickListener
 
             val intent = Intent(Intent.ACTION_DIAL).apply {
@@ -112,7 +113,6 @@ class VacancyDetailFragment : Fragment() {
 
             startActivity(Intent.createChooser(intent, null))
         }
-
     }
 
     private fun renderFavouriteButton(isFavourite: Boolean) {
@@ -276,32 +276,22 @@ class VacancyDetailFragment : Fragment() {
 
         binding.contactPhoneLabel.isVisible = hasPhone
         binding.contactPhone.isVisible = hasPhone
-        if (phone != null) {
-            binding.contactPhone.setOnClickListener {
-                val currentState = viewModel.state.value as? VacancyDetailState.Content ?: return@setOnClickListener
 
-                val phone = currentState.vacancy.contacts
-                    ?.phones
-                    ?.firstOrNull()
-                    ?.formatted ?: return@setOnClickListener
-
-                val intent = Intent(Intent.ACTION_DIAL).apply {
-                    data = Uri.parse("tel:$phone")
-                }
-
-                startActivity(Intent.createChooser(intent, null))
-            }
+        if (hasPhone) {
+            binding.contactPhone.text = phone!!.formatted
         }
-        val hasComment = phone != null && !phone.comment.isNullOrEmpty()
+
+        val hasComment = phone?.comment?.isNotEmpty() == true
+
         binding.contactPhoneCommentLabel.isVisible = hasComment
         binding.contactPhoneComment.isVisible = hasComment
+
         if (hasComment) {
             binding.contactPhoneComment.text = phone.comment
         }
 
         return hasPhone
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
