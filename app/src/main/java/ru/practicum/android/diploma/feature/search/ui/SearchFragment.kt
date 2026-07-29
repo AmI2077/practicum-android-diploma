@@ -111,15 +111,31 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.totalFound.observe(viewLifecycleOwner) { found ->
+
+            binding.statusContainer.isVisible = found > 0
+
             if (found > 0) {
-                binding.statusContainer.isVisible = true
                 binding.statusVacancies.text =
                     getString(
                         R.string.vacancies_found,
                         found
                     )
             }
+        }
+        viewModel.filterState.observe(viewLifecycleOwner) { state ->
 
+            val hasFilters =
+                state.salary != null ||
+                    state.hideWithoutSalary ||
+                    state.industry != null
+
+            binding.filterButton.setImageResource(
+                if (hasFilters) {
+                    R.drawable.ic_filter_on_24
+                } else {
+                    R.drawable.ic_filter_off_24
+                }
+            )
         }
     }
 

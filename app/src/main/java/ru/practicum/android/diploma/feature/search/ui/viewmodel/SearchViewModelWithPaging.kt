@@ -40,7 +40,7 @@ class SearchViewModelWithPaging(
     val totalFound = _totalFound
 
     val queryFlow = MutableStateFlow("")
-    private val appliedFiltersFlow = MutableStateFlow(currentFilters)
+    private val appliedFiltersFlow = MutableStateFlow(FilterSettings())
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val pagingData: LiveData<PagingData<VacancyCard>> = combine(
