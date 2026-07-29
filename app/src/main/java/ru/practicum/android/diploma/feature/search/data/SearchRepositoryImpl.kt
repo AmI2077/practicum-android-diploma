@@ -31,16 +31,7 @@ class SearchRepositoryImpl(
                     val response = result.data
 
                     if (response == null) {
-                        Result.Content(
-                            VacancySearchResult(
-                                vacancies = emptyList(),
-                                found = 0,
-                                page = 0,
-                                pages = 0
-                            )
-                        )
                         Result.Error(NetworkErrors.ServerError)
-
                     } else {
                         Result.Content(
                             response.toModel()

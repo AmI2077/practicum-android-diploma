@@ -45,7 +45,7 @@ class SearchPagingSource(
 
             is Result.Error -> {
                 LoadResult.Error(
-                    Exception(result.error.toString())
+                    SearchException(result.error)
                 )
             }
         }
