@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.extensions.loadCompanyLogo
 import ru.practicum.android.diploma.core.models.details.Contacts
 import ru.practicum.android.diploma.core.models.details.Phone
 import ru.practicum.android.diploma.core.models.details.VacancyDetails
@@ -145,7 +146,11 @@ class VacancyDetailFragment : Fragment() {
             salary.text = formatter.formatSalary(vacancy.salary)
 
             company.text = vacancy.employer.name
-            loadCompanyLogo(vacancy.employer.logo)
+
+            companyLogo.loadCompanyLogo(
+                logoUrl = vacancy.employer.logo,
+                cornerRadius = resources.getDimension(R.dimen.corner_radius).toInt()
+            )
 
             val locationText = vacancy.address?.raw ?: vacancy.area.name
             city.text = locationText
@@ -174,25 +179,6 @@ class VacancyDetailFragment : Fragment() {
                 skillTitle.isVisible = false
             }
             displayContacts(vacancy.contacts)
-        }
-    }
-
-    private fun loadCompanyLogo(logoUrl: String?) {
-        val context = binding.root.context
-        val cornerRadius = context.resources.getDimension(R.dimen.corner_radius).toInt()
-
-        if (!logoUrl.isNullOrEmpty()) {
-            Glide.with(context)
-                .load(logoUrl)
-                .placeholder(R.drawable.ic_placeholder_32)
-                .error(R.drawable.ic_placeholder_32)
-                .transform(
-                    CenterCrop(),
-                    RoundedCorners(cornerRadius)
-                )
-                .into(binding.companyLogo)
-        } else {
-            binding.companyLogo.setImageResource(R.drawable.ic_placeholder_32)
         }
     }
 
