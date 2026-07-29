@@ -99,9 +99,10 @@ class SearchViewModelWithPaging(
         _filterState.value = currentFilters.toFilterState()
     }
 
-    fun saveSalary(text: String) {
+    fun saveSalary(text: String?) {
         currentFilters = currentFilters.copy(
-            salary = text.toIntOrNull()
+            salary = text
+                ?.toIntOrNull()
                 ?.takeIf { it > 0 }
         )
         syncFilterState()
