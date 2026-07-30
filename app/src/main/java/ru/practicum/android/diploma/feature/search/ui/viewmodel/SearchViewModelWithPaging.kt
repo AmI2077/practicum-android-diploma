@@ -105,16 +105,25 @@ class SearchViewModelWithPaging(
                 ?.toIntOrNull()
                 ?.takeIf { it > 0 }
         )
+
+        filterInteractor.save(currentFilters)
+
         syncFilterState()
     }
 
     fun saveIndustry(filterIndustry: FilterIndustry?) {
         currentFilters = currentFilters.copy(industry = filterIndustry)
+
+        filterInteractor.save(currentFilters)
+
         syncFilterState()
     }
 
     fun saveHideWithoutSalary(checked: Boolean) {
         currentFilters = currentFilters.copy(hideWithoutSalary = checked)
+
+        filterInteractor.save(currentFilters)
+
         syncFilterState()
     }
 
