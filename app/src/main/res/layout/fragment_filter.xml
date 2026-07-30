@@ -147,7 +147,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/clearButton"
                 style="@style/SearchFieldIcon"
                 android:src="@drawable/ic_search_clean_24"
