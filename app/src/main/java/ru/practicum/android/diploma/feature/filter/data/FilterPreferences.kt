@@ -52,11 +52,10 @@ class FilterPreferences(
 
         return FilterSettings(
             salary = salary,
-            hideWithoutSalary =
-                prefs.getBoolean(
-                    HIDE_WITHOUT_SALARY,
-                    false
-                ),
+            hideWithoutSalary = prefs.getBoolean(
+                HIDE_WITHOUT_SALARY,
+                false
+            ),
             industry = industry
         )
     }

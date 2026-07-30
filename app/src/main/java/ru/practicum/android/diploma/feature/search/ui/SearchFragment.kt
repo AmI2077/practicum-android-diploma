@@ -233,9 +233,10 @@ class SearchFragment : Fragment() {
 
         binding.errorNoVacancies.isVisible =
             state is PagingUiState.Empty ||
-                error is SearchException &&
-                error.networkError == NetworkErrors.NotFoundError
-
+                (
+                    error is SearchException &&
+                        error.networkError == NetworkErrors.NotFoundError
+                    )
         if (state is PagingUiState.Initial || state is PagingUiState.Loading || state is PagingUiState.Error) {
             binding.statusContainer.isVisible = false
         }

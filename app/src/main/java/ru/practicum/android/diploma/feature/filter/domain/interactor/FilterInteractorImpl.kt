@@ -7,18 +7,15 @@ class FilterInteractorImpl(
     private val repository: FilterRepository
 ) : FilterInteractor {
 
-
     override fun save(
         settings: FilterSettings
     ) {
         repository.saveFilter(settings)
     }
 
-
     override fun get(): FilterSettings {
         return repository.getFilter()
     }
-
 
     override fun clear() {
         repository.clearFilter()
