@@ -226,6 +226,10 @@ class SearchFragment : Fragment() {
         val error =
             (state as? PagingUiState.Error)?.error
 
+        binding.errorNoInternet.isVisible =
+            error is SearchException &&
+                error.networkError == NetworkErrors.NoInternetConnectionError
+
         binding.errorServer.isVisible =
             error is SearchException &&
                 error.networkError == NetworkErrors.ServerError
@@ -236,7 +240,6 @@ class SearchFragment : Fragment() {
                     error is SearchException &&
                         error.networkError == NetworkErrors.NotFoundError
                     )
-
 
         if (state is PagingUiState.Initial || state is PagingUiState.Loading || state is PagingUiState.Error) {
             binding.statusContainer.isVisible = false
