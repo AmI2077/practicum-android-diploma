@@ -24,6 +24,7 @@ class DetailsHtmlParserImpl : HtmlParser {
                 stringBuilder.append("\t").append("• ").append(item.text()).append("<br>")
             }
         }
+
         return stringBuilder.toString().trim()
     }
 }

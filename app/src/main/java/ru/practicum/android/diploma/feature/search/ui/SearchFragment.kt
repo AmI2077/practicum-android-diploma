@@ -114,20 +114,19 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.totalFound.observe(viewLifecycleOwner) { found ->
-
             if (found == null) {
                 binding.statusContainer.isVisible = false
-                return@observe
-            }
+//                return@observe (Detekt отметил return@observe)
+            } else {
+                binding.statusContainer.isVisible = found > 0
 
-            binding.statusContainer.isVisible = found > 0
-
-            if (found > 0) {
-                binding.statusVacancies.text =
-                    getString(
-                        R.string.vacancies_found,
-                        found
-                    )
+                if (found > 0) {
+                    binding.statusVacancies.text =
+                        getString(
+                            R.string.vacancies_found,
+                            found
+                        )
+                }
             }
         }
         viewModel.filterState.observe(viewLifecycleOwner) { state ->
@@ -159,13 +158,11 @@ class SearchFragment : Fragment() {
             .navigate(action)
     }
 
-
     private fun setupLoadStateListener() {
         adapter?.addLoadStateListener { loadStates ->
             val appendState = loadStates.append
 
             if (appendState is LoadState.Error) {
-
                 val message = when (
                     (appendState.error as? SearchException)?.networkError
                 ) {
@@ -236,10 +233,8 @@ class SearchFragment : Fragment() {
 
         binding.errorNoVacancies.isVisible =
             state is PagingUiState.Empty ||
-                (
-                    error is SearchException &&
-                        error.networkError == NetworkErrors.NotFoundError
-                    )
+                error is SearchException &&
+                error.networkError == NetworkErrors.NotFoundError
 
         if (state is PagingUiState.Initial || state is PagingUiState.Loading || state is PagingUiState.Error) {
             binding.statusContainer.isVisible = false

@@ -81,13 +81,13 @@ class FilterFragment : Fragment() {
         }
 
         binding.salaryEdit.doOnTextChanged { text, _, _, _ ->
-
             binding.clearButton.isVisible =
                 !text.isNullOrBlank()
 
             if (binding.salaryEdit.hasFocus()) {
                 viewModel.saveSalary(text?.toString())
-            }        }
+            }
+        }
 
         binding.clearButton.setOnClickListener {
             binding.salaryEdit.text?.clear()
@@ -138,8 +138,8 @@ class FilterFragment : Fragment() {
             )
         }
     }
-    private fun updateButtonsVisibility(state: FilterState) {
 
+    private fun updateButtonsVisibility(state: FilterState) {
         val hasFilters =
             state.salary != null ||
                 state.hideWithoutSalary ||
@@ -161,7 +161,6 @@ class FilterFragment : Fragment() {
             val newSalary = state.salary
             val currentInput = binding.salaryEdit.text.toString()
 
-//            val targetText = if (newSalary == 0 || newSalary == null) "" else newSalary.toString()
             val targetText = newSalary?.toString().orEmpty()
 
             if (currentInput != targetText) {

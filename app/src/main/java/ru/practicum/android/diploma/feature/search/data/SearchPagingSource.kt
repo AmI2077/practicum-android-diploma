@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.search.data
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.practicum.android.diploma.core.models.Result
@@ -28,7 +27,6 @@ class SearchPagingSource(
     override suspend fun load(
         params: LoadParams<Int>
     ): LoadResult<Int, VacancyCard> {
-
         val page = params.key ?: 1
 
         val searchParams = VacancySearchParams(

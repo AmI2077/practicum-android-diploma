@@ -92,7 +92,6 @@ val dataModule = module {
         )
     }
 
-
     single<SharingInteractor> {
         SharingInteractorImpl(
             repository = get()

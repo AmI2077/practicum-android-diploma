@@ -17,7 +17,6 @@ class IndustryRepositoryImpl(
     override suspend fun getIndustries(): Result<List<FilterIndustry>> =
         withContext(Dispatchers.IO) {
             when (val result = networkClient.fetchIndustries()) {
-
                 is NetworkResult.Error -> {
                     Result.Error(result.codeToError())
                 }

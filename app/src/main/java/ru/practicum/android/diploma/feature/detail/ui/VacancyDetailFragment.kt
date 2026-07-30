@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.detail.ui
 
-import android.R.attr.data
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -98,21 +97,24 @@ class VacancyDetailFragment : Fragment() {
         }
 
         binding.contactPhone.setOnClickListener {
-            val currentState = viewModel.state.value as? VacancyDetailState.Content
-                ?: return@setOnClickListener
-
-            val phone = currentState.vacancy.contacts
-                ?.phones
-                ?.firstOrNull()
-                ?.formatted
-                ?: return@setOnClickListener
-
-            val intent = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:$phone")
-            }
-
-            startActivity(Intent.createChooser(intent, null))
+            callContactPhone()
         }
+    }
+
+    private fun callContactPhone() {
+        val currentState = viewModel.state.value as? VacancyDetailState.Content ?: return
+
+        val phone = currentState.vacancy.contacts
+            ?.phones
+            ?.firstOrNull()
+            ?.formatted
+            ?: return
+
+        val intent = Intent(Intent.ACTION_DIAL).apply {
+            data = Uri.parse("tel:$phone")
+        }
+
+        startActivity(Intent.createChooser(intent, null))
     }
 
     private fun renderFavouriteButton(isFavourite: Boolean) {
@@ -253,7 +255,7 @@ class VacancyDetailFragment : Fragment() {
             contactsCont.isVisible = true
 
             val hasName = setContactField(contactName, contactNameLabel, contacts.name)
-            val hasEmail = setContactField(contactEmail, contactEmailLabel,     contacts.email.orEmpty())
+            val hasEmail = setContactField(contactEmail, contactEmailLabel, contacts.email.orEmpty())
             val hasPhone = setupPhoneFields(contacts.phones)
 
             contactsCont.isVisible = hasName || hasEmail || hasPhone
@@ -277,8 +279,8 @@ class VacancyDetailFragment : Fragment() {
         binding.contactPhoneLabel.isVisible = hasPhone
         binding.contactPhone.isVisible = hasPhone
 
-        if (hasPhone) {
-            binding.contactPhone.text = phone!!.formatted
+        phone?.let {
+            binding.contactPhone.text = it.formatted
         }
 
         val hasComment = phone?.comment?.isNotEmpty() == true

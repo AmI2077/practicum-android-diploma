@@ -12,7 +12,7 @@ class FilterPreferences(
         prefs.edit()
             .putInt(
                 SALARY,
-                settings.salary ?: -1
+                settings.salary ?: NO_VALUE
             )
             .putBoolean(
                 HIDE_WITHOUT_SALARY,
@@ -20,7 +20,7 @@ class FilterPreferences(
             )
             .putInt(
                 INDUSTRY_ID,
-                settings.industry?.id ?: -1
+                settings.industry?.id ?: NO_VALUE
             )
             .putString(
                 INDUSTRY_NAME,
@@ -29,20 +29,16 @@ class FilterPreferences(
             .apply()
     }
 
-
     fun getFilter(): FilterSettings {
-
         val salary =
-            prefs.getInt(SALARY, -1)
-                .takeIf { it != -1 }
-
+            prefs.getInt(SALARY, NO_VALUE)
+                .takeIf { it != NO_VALUE }
 
         val industryId =
-            prefs.getInt(INDUSTRY_ID, -1)
-
+            prefs.getInt(INDUSTRY_ID, NO_VALUE)
 
         val industry =
-            if (industryId != -1) {
+            if (industryId != NO_VALUE) {
                 FilterIndustry(
                     id = industryId,
                     name = prefs.getString(
@@ -53,7 +49,6 @@ class FilterPreferences(
             } else {
                 null
             }
-
 
         return FilterSettings(
             salary = salary,
@@ -66,15 +61,14 @@ class FilterPreferences(
         )
     }
 
-
     fun clear() {
         prefs.edit()
             .clear()
             .apply()
     }
 
-
     companion object {
+        private const val NO_VALUE = -1
         private const val SALARY = "salary"
         private const val HIDE_WITHOUT_SALARY =
             "hide_without_salary"

@@ -98,7 +98,6 @@ class IndustryFilterFragment : Fragment() {
         ) { state ->
 
             when (state) {
-
                 IndustryState.Loading -> {
                     showLoading()
                 }
@@ -146,12 +145,10 @@ class IndustryFilterFragment : Fragment() {
         binding.errorNoIndustries.isVisible = false
     }
 
-
     private fun showIndustries() {
         binding.recyclerView.isVisible = true
         binding.errorNoIndustries.isVisible = false
     }
-
 
     private fun showError() {
         binding.recyclerView.isVisible = false
