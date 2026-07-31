@@ -32,12 +32,14 @@ class IndustryViewModel(
                     allIndustries = result.data
                     _state.value = IndustryState.Content(allIndustries)
                 }
+
                 is Result.Error -> {
                     _state.value = IndustryState.Error
                 }
             }
         }
     }
+
     fun searchIndustry(query: String) {
         val searchText = query.trim()
 

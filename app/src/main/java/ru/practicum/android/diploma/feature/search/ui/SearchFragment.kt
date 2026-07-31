@@ -29,22 +29,14 @@ class SearchFragment : Fragment() {
     private var adapter: PagingVacancyAdapter? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding =
-            FragmentSearchBinding.inflate(
-                inflater,
-                container,
-                false
-            )
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
+        view: View, savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
@@ -62,12 +54,8 @@ class SearchFragment : Fragment() {
             openVacancyDetails(vacancy)
         }
         binding.recyclerView.apply {
-            layoutManager =
-                LinearLayoutManager(requireContext())
-            adapter =
-                this@SearchFragment.adapter?.withLoadStateFooter(
-                    footer = VacancyLoadStateAdapter()
-                )
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@SearchFragment.adapter?.withLoadStateFooter(footer = VacancyLoadStateAdapter())
         }
     }
 
@@ -75,10 +63,8 @@ class SearchFragment : Fragment() {
         binding.searchEditText.apply {
             doOnTextChanged { text, _, _, _ ->
                 val query = text.toString()
-                binding.clearButton.isVisible =
-                    query.isNotEmpty()
-                binding.searchButton.isVisible =
-                    query.isEmpty()
+                binding.clearButton.isVisible = query.isNotEmpty()
+                binding.searchButton.isVisible = query.isEmpty()
                 viewModel.search(query)
             }
             setOnEditorActionListener { _, actionId, _ ->
@@ -101,10 +87,7 @@ class SearchFragment : Fragment() {
 
     private fun setupFilterButton() {
         binding.filterButton.setOnClickListener {
-            findNavController()
-                .navigate(
-                    R.id.action_search_screen_tab_to_filterFragment
-                )
+            findNavController().navigate(R.id.action_search_screen_tab_to_filterFragment)
         }
     }
 
@@ -112,29 +95,19 @@ class SearchFragment : Fragment() {
         viewModel.pagingData.observe(viewLifecycleOwner) { pagingData ->
             adapter?.submitData(lifecycle, pagingData)
         }
-
         viewModel.totalFound.observe(viewLifecycleOwner) { found ->
             if (found == null) {
                 binding.statusContainer.isVisible = false
-//                return@observe (Detekt отметил return@observe)
             } else {
                 binding.statusContainer.isVisible = found > 0
 
                 if (found > 0) {
-                    binding.statusVacancies.text =
-                        getString(
-                            R.string.vacancies_found,
-                            found
-                        )
+                    binding.statusVacancies.text = getString(R.string.vacancies_found, found)
                 }
             }
         }
         viewModel.filterState.observe(viewLifecycleOwner) { state ->
-
-            val hasFilters =
-                state.salary != null ||
-                    state.hideWithoutSalary ||
-                    state.industry != null
+            val hasFilters = state.salary != null || state.hideWithoutSalary || state.industry != null
 
             binding.filterButton.setImageResource(
                 if (hasFilters) {
@@ -149,13 +122,8 @@ class SearchFragment : Fragment() {
     private fun openVacancyDetails(
         vacancy: VacancyCard
     ) {
-        val action =
-            SearchFragmentDirections
-                .actionSearchScreenTabToVacancyDetailFragment(
-                    vacancy.id
-                )
-        findNavController()
-            .navigate(action)
+        val action = SearchFragmentDirections.actionSearchScreenTabToVacancyDetailFragment(vacancy.id)
+        findNavController().navigate(action)
     }
 
     private fun setupLoadStateListener() {
@@ -163,29 +131,15 @@ class SearchFragment : Fragment() {
             val appendState = loadStates.append
 
             if (appendState is LoadState.Error) {
-                val message = when (
-                    (appendState.error as? SearchException)?.networkError
-                ) {
-                    NetworkErrors.NoInternetConnectionError ->
-                        getString(R.string.no_internet)
-
-                    NetworkErrors.ServerError ->
-                        getString(R.string.server_error_title)
-
-                    NetworkErrors.NotFoundError ->
-                        getString(R.string.vacancies_not_found)
-
-                    else ->
-                        getString(R.string.server_error_title)
+                val message = when ((appendState.error as? SearchException)?.networkError) {
+                    NetworkErrors.NoInternetConnectionError -> getString(R.string.no_internet)
+                    NetworkErrors.ServerError -> getString(R.string.server_error_title)
+                    NetworkErrors.NotFoundError -> getString(R.string.vacancies_not_found)
+                    else -> getString(R.string.server_error_title)
                 }
 
-                Toast.makeText(
-                    requireContext(),
-                    message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
-
             val refreshState = loadStates.refresh
             val itemCount = adapter?.itemCount ?: 0
             val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
@@ -220,23 +174,15 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = state is PagingUiState.Loading
         binding.recyclerView.isVisible = state is PagingUiState.Success
 
-        val error =
-            (state as? PagingUiState.Error)?.error
+        val error = (state as? PagingUiState.Error)?.error
 
         binding.errorNoInternet.isVisible =
-            error is SearchException &&
-                error.networkError == NetworkErrors.NoInternetConnectionError
+            error is SearchException && error.networkError == NetworkErrors.NoInternetConnectionError
 
-        binding.errorServer.isVisible =
-            error is SearchException &&
-                error.networkError == NetworkErrors.ServerError
+        binding.errorServer.isVisible = error is SearchException && error.networkError == NetworkErrors.ServerError
 
         binding.errorNoVacancies.isVisible =
-            state is PagingUiState.Empty ||
-                (
-                    error is SearchException &&
-                        error.networkError == NetworkErrors.NotFoundError
-                    )
+            state is PagingUiState.Empty || error is SearchException && error.networkError == NetworkErrors.NotFoundError
         if (state is PagingUiState.Initial || state is PagingUiState.Loading || state is PagingUiState.Error) {
             binding.statusContainer.isVisible = false
         }
@@ -246,15 +192,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun hideKeyboard() {
-        val imm =
-            requireContext()
-                .getSystemService(
-                    InputMethodManager::class.java
-                )
-        imm?.hideSoftInputFromWindow(
-            binding.searchEditText.windowToken,
-            0
-        )
+        val imm = requireContext().getSystemService(InputMethodManager::class.java)
+        imm?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
     override fun onDestroyView() {

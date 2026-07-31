@@ -9,12 +9,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.navigation.koinNavGraphViewModel
 import ru.practicum.android.diploma.R
-import androidx.core.view.isVisible
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterState
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
@@ -27,9 +27,7 @@ class FilterFragment : Fragment() {
     private val viewModel: SearchViewModelWithPaging by koinNavGraphViewModel(R.id.search_screen_tab)
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFilterBinding.inflate(inflater, container, false)
         return binding.root
@@ -81,8 +79,7 @@ class FilterFragment : Fragment() {
         }
 
         binding.salaryEdit.doOnTextChanged { text, _, _, _ ->
-            binding.clearButton.isVisible =
-                !text.isNullOrBlank()
+            binding.clearButton.isVisible = !text.isNullOrBlank()
 
             if (binding.salaryEdit.hasFocus()) {
                 viewModel.saveSalary(text?.toString())
@@ -107,14 +104,11 @@ class FilterFragment : Fragment() {
     }
 
     private fun hideKeyboard() {
-        val imm =
-            requireContext()
-                .getSystemService(
-                    InputMethodManager::class.java
-                )
+        val imm = requireContext().getSystemService(
+            InputMethodManager::class.java
+        )
         imm?.hideSoftInputFromWindow(
-            binding.salaryEdit.windowToken,
-            0
+            binding.salaryEdit.windowToken, 0
         )
     }
 
@@ -141,10 +135,7 @@ class FilterFragment : Fragment() {
     }
 
     private fun updateButtonsVisibility(state: FilterState) {
-        val hasFilters =
-            state.salary != null ||
-                state.hideWithoutSalary ||
-                state.industry != null
+        val hasFilters = state.salary != null || state.hideWithoutSalary || state.industry != null
 
         binding.buttonsContainer.isVisible = hasFilters
     }
