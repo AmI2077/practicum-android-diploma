@@ -1,13 +1,13 @@
 package ru.practicum.android.diploma.feature.detail.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -46,9 +46,7 @@ class VacancyDetailFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentVacancyDetailBinding.inflate(inflater, container, false)
         return binding.root
@@ -88,9 +86,8 @@ class VacancyDetailFragment : Fragment() {
 
                 if (!email.isNullOrEmpty()) {
                     val intent = Intent(Intent.ACTION_SENDTO).apply {
-                        data = Uri.parse("mailto:$email")
+                        data = "mailto:$email".toUri()
                     }
-
                     startActivity(intent)
                 }
             }
@@ -104,14 +101,10 @@ class VacancyDetailFragment : Fragment() {
     private fun callContactPhone() {
         val currentState = viewModel.state.value as? VacancyDetailState.Content ?: return
 
-        val phone = currentState.vacancy.contacts
-            ?.phones
-            ?.firstOrNull()
-            ?.formatted
-            ?: return
+        val phone = currentState.vacancy.contacts?.phones?.firstOrNull()?.formatted ?: return
 
         val intent = Intent(Intent.ACTION_DIAL).apply {
-            data = Uri.parse("tel:$phone")
+            data = "tel:$phone".toUri()
         }
 
         startActivity(Intent.createChooser(intent, null))
@@ -178,9 +171,7 @@ class VacancyDetailFragment : Fragment() {
             errorServer.isVisible = false
 
             jobTitle.text = vacancy.name
-
             salary.text = formatter.formatSalary(vacancy.salary)
-
             company.text = vacancy.employer.name
 
             companyLogo.loadCompanyLogo(
@@ -190,7 +181,6 @@ class VacancyDetailFragment : Fragment() {
 
             val locationText = vacancy.address?.raw ?: vacancy.area.name
             city.text = locationText
-
             experience.text = vacancy.experience?.name ?: getString(R.string.not_specified)
 
             val scheduleName = vacancy.schedule?.name ?: ""
