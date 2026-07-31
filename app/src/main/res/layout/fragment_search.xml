@@ -25,7 +25,6 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_filter_off_24"
         android:background="?attr/colorSurface"
-        app:tint="@color/black"
         android:layout_marginEnd="@dimen/filter_button_margin_end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/header"

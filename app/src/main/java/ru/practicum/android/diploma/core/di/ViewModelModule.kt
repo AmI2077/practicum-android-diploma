@@ -27,6 +27,9 @@ val viewModelModuleDI = module {
     }
 
     viewModel {
-        SearchViewModelWithPaging(get())
+        SearchViewModelWithPaging(
+            searchVacanciesUseCase = get(),
+            filterInteractor = get()
+        )
     }
 }

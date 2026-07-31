@@ -14,7 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.navigation.koinNavGraphViewModel
 import ru.practicum.android.diploma.R
+import androidx.core.view.isVisible
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
+import ru.practicum.android.diploma.feature.filter.ui.viewmodel.FilterState
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
 
 class FilterFragment : Fragment() {
@@ -79,9 +81,16 @@ class FilterFragment : Fragment() {
         }
 
         binding.salaryEdit.doOnTextChanged { text, _, _, _ ->
-            text?.let {
-                viewModel.saveSalary(text.toString())
+            binding.clearButton.isVisible =
+                !text.isNullOrBlank()
+
+            if (binding.salaryEdit.hasFocus()) {
+                viewModel.saveSalary(text?.toString())
             }
+        }
+
+        binding.clearButton.setOnClickListener {
+            binding.salaryEdit.text?.clear()
         }
     }
 
@@ -130,8 +139,18 @@ class FilterFragment : Fragment() {
         }
     }
 
+    private fun updateButtonsVisibility(state: FilterState) {
+        val hasFilters =
+            state.salary != null ||
+                state.hideWithoutSalary ||
+                state.industry != null
+
+        binding.buttonsContainer.isVisible = hasFilters
+    }
+
     private fun observeState() {
         viewModel.filterState.observe(viewLifecycleOwner) { state ->
+            updateButtonsVisibility(state)
             binding.salaryCheckBox.setImageResource(
                 if (state.hideWithoutSalary) {
                     R.drawable.ic_check_box_on_24
@@ -142,7 +161,7 @@ class FilterFragment : Fragment() {
             val newSalary = state.salary
             val currentInput = binding.salaryEdit.text.toString()
 
-            val targetText = if (newSalary == 0 || newSalary == null) "" else newSalary.toString()
+            val targetText = newSalary?.toString().orEmpty()
 
             if (currentInput != targetText) {
                 binding.salaryEdit.setText(targetText)

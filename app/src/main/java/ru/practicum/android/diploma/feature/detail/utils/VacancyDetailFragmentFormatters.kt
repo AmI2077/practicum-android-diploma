@@ -20,7 +20,7 @@ class VacancyDetailFragmentFormatters(
             "UZS" -> context.getString(R.string.currency_uzs)
             "GEL" -> context.getString(R.string.currency_gel)
             "KGS" -> context.getString(R.string.currency_kgs)
-            else -> ""
+            else -> currency.orEmpty()
         }
     }
 

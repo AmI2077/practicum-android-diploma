@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -14,8 +15,10 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.navigation.koinNavGraphViewModel
 import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.core.models.NetworkErrors
 import ru.practicum.android.diploma.core.models.card.VacancyCard
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.feature.search.data.SearchException
 import ru.practicum.android.diploma.feature.search.ui.viewmodel.SearchViewModelWithPaging
 
 class SearchFragment : Fragment() {
@@ -111,15 +114,35 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.totalFound.observe(viewLifecycleOwner) { found ->
-            if (found > 0) {
-                binding.statusContainer.isVisible = true
-                binding.statusVacancies.text =
-                    getString(
-                        R.string.vacancies_found,
-                        found
-                    )
-            }
+            if (found == null) {
+                binding.statusContainer.isVisible = false
+//                return@observe (Detekt отметил return@observe)
+            } else {
+                binding.statusContainer.isVisible = found > 0
 
+                if (found > 0) {
+                    binding.statusVacancies.text =
+                        getString(
+                            R.string.vacancies_found,
+                            found
+                        )
+                }
+            }
+        }
+        viewModel.filterState.observe(viewLifecycleOwner) { state ->
+
+            val hasFilters =
+                state.salary != null ||
+                    state.hideWithoutSalary ||
+                    state.industry != null
+
+            binding.filterButton.setImageResource(
+                if (hasFilters) {
+                    R.drawable.ic_filter_on_24
+                } else {
+                    R.drawable.ic_filter_off_24
+                }
+            )
         }
     }
 
@@ -137,6 +160,32 @@ class SearchFragment : Fragment() {
 
     private fun setupLoadStateListener() {
         adapter?.addLoadStateListener { loadStates ->
+            val appendState = loadStates.append
+
+            if (appendState is LoadState.Error) {
+                val message = when (
+                    (appendState.error as? SearchException)?.networkError
+                ) {
+                    NetworkErrors.NoInternetConnectionError ->
+                        getString(R.string.no_internet)
+
+                    NetworkErrors.ServerError ->
+                        getString(R.string.server_error_title)
+
+                    NetworkErrors.NotFoundError ->
+                        getString(R.string.vacancies_not_found)
+
+                    else ->
+                        getString(R.string.server_error_title)
+                }
+
+                Toast.makeText(
+                    requireContext(),
+                    message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
             val refreshState = loadStates.refresh
             val itemCount = adapter?.itemCount ?: 0
             val isQueryBlank = binding.searchEditText.text.isNullOrBlank()
@@ -171,14 +220,23 @@ class SearchFragment : Fragment() {
         binding.progressBar.isVisible = state is PagingUiState.Loading
         binding.recyclerView.isVisible = state is PagingUiState.Success
 
-        binding.errorNoVacancies.isVisible = state is PagingUiState.Empty
+        val error =
+            (state as? PagingUiState.Error)?.error
 
-        val isServerError = state is PagingUiState.Error && state.error.message?.contains("ServerError") == true
-        val isInternetError = state is PagingUiState.Error && !isServerError
+        binding.errorNoInternet.isVisible =
+            error is SearchException &&
+                error.networkError == NetworkErrors.NoInternetConnectionError
 
-        binding.errorServer.isVisible = isServerError
-        binding.errorNoInternet.isVisible = isInternetError
+        binding.errorServer.isVisible =
+            error is SearchException &&
+                error.networkError == NetworkErrors.ServerError
 
+        binding.errorNoVacancies.isVisible =
+            state is PagingUiState.Empty ||
+                (
+                    error is SearchException &&
+                        error.networkError == NetworkErrors.NotFoundError
+                    )
         if (state is PagingUiState.Initial || state is PagingUiState.Loading || state is PagingUiState.Error) {
             binding.statusContainer.isVisible = false
         }

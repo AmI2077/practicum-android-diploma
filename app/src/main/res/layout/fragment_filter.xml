@@ -142,9 +142,19 @@
                 android:id="@+id/salaryEdit"
                 android:hint="@string/enter_salary_hint"
                 style="@style/salaryEditText"
+                android:inputType="number"
                 app:layout_constraintTop_toBottomOf="@id/salaryLabel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/clearButton"
+                style="@style/SearchFieldIcon"
+                android:src="@drawable/ic_search_clean_24"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -186,6 +196,7 @@
             android:id="@+id/buttonsContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:paddingHorizontal="@dimen/button_padding_horizontal_1"
             android:paddingBottom="@dimen/button_padding_bottom"
             app:layout_constraintBottom_toBottomOf="parent"

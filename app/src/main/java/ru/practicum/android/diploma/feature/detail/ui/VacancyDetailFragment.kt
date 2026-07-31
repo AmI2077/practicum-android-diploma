@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.feature.detail.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -78,6 +80,41 @@ class VacancyDetailFragment : Fragment() {
                 viewModel.onFavouritesClick()
             }
         }
+        binding.contactEmail.setOnClickListener {
+            val currentState = viewModel.state.value
+
+            if (currentState is VacancyDetailState.Content) {
+                val email = currentState.vacancy.contacts?.email
+
+                if (!email.isNullOrEmpty()) {
+                    val intent = Intent(Intent.ACTION_SENDTO).apply {
+                        data = Uri.parse("mailto:$email")
+                    }
+
+                    startActivity(intent)
+                }
+            }
+        }
+
+        binding.contactPhone.setOnClickListener {
+            callContactPhone()
+        }
+    }
+
+    private fun callContactPhone() {
+        val currentState = viewModel.state.value as? VacancyDetailState.Content ?: return
+
+        val phone = currentState.vacancy.contacts
+            ?.phones
+            ?.firstOrNull()
+            ?.formatted
+            ?: return
+
+        val intent = Intent(Intent.ACTION_DIAL).apply {
+            data = Uri.parse("tel:$phone")
+        }
+
+        startActivity(Intent.createChooser(intent, null))
     }
 
     private fun renderFavouriteButton(isFavourite: Boolean) {
@@ -99,8 +136,8 @@ class VacancyDetailFragment : Fragment() {
                         }
 
                         is VacancyDetailState.Error -> showError()
-                        is VacancyDetailState.NotFound -> showError()
-                        is VacancyDetailState.NoInternet -> showError()
+                        is VacancyDetailState.NotFound -> showNotFound()
+                        is VacancyDetailState.NoInternet -> showNoInternet()
                     }
                 }
             }
@@ -190,6 +227,24 @@ class VacancyDetailFragment : Fragment() {
         }
     }
 
+    private fun showNotFound() {
+        with(binding) {
+            detailScrollView.isVisible = false
+            progressBar.isVisible = false
+            errorServer.isVisible = true
+            errorServerImage.setImageResource(R.drawable.ic_industry_filter)
+        }
+    }
+
+    private fun showNoInternet() {
+        with(binding) {
+            detailScrollView.isVisible = false
+            progressBar.isVisible = false
+            errorServer.isVisible = true
+            errorServerImage.setImageResource(R.drawable.ic_no_internet)
+        }
+    }
+
     private fun displayContacts(contacts: Contacts?) {
         with(binding) {
             if (contacts == null) {
@@ -200,7 +255,7 @@ class VacancyDetailFragment : Fragment() {
             contactsCont.isVisible = true
 
             val hasName = setContactField(contactName, contactNameLabel, contacts.name)
-            val hasEmail = setContactField(contactEmail, contactEmailLabel, contacts.email)
+            val hasEmail = setContactField(contactEmail, contactEmailLabel, contacts.email.orEmpty())
             val hasPhone = setupPhoneFields(contacts.phones)
 
             contactsCont.isVisible = hasName || hasEmail || hasPhone
@@ -223,13 +278,16 @@ class VacancyDetailFragment : Fragment() {
 
         binding.contactPhoneLabel.isVisible = hasPhone
         binding.contactPhone.isVisible = hasPhone
-        if (phone != null) {
-            binding.contactPhone.text = phone.formatted
+
+        phone?.let {
+            binding.contactPhone.text = it.formatted
         }
 
-        val hasComment = phone != null && !phone.comment.isNullOrEmpty()
+        val hasComment = phone?.comment?.isNotEmpty() == true
+
         binding.contactPhoneCommentLabel.isVisible = hasComment
         binding.contactPhoneComment.isVisible = hasComment
+
         if (hasComment) {
             binding.contactPhoneComment.text = phone.comment
         }

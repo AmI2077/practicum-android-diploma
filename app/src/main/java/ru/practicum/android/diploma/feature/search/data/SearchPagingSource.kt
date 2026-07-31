@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.feature.search.data
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.practicum.android.diploma.core.models.Result
@@ -16,7 +15,18 @@ class SearchPagingSource(
     private val industryId: Int?,
     private val onTotalFoundLoaded: (totalPages: Int) -> Unit
 ) : PagingSource<Int, VacancyCard>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, VacancyCard> {
+
+    private val loadedVacancyIds = mutableSetOf<String>()
+
+    init {
+        registerInvalidatedCallback {
+            loadedVacancyIds.clear()
+        }
+    }
+
+    override suspend fun load(
+        params: LoadParams<Int>
+    ): LoadResult<Int, VacancyCard> {
         val page = params.key ?: 1
 
         val searchParams = VacancySearchParams(
@@ -26,9 +36,14 @@ class SearchPagingSource(
             onlyWithSalary = onlyWithSalary,
             industry = industryId
         )
-        return when (val result = searchVacanciesUseCase(searchParams)) {
+
+        return when (
+            val result = searchVacanciesUseCase(searchParams)
+        ) {
             is Result.Content -> {
-                val vacancies = result.data.vacancies
+                val vacancies = result.data.vacancies.filter { vacancy ->
+                    loadedVacancyIds.add(vacancy.id)
+                }
                 val totalPages = result.data.pages
 
                 val prevKey = if (page == 1) null else page - 1
@@ -45,7 +60,7 @@ class SearchPagingSource(
 
             is Result.Error -> {
                 LoadResult.Error(
-                    Exception(result.error.toString())
+                    SearchException(result.error)
                 )
             }
         }

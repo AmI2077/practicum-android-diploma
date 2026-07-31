@@ -6,6 +6,5 @@ import ru.practicum.android.diploma.core.models.search.VacancySearchResult
 
 interface SearchRepository {
 
-    //    suspend fun fetchVacancies(params: VacancySearchParams): Result<List<VacancyCard>>
     suspend fun fetchVacancies(params: VacancySearchParams): Result<VacancySearchResult>
 }
