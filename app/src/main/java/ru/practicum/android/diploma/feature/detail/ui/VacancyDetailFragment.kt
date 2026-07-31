@@ -2,11 +2,9 @@ package ru.practicum.android.diploma.feature.detail.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,15 +17,12 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.core.extensions.loadCompanyLogo
-import ru.practicum.android.diploma.core.models.details.Contacts
-import ru.practicum.android.diploma.core.models.details.Phone
-import ru.practicum.android.diploma.core.models.details.VacancyDetails
 import ru.practicum.android.diploma.databinding.FragmentVacancyDetailBinding
 import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailNavigationCommand
 import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailState
 import ru.practicum.android.diploma.feature.detail.ui.viewmodel.VacancyDetailViewModel
 import ru.practicum.android.diploma.feature.detail.utils.VacancyDetailFragmentFormatters
+import ru.practicum.android.diploma.feature.detail.utils.bindVacancyInfo
 import ru.practicum.android.diploma.feature.sharing.domain.SharingInteractor
 
 class VacancyDetailFragment : Fragment() {
@@ -36,9 +31,7 @@ class VacancyDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: VacancyDetailFragmentArgs by navArgs()
-
     private val viewModel: VacancyDetailViewModel by viewModel()
-
     private val sharingInteractor: SharingInteractor by inject()
 
     private val formatter by lazy {
@@ -46,19 +39,22 @@ class VacancyDetailFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentVacancyDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
         super.onViewCreated(view, savedInstanceState)
-
         setupClickListeners()
         observeState()
         observeNavigation()
-
         viewModel.loadVacancyDetail(args.vacancyId)
     }
 
@@ -100,13 +96,10 @@ class VacancyDetailFragment : Fragment() {
 
     private fun callContactPhone() {
         val currentState = viewModel.state.value as? VacancyDetailState.Content ?: return
-
         val phone = currentState.vacancy.contacts?.phones?.firstOrNull()?.formatted ?: return
-
         val intent = Intent(Intent.ACTION_DIAL).apply {
             data = "tel:$phone".toUri()
         }
-
         startActivity(Intent.createChooser(intent, null))
     }
 
@@ -122,15 +115,18 @@ class VacancyDetailFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     when (state) {
-                        is VacancyDetailState.Loading -> showLoading()
+                        is VacancyDetailState.Loading -> renderStatus(showLoading = true)
+                        is VacancyDetailState.Error -> renderStatus(showError = R.drawable.ic_vacancy_server_error)
+                        is VacancyDetailState.NotFound -> renderStatus(showError = R.drawable.ic_industry_filter)
+                        is VacancyDetailState.NoInternet -> renderStatus(showError = R.drawable.ic_no_internet)
                         is VacancyDetailState.Content -> {
-                            showVacancyDetail(state.vacancy)
+                            renderStatus(showContent = true)
                             renderFavouriteButton(state.isFavourite)
+                            binding.bindVacancyInfo(
+                                state.vacancy,
+                                formatter
+                            )
                         }
-
-                        is VacancyDetailState.Error -> showError()
-                        is VacancyDetailState.NotFound -> showNotFound()
-                        is VacancyDetailState.NoInternet -> showNoInternet()
                     }
                 }
             }
@@ -156,133 +152,19 @@ class VacancyDetailFragment : Fragment() {
         }
     }
 
-    private fun showLoading() {
+    private fun renderStatus(
+        showLoading: Boolean = false,
+        showContent: Boolean = false,
+        showError: Int? = null
+    ) {
         with(binding) {
-            detailScrollView.isVisible = false
-            progressBar.isVisible = true
-            errorServer.isVisible = false
-        }
-    }
-
-    private fun showVacancyDetail(vacancy: VacancyDetails) {
-        with(binding) {
-            detailScrollView.isVisible = true
-            progressBar.isVisible = false
-            errorServer.isVisible = false
-
-            jobTitle.text = vacancy.name
-            salary.text = formatter.formatSalary(vacancy.salary)
-            company.text = vacancy.employer.name
-
-            companyLogo.loadCompanyLogo(
-                logoUrl = vacancy.employer.logo,
-                cornerRadius = resources.getDimension(R.dimen.corner_radius).toInt()
-            )
-
-            val locationText = vacancy.address?.raw ?: vacancy.area.name
-            city.text = locationText
-            experience.text = vacancy.experience?.name ?: getString(R.string.not_specified)
-
-            val scheduleName = vacancy.schedule?.name ?: ""
-            val employmentName = vacancy.employment?.name ?: ""
-            employment.text = when {
-                scheduleName.isNotEmpty() && employmentName.isNotEmpty() -> "$scheduleName, $employmentName"
-                scheduleName.isNotEmpty() -> scheduleName
-                employmentName.isNotEmpty() -> employmentName
-                else -> getString(R.string.not_specified)
+            progressBar.isVisible = showLoading
+            detailScrollView.isVisible = showContent
+            errorServer.isVisible = showError != null
+            showError?.let {
+                errorServerImage.setImageResource(it)
             }
-
-            description.text = Html.fromHtml(vacancy.description, Html.FROM_HTML_MODE_COMPACT)
-            description.isVisible = true
-
-            if (vacancy.skills.isNotEmpty()) {
-                val skillsText = vacancy.skills.joinToString("\n") { "• $it" }
-                skill.text = skillsText
-                skill.isVisible = true
-                skillTitle.isVisible = true
-            } else {
-                skill.isVisible = false
-                skillTitle.isVisible = false
-            }
-            displayContacts(vacancy.contacts)
         }
-    }
-
-    private fun showError() {
-        with(binding) {
-            detailScrollView.isVisible = false
-            progressBar.isVisible = false
-            errorServer.isVisible = true
-            errorServerImage.setImageResource(R.drawable.ic_vacancy_server_error)
-        }
-    }
-
-    private fun showNotFound() {
-        with(binding) {
-            detailScrollView.isVisible = false
-            progressBar.isVisible = false
-            errorServer.isVisible = true
-            errorServerImage.setImageResource(R.drawable.ic_industry_filter)
-        }
-    }
-
-    private fun showNoInternet() {
-        with(binding) {
-            detailScrollView.isVisible = false
-            progressBar.isVisible = false
-            errorServer.isVisible = true
-            errorServerImage.setImageResource(R.drawable.ic_no_internet)
-        }
-    }
-
-    private fun displayContacts(contacts: Contacts?) {
-        with(binding) {
-            if (contacts == null) {
-                contactsCont.isVisible = false
-                return
-            }
-
-            contactsCont.isVisible = true
-
-            val hasName = setContactField(contactName, contactNameLabel, contacts.name)
-            val hasEmail = setContactField(contactEmail, contactEmailLabel, contacts.email.orEmpty())
-            val hasPhone = setupPhoneFields(contacts.phones)
-
-            contactsCont.isVisible = hasName || hasEmail || hasPhone
-        }
-    }
-
-    private fun setContactField(textView: TextView, labelView: View, text: String): Boolean {
-        val isValid = text.isNotEmpty()
-        textView.isVisible = isValid
-        labelView.isVisible = isValid
-        if (isValid) {
-            textView.text = text
-        }
-        return isValid
-    }
-
-    private fun setupPhoneFields(phones: List<Phone>): Boolean {
-        val phone = phones.firstOrNull()
-        val hasPhone = phone != null
-
-        binding.contactPhoneLabel.isVisible = hasPhone
-        binding.contactPhone.isVisible = hasPhone
-
-        phone?.let {
-            binding.contactPhone.text = it.formatted
-        }
-
-        val hasComment = phone?.comment?.isNotEmpty() == true
-
-        binding.contactPhoneCommentLabel.isVisible = hasComment
-        binding.contactPhoneComment.isVisible = hasComment
-
-        if (hasComment) {
-            binding.contactPhoneComment.text = phone.comment
-        }
-
-        return hasPhone
     }
 
     override fun onDestroyView() {

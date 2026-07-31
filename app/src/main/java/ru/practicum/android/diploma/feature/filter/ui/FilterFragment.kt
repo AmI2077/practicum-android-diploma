@@ -27,7 +27,9 @@ class FilterFragment : Fragment() {
     private val viewModel: SearchViewModelWithPaging by koinNavGraphViewModel(R.id.search_screen_tab)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFilterBinding.inflate(inflater, container, false)
         return binding.root
@@ -108,7 +110,8 @@ class FilterFragment : Fragment() {
             InputMethodManager::class.java
         )
         imm?.hideSoftInputFromWindow(
-            binding.salaryEdit.windowToken, 0
+            binding.salaryEdit.windowToken,
+            0
         )
     }
 
