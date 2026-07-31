@@ -33,10 +33,7 @@ class FavouritesInteractorImpl(
         repository.deleteVacancyFromFavourites(vacancy)
     }
 
-    override suspend fun isVacancyFavourite(
-        vacancyId: String
-    ): Boolean {
-        return repository
-            .getFavouriteVacancyById(vacancyId) != null
+    override suspend fun getFavouriteVacancyById(vacancyId: String): VacancyDetails? {
+        return repository.getFavouriteVacancyById(vacancyId)
     }
 }

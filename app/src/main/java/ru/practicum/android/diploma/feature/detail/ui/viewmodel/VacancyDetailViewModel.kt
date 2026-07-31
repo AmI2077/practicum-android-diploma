@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.core.models.NetworkErrors
 import ru.practicum.android.diploma.core.models.Result
+import ru.practicum.android.diploma.core.models.details.VacancyDetails
 import ru.practicum.android.diploma.feature.detail.domain.usecase.GetVacancyDetailUseCase
 import ru.practicum.android.diploma.feature.favourites.domain.interactor.FavouritesInteractor
 import kotlin.time.Duration.Companion.milliseconds
@@ -35,26 +36,39 @@ class VacancyDetailViewModel(
         _state.value = VacancyDetailState.Loading
 
         viewModelScope.launch {
-            when (val result = getVacancyDetailUseCase(vacancyId)) {
-                is Result.Content -> {
-                    val vacancy = result.data
-                    if (vacancy != null) {
-                        val isFavourite = favouritesInteractor.isVacancyFavourite(vacancy.id)
-                        _state.value = VacancyDetailState.Content(
-                            vacancy = vacancy,
-                            isFavourite = isFavourite,
-                        )
-                    } else {
-                        _state.value = VacancyDetailState.NotFound
-                    }
-                }
+            val vacancy = favouritesInteractor.getFavouriteVacancyById(vacancyId)
+            val isFavourite = vacancy != null
+            if (isFavourite) {
+                _state.value = VacancyDetailState.Content(
+                    vacancy = vacancy,
+                    isFavourite = true,
+                )
+            } else {
+                val result = getVacancyDetailUseCase(vacancyId)
+                handleNetworkResult(result)
+            }
+        }
+    }
 
-                is Result.Error -> {
-                    _state.value = when (result.error) {
-                        NetworkErrors.NoInternetConnectionError -> VacancyDetailState.NoInternet
-                        NetworkErrors.NotFoundError -> VacancyDetailState.NotFound
-                        NetworkErrors.ServerError -> VacancyDetailState.Error
-                    }
+    private fun handleNetworkResult(result: Result<VacancyDetails?>) {
+        when (result) {
+            is Result.Content -> {
+                val vacancy = result.data
+                if (vacancy != null) {
+                    _state.value = VacancyDetailState.Content(
+                        vacancy = vacancy,
+                        isFavourite = false,
+                    )
+                } else {
+                    _state.value = VacancyDetailState.NotFound
+                }
+            }
+
+            is Result.Error -> {
+                _state.value = when (result.error) {
+                    NetworkErrors.NoInternetConnectionError -> VacancyDetailState.NoInternet
+                    NetworkErrors.NotFoundError -> VacancyDetailState.NotFound
+                    NetworkErrors.ServerError -> VacancyDetailState.Error
                 }
             }
         }
