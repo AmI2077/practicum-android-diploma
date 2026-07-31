@@ -29,14 +29,17 @@ class SearchFragment : Fragment() {
     private var adapter: PagingVacancyAdapter? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(
-        view: View, savedInstanceState: Bundle?
+        view: View,
+        savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
@@ -182,7 +185,8 @@ class SearchFragment : Fragment() {
         binding.errorServer.isVisible = error is SearchException && error.networkError == NetworkErrors.ServerError
 
         binding.errorNoVacancies.isVisible =
-            state is PagingUiState.Empty || error is SearchException && error.networkError == NetworkErrors.NotFoundError
+            state is PagingUiState.Empty || error is SearchException
+                && error.networkError == NetworkErrors.NotFoundError
         if (state is PagingUiState.Initial || state is PagingUiState.Loading || state is PagingUiState.Error) {
             binding.statusContainer.isVisible = false
         }
