@@ -54,12 +54,7 @@ class SearchViewModelWithPaging(
 
             _totalFound.value = null
 
-            val hasFilters =
-                filters.salary != null ||
-                    filters.hideWithoutSalary ||
-                    filters.industry != null
-
-            if (query.isEmpty() && !hasFilters) {
+            if (query.isEmpty()) {
                 flowOf(PagingData.empty())
             } else {
                 Pager(

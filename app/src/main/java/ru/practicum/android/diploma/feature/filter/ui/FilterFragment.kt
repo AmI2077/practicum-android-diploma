@@ -91,6 +91,7 @@ class FilterFragment : Fragment() {
 
         binding.clearButton.setOnClickListener {
             binding.salaryEdit.text?.clear()
+            viewModel.saveSalary(null)
         }
     }
 
@@ -172,12 +173,18 @@ class FilterFragment : Fragment() {
             if (industry == null) {
                 binding.industryHint.apply {
                     text = getString(R.string.industry_hint)
+                    binding.IndustryIcon.setImageResource(R.drawable.ic_arrow_forward_24)
+                    binding.IndustryIcon.setOnClickListener(null)
                     setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
                 }
             } else {
                 binding.industryHint.apply {
                     text = industry.name
                     setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    binding.IndustryIcon.setImageResource(R.drawable.ic_search_clean_24)
+                    binding.IndustryIcon.setOnClickListener {
+                        viewModel.saveIndustry(null)
+                    }
                 }
             }
         }

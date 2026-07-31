@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.vacancyDetailFragment,
-                R.id.filter_screen -> {
+                R.id.filter_screen,
+                R.id.industry_filter -> {
                     bottomNavigationView.isVisible = false
                     bottomNavBorder.isVisible = false
                 }
