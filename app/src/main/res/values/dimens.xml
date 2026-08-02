@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_32">32sp</dimen>
+
+    <dimen name="regular_text_style_line_height">16sp</dimen>
+    <dimen name="regular_text_style_line_height_19">19sp</dimen>
+    <dimen name="regular_text_style_font_weight">400</dimen>
+
+    <dimen name="medium_text_style_line_height_19">19sp</dimen>
+    <dimen name="medium_text_style_line_height">26sp</dimen>
+    <dimen name="medium_text_style_font_weight">500</dimen>
+
+    <dimen name="bold_text_style_line_height">38sp</dimen>
+    <dimen name="bold_text_style_font_weight">700</dimen>
+
+    <dimen name="bottom_nav_view_divider_height">1dp</dimen>
+
+    <dimen name="header_padding_vertical">19dp</dimen>
+
+    <dimen name="header_padding_start">16dp</dimen>
+    <dimen name="header_margin_end">20dp</dimen>
+    <dimen name="header_margin_buttons">28dp</dimen>
+
+
+    <dimen name="search_header_margin_start">16dp</dimen>
+    <dimen name="search_field_height">48dp</dimen>
+    <dimen name="search_field_padding_horizontal">12dp</dimen>
+    <dimen name="search_field_margin_horizontal">16dp</dimen>
+    <dimen name="search_field_margin_top">8dp</dimen>
+    <dimen name="search_edit_text_margin_horizontal">16dp</dimen>
+
+    <dimen name="status_container_margin_top">11dp</dimen>
+    <dimen name="status_container_corner_radius">12dp</dimen>
+    <dimen name="status_text_padding_vertical">4dp</dimen>
+    <dimen name="status_text_padding_horizontal">12dp</dimen>
+    <dimen name="status_text_size">14sp</dimen>
+
+    <dimen name="error_image_width">328dp</dimen>
+    <dimen name="error_image_height">233dp</dimen>
+    <dimen name="error_text_margin_top">16dp</dimen>
+
+    <dimen name="recycler_view_margin_top">17dp</dimen>
+    <dimen name="recycler_view_padding_bottom">16dp</dimen>
+
+    <dimen name="filter_button_margin_end">20dp</dimen>
+
+    <dimen name="item_vacancy_margin_horizontal">16dp</dimen>
+    <dimen name="item_vacancy_margin_vertical">9dp</dimen>
+    <dimen name="item_vacancy_logo_size">48dp</dimen>
+    <dimen name="item_vacancy_logo_corner_radius">12dp</dimen>
+    <dimen name="item_vacancy_text_margin_start">12dp</dimen>
+
+    <dimen name="corner_radius">12dp</dimen>
+
+    <dimen name="detail_vacancy_padding_horizontal">16dp</dimen>
+    <dimen name="detail_vacancy_padding_vertical">8dp</dimen>
+    <dimen name="detail_vacancy_margin_top_4">4dp</dimen>
+    <dimen name="detail_vacancy_margin_top_8">8dp</dimen>
+    <dimen name="detail_vacancy_margin_top_16">16dp</dimen>
+    <dimen name="card_vacancy_height">80dp</dimen>
+
+    <dimen name="detail_vacancy_padding_top_24">24dp</dimen>
+    <dimen name="detail_vacancy_padding_bottom_24">24dp</dimen>
+    <dimen name="detail_vacancy_padding_top_32">32dp</dimen>
+
+    <dimen name="detail_vacancy_margin_start_8">8dp</dimen>
+
+    <dimen name="detail_vacancy_margin_bottom_19">19dp</dimen>
+
+    <dimen name="detail_vacancy_card_logo_size">45dp</dimen>
+
+    <dimen name="detail_vacancy_card_logo_margin">16dp</dimen>
+
+
+    <dimen name="filter_padding_horizontal">16dp</dimen>
+    <dimen name="filter_padding_top">16dp</dimen>
+    <dimen name="filter_height">48dp</dimen>
+    <dimen name="filter_height_check_box">60dp</dimen>
+    <dimen name="filter_margin_top">16dp</dimen>
+    <dimen name="filter_section_margin_top">24dp</dimen>
+
+    <dimen name="item_industry_margin_horizontal">16dp</dimen>
+    <dimen name="item_industry_margin_vertical">6dp</dimen>
+
+    <dimen name="recycler_view_margin_top_industry">16dp</dimen>
+
+    <dimen name="button_height">59dp</dimen>
+    <dimen name="button_margin_top">8dp</dimen>
+    <dimen name="button_padding_horizontal_1">1dp</dimen>
+    <dimen name="button_padding_horizontal_17">17dp</dimen>
+    <dimen name="button_padding_bottom">24dp</dimen>
+
+    <dimen name="team_padding_vertical">16dp</dimen>
+
+    <dimen name="bottom_navigation_height">16dp</dimen>
+</resources>

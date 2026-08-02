@@ -1,0 +1,30 @@
+package ru.practicum.android.diploma.core.network.client
+
+import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
+import ru.practicum.android.diploma.core.dto.response.VacancyResponseDto
+import ru.practicum.android.diploma.feature.detail.data.dto.VacancyDetailsDto
+import ru.practicum.android.diploma.feature.filter.data.dto.FilterIndustryDto
+
+interface VacanciesApiService {
+
+    @GET("/vacancies")
+    suspend fun fetchVacancies(
+        @Query("area") area: Int? = null,
+        @Query("industry") industry: Int? = null,
+        @Query("text") text: String,
+        @Query("salary") salary: Int? = null,
+        @Query("page") page: Int? = null,
+        @Query("only_with_salary") onlyWithSalary: Boolean? = null,
+    ): Response<VacancyResponseDto>
+
+    @GET("/vacancies/{id}")
+    suspend fun fetchVacancyDetails(
+        @Path("id") vacancyId: String,
+    ): Response<VacancyDetailsDto>
+
+    @GET("/industries")
+    suspend fun fetchIndustries(): Response<List<FilterIndustryDto>>
+}

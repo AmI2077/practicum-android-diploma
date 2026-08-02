@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RegularTextStyle">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="lineHeight">@dimen/regular_text_style_line_height</item>
+        <item name="android:fontWeight">@dimen/regular_text_style_font_weight</item>
+    </style>
+
+    <style name="MediumTextStyle">
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="lineHeight">@dimen/medium_text_style_line_height</item>
+        <item name="android:fontWeight">@dimen/medium_text_style_font_weight</item>
+    </style>
+
+    <style name="BoldTextStyle">
+        <item name="fontFamily">@font/ys_display_bold</item>
+        <item name="lineHeight">@dimen/bold_text_style_line_height</item>
+        <item name="android:fontWeight">@dimen/bold_text_style_font_weight</item>
+    </style>
+
+    <style name="MediumTextStyle.16" parent="MediumTextStyle">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="lineHeight">@dimen/medium_text_style_line_height_19</item>
+    </style>
+
+    <style name="MediumTextStyle.22" parent="MediumTextStyle">
+        <item name="android:textSize">@dimen/text_size_22</item>
+    </style>
+
+    <style name="RegularTextStyle.12" parent="RegularTextStyle">
+        <item name="android:textSize">@dimen/text_size_12</item>
+    </style>
+
+    <style name="RegularTextStyle.16" parent="RegularTextStyle">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="lineHeight">@dimen/regular_text_style_line_height_19</item>
+    </style>
+
+    <style name="MediumTextStyle.22.Header" parent="MediumTextStyle.22">
+        <item name="android:paddingTop">@dimen/header_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/header_padding_vertical</item>
+        <item name="android:paddingStart">@dimen/header_padding_start</item>
+    </style>
+
+    <style name="BoldTextStyle.32" parent="BoldTextStyle">
+        <item name="android:textSize">@dimen/text_size_32</item>
+    </style>
+
+
+    <!-- Для экрана настроек -->
+    <style name="SearchEditText" parent="RegularTextStyle.16">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/search_edit_text_margin_horizontal</item>
+        <item name="android:layout_marginEnd">@dimen/search_edit_text_margin_horizontal</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:textCursorDrawable">@drawable/ic_cursor</item>
+        <item name="android:textColor">@color/blackUniversal</item>
+    </style>
+
+    <style name="SearchFieldIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="ErrorContainer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ErrorImage">
+        <item name="android:layout_width">@dimen/error_image_width</item>
+        <item name="android:layout_height">@dimen/error_image_height</item>
+    </style>
+
+    <style name="ErrorTitle" parent="MediumTextStyle.22">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/error_text_margin_top</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="StatusText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">@dimen/status_text_padding_vertical</item>
+        <item name="android:paddingHorizontal">@dimen/status_text_padding_horizontal</item>
+        <item name="android:textSize">@dimen/status_text_size</item>
+        <item name="android:background">@color/blue</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="FixedHintTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextAppearance">@style/RegularTextStyle.12</item>
+    </style>
+
+    <style name="salaryEditText" parent="RegularTextStyle.16">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@null</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textCursorDrawable">@drawable/ic_cursor</item>
+        <item name="android:textColor">@color/blackUniversal</item>
+
+    </style>
+</resources>
