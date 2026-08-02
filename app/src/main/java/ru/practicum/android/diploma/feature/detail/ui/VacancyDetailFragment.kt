@@ -116,9 +116,9 @@ class VacancyDetailFragment : Fragment() {
                 viewModel.state.collect { state ->
                     when (state) {
                         is VacancyDetailState.Loading -> renderStatus(showLoading = true)
-                        is VacancyDetailState.Error -> renderStatus(showError = R.drawable.ic_vacancy_server_error)
-                        is VacancyDetailState.NotFound -> renderStatus(showError = R.drawable.ic_industry_filter)
-                        is VacancyDetailState.NoInternet -> renderStatus(showError = R.drawable.ic_no_internet)
+                        is VacancyDetailState.Error -> renderStatus(showError = true)
+                        is VacancyDetailState.NotFound -> renderStatus(showError = true)
+                        is VacancyDetailState.NoInternet -> renderStatus(showError = true)
                         is VacancyDetailState.Content -> {
                             renderStatus(showContent = true)
                             renderFavouriteButton(state.isFavourite)
@@ -155,15 +155,12 @@ class VacancyDetailFragment : Fragment() {
     private fun renderStatus(
         showLoading: Boolean = false,
         showContent: Boolean = false,
-        showError: Int? = null
+        showError: Boolean = false
     ) {
         with(binding) {
             progressBar.isVisible = showLoading
             detailScrollView.isVisible = showContent
-            errorServer.isVisible = showError != null
-            showError?.let {
-                errorServerImage.setImageResource(it)
-            }
+            errorServer.isVisible = showError
         }
     }
 
