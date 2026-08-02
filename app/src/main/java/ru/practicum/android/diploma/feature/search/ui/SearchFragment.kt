@@ -154,7 +154,7 @@ class SearchFragment : Fragment() {
             binding.statusContainer.isVisible = refreshState is LoadState.NotLoading && isSearching
 
             val uiState = when {
-                !isSearching -> PagingUiState.Initial
+                isQueryBlank -> PagingUiState.Initial
                 refreshState is LoadState.Loading -> PagingUiState.Loading
                 refreshState is LoadState.NotLoading && itemCount > 0 -> PagingUiState.Success
                 refreshState is LoadState.NotLoading && itemCount == 0 -> PagingUiState.Empty
