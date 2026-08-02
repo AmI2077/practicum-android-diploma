@@ -31,6 +31,10 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigationView.isVisible = false
                     bottomNavBorder.isVisible = false
                 }
+                R.id.work_place_filter -> {
+                    bottomNavigationView.isVisible = false
+                    bottomNavBorder.isVisible = false
+                }
 
                 else -> {
                     bottomNavigationView.isVisible = true
