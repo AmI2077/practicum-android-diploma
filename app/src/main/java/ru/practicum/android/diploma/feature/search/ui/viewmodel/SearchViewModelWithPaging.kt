@@ -42,6 +42,15 @@ class SearchViewModelWithPaging(
     val queryFlow = MutableStateFlow("")
     private val appliedFiltersFlow = MutableStateFlow(FilterSettings())
 
+    init {
+        applySavedFilters()
+    }
+
+    private fun applySavedFilters() {
+        _filterState.value = currentFilters.toFilterState()
+        appliedFiltersFlow.value = currentFilters
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val pagingData: LiveData<PagingData<VacancyCard>> = combine(
         queryFlow.debounce(SEARCH_DELAY_MS.milliseconds),
