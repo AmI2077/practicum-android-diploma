@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.vacancyDetailFragment,
                 R.id.filter_screen,
-                R.id.industry_filter -> {
+                R.id.industry_filter,
+                R.id.work_place_filter -> {
                     bottomNavigationView.isVisible = false
                     bottomNavBorder.isVisible = false
                 }

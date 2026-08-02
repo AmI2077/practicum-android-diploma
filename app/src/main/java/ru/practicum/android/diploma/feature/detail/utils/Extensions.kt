@@ -42,7 +42,7 @@ fun FragmentVacancyDetailBinding.bindVacancyInfo(
     description.isVisible = true
 
     if (vacancy.skills.isNotEmpty()) {
-        skill.text = vacancy.skills.joinToString("\n") { "• $it" }
+        skill.text = vacancy.skills.joinToString("\n") { "    • $it" }
         skill.isVisible = true
         skillTitle.isVisible = true
     } else {
